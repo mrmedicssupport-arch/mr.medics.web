@@ -243,8 +243,8 @@ async function startServer() {
     });
   }
 
-  // API Route: AI Symptom Checker
-  app.post('/api/symptom-checker', async (req, res) => {
+  // API Route: AI Symptom Checker (supports both paths)
+  app.post(['/api/symptom-checker', '/api/gemini/analyze-symptoms'], async (req, res) => {
     try {
       const { symptoms, duration, severity, ageGroup, gender, existingConditions } = req.body;
       if (!symptoms || typeof symptoms !== 'string' || symptoms.trim().length === 0) {

@@ -16,11 +16,13 @@ import {
   Info,
   Calendar,
   PhoneCall,
-  Activity
+  Activity,
+  MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import Hero3D from '../../components/Hero3D';
+import { config } from '../../config';
 import { 
   AnimatedHeading, 
   AnimatedParagraph, 
@@ -88,27 +90,48 @@ export default function AiSymptomCheckerPage() {
     setErrorMsg(null);
 
     try {
-      const response = await fetch('/api/symptom-checker', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          symptoms: symptoms.trim(),
-          duration,
-          severity,
-          ageGroup,
-          existingConditions: existingConditions.trim() || undefined,
-        }),
-      });
+      const apiBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+      const payload = {
+        symptoms: symptoms.trim(),
+        duration,
+        severity,
+        ageGroup,
+        existingConditions: existingConditions.trim() || undefined,
+      };
+
+      let response: Response;
+      try {
+        response = await fetch(`${apiBase}/api/gemini/analyze-symptoms`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        // Fallback to legacy path if 404
+        if (response.status === 404) {
+          response = await fetch(`${apiBase}/api/symptom-checker`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        }
+      } catch (networkError) {
+        throw networkError;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Service returned HTTP ${response.status}`);
+      }
 
       const data = await response.json();
-      if (response.ok && data.success && data.data) {
+      if (data && data.success && data.data) {
         setResult(data.data);
       } else {
-        throw new Error(data.error || 'Failed to complete symptom analysis.');
+        throw new Error(data?.error || 'Failed to complete symptom analysis.');
       }
     } catch (err: any) {
       console.error('Symptom analysis error:', err);
-      setErrorMsg('Could not complete request. Please verify symptoms and try again.');
+      setErrorMsg('Symptom checker is temporarily unavailable, please contact us on WhatsApp');
     } finally {
       setLoading(false);
     }
@@ -319,8 +342,20 @@ export default function AiSymptomCheckerPage() {
                 </div>
 
                 {errorMsg && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-bold">
-                    {errorMsg}
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs sm:text-sm font-medium flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+                    <div className="flex items-center gap-2.5">
+                      <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+                      <span>{errorMsg}</span>
+                    </div>
+                    <a
+                      href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mrmedics,%20I%20need%20assistance%20with%20my%20symptoms:%20${encodeURIComponent(symptoms)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl font-bold text-xs shadow transition-all shrink-0 hover:scale-105"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-current" />
+                      <span>Chat on WhatsApp</span>
+                    </a>
                   </div>
                 )}
 
