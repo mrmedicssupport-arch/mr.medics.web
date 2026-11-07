@@ -1,13 +1,9 @@
 import { motion } from 'motion/react';
 import { AnimatedNumber } from './AnimatedTypography';
+import { platformStats } from '../data/content';
 
 export default function StatsBand() {
-  const stats = [
-    { value: 50, suffix: "+", label: "Medical Specialties" },
-    { value: 500, suffix: "+", label: "Lab Tests & Packages" },
-    { value: 100, suffix: "k+", label: "Happy Patients" },
-    { value: 4, suffix: " hrs", label: "Fast Reports" },
-  ];
+  const stats = platformStats;
 
   return (
     <section className="bg-[#0A1A45] py-8 md:py-20 text-white relative overflow-hidden">

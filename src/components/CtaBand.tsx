@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { config } from '../config';
@@ -34,23 +35,23 @@ export default function CtaBand() {
             </h2>
 
             <AnimatedParagraph className="text-white/90 text-xs sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-10 leading-normal sm:leading-relaxed font-normal">
-              Join thousands of satisfied patients across India managing their consultations, diagnostics, and prescriptions with Mrmedics.
+              Join thousands of patients across India managing their consultations, diagnostics, and prescriptions with Mr Medics.
             </AnimatedParagraph>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
-              <a 
-                href={`${config.APP_URL}/signup`}
+              <Link 
+                to="/signup"
                 className="bg-white text-[#1769E0] px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:bg-slate-50 transition shadow-md flex items-center justify-center gap-2 active:scale-95"
               >
                 <span>Get Started Free</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
-              <a 
-                href="/contact"
-                className="border-2 border-white text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition flex items-center justify-center active:scale-95"
+              </Link>
+              <Link 
+                to="/contact"
+                className="border-2 border-white text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition flex items-center justify-center active:scale-95 hover:bg-white hover:text-[#0A1A45]"
               >
                 Contact Support
-              </a>
+              </Link>
             </div>
           </div>
         </motion.div>

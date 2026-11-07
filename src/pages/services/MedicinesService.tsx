@@ -23,11 +23,17 @@ import {
 } from '../../components/AnimatedTypography';
 import FaqSection from '../../components/FaqSection';
 
+import { config } from '../../config';
+import { logLeadSafely } from '../../lib/leads';
+
 export default function MedicinesService() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState<any[]>([]);
-  const [rxUploaded, setRxUploaded] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [validationError, setValidationError] = useState('');
+  const [whatsappLink, setWhatsappLink] = useState('');
+  const [customer, setCustomer] = useState({ name: '', phone: '', address: '' });
 
   const medicines = [
     { name: "Paracetamol 650mg (Dolo)", category: "Pain Relief", mrp: "₹35", price: "₹28", rx: false, discount: "20% OFF", desc: "Fast-acting relief from fever and mild to moderate pain." },
@@ -48,8 +54,63 @@ export default function MedicinesService() {
     setCart(prev => [...prev, med]);
   };
 
+  const removeFromCart = (index: number) => {
+    setCart(prev => prev.filter((_, i) => i !== index));
+  };
+
   const calculateTotal = () => {
     return cart.reduce((acc, item) => acc + parseInt(item.price.replace('₹', '')), 0);
+  };
+
+  const handlePlaceOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    setValidationError('');
+
+    if (!customer.name.trim()) {
+      setValidationError('Please enter patient full name.');
+      return;
+    }
+    const cleanPhone = customer.phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setValidationError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    if (!customer.address.trim()) {
+      setValidationError('Please enter delivery address.');
+      return;
+    }
+
+    const itemsSummary = cart.map(item => `• ${item.name} (${item.price})`).join('\n');
+    const total = calculateTotal();
+
+    const message = `Hello Mr Medics,
+I would like to place a Medicine Order:
+${itemsSummary}
+• Estimated Total: ₹${total}
+• Patient: ${customer.name.trim()}
+• Phone: ${cleanPhone}
+• Delivery Address: ${customer.address.trim()}
+Please verify prescription and confirm my medicine delivery.`;
+
+    const encoded = encodeURIComponent(message);
+    const link = `https://wa.me/${config.WHATSAPP_NUMBER}?text=${encoded}`;
+    setWhatsappLink(link);
+    setOrderPlaced(true);
+
+    try {
+      window.open(link, '_blank');
+    } catch (e) {
+      console.warn('Popup blocked, link shown in UI');
+    }
+
+    logLeadSafely({
+      type: 'pharmacy_order',
+      items: cart.map(i => i.name),
+      totalAmount: total,
+      patientName: customer.name.trim(),
+      phone: cleanPhone,
+      deliveryAddress: customer.address.trim(),
+    });
   };
 
   return (
@@ -180,24 +241,20 @@ export default function MedicinesService() {
             {/* Prescription Upload Card */}
             <div className="bg-white p-6 rounded-3xl shadow-xl border border-blue-100">
               <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block mb-1">
-                Quick Order Via Prescription
+                Direct Pharmacy WhatsApp
               </span>
-              <h3 className="text-lg font-extrabold text-[#0A1A45] mb-2">Upload Doctor's Rx</h3>
-              <p className="text-xs text-[#475569] mb-4">Our pharmacist will read your prescription and prepare your order automatically.</p>
+              <h3 className="text-lg font-extrabold text-[#0A1A45] mb-2">Order Via Prescription</h3>
+              <p className="text-xs text-[#475569] mb-4">Send your physical prescription photo directly to our licensed pharmacist on WhatsApp.</p>
               
-              {rxUploaded ? (
-                <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center gap-3 text-emerald-800 text-xs font-bold">
-                  <CheckCircle2 className="w-5 h-5 shrink-0 text-[#0FB5A0]" />
-                  <span>Prescription uploaded! Verified by licensed pharmacist.</span>
-                </div>
-              ) : (
-                <label className="border-2 border-dashed border-blue-200 hover:border-[#1769E0] rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-[#F2F7FF] hover:bg-blue-50/50 transition-all text-center">
-                  <Upload className="w-8 h-8 text-[#1769E0] mb-2" />
-                  <span className="text-xs font-bold text-[#0A1A45]">Click to upload prescription</span>
-                  <span className="text-[10px] text-slate-400 mt-1">Supports JPG, PNG, PDF (Max 10MB)</span>
-                  <input type="file" onChange={() => setRxUploaded(true)} className="hidden" />
-                </label>
-              )}
+              <a 
+                href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mr%20Medics%20Pharmacy,%20I%20would%20like%20to%20share%20my%20prescription%20photo%20for%20medicine%20delivery.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3.5 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
+              >
+                <Upload className="w-4 h-4" />
+                <span>Send Prescription on WhatsApp</span>
+              </a>
             </div>
 
             {/* Cart Summary Card */}
@@ -222,29 +279,113 @@ export default function MedicinesService() {
                         <span className="font-bold text-[#0A1A45] block">{item.name}</span>
                         <span className="text-[10px] text-slate-400">{item.category}</span>
                       </div>
-                      <span className="font-extrabold text-[#1769E0]">{item.price}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-extrabold text-[#1769E0]">{item.price}</span>
+                        <button 
+                          onClick={() => removeFromCart(i)}
+                          className="text-slate-400 hover:text-red-500 text-xs px-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
                   ))}
 
                   <div className="pt-3 border-t border-slate-200 flex justify-between font-extrabold text-sm text-[#0A1A45]">
-                    <span>Total Amount</span>
+                    <span>Total Estimated</span>
                     <span className="text-[#1769E0]">₹{calculateTotal()}</span>
                   </div>
                 </div>
               )}
 
               {orderPlaced ? (
-                <div className="p-4 bg-emerald-50 rounded-2xl text-center text-emerald-800 text-xs font-bold">
-                  <CheckCircle2 className="w-6 h-6 text-[#0FB5A0] mx-auto mb-1" />
-                  Order confirmed! Out for door-delivery with real-time tracking.
+                <div className="p-4 bg-[#F2F7FF] rounded-2xl text-center text-xs border border-blue-100">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-[#0FB5A0] flex items-center justify-center mx-auto mb-2">
+                    <CheckCircle2 className="w-7 h-7" />
+                  </div>
+                  <h4 className="text-base font-bold text-[#0A1A45] mb-1">Your Request is Ready</h4>
+                  <p className="text-xs text-[#475569] mb-4">
+                    Send it on WhatsApp so our pharmacy team can verify your prescription and confirm delivery.
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <a 
+                      href={whatsappLink} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      <span>Open WhatsApp</span>
+                    </a>
+                    <a 
+                      href={`tel:${config.PHONE}`} 
+                      className="w-full py-2.5 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      <span>Call Us: {config.PHONE}</span>
+                    </a>
+                  </div>
                 </div>
+              ) : showCheckout ? (
+                <form onSubmit={handlePlaceOrder} className="space-y-3 pt-2">
+                  {validationError && (
+                    <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold">
+                      {validationError}
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#0A1A45] uppercase mb-1">Patient Full Name *</label>
+                    <input 
+                      type="text" 
+                      required 
+                      placeholder="e.g. Praveen Kumar"
+                      value={customer.name}
+                      onChange={e => setCustomer({ ...customer, name: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#0A1A45] uppercase mb-1">Mobile (10 digits) *</label>
+                    <input 
+                      type="tel" 
+                      required 
+                      maxLength={10}
+                      placeholder="9311601420"
+                      value={customer.phone}
+                      onChange={e => setCustomer({ ...customer, phone: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#0A1A45] uppercase mb-1">Delivery Address *</label>
+                    <textarea 
+                      required 
+                      rows={2}
+                      placeholder="Flat / House no, Landmark, Noida / City"
+                      value={customer.address}
+                      onChange={e => setCustomer({ ...customer, address: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
+                    />
+                  </div>
+                  <button 
+                    type="submit"
+                    className="w-full py-3 rounded-xl health-gradient text-white font-bold text-xs shadow-md hover:scale-[1.01] transition-transform"
+                  >
+                    Send Medicine Order on WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowCheckout(false)}
+                    className="w-full py-1 text-slate-400 text-xs hover:text-slate-600"
+                  >
+                    Back to Cart
+                  </button>
+                </form>
               ) : (
                 <button 
-                  onClick={() => { if (cart.length > 0) setOrderPlaced(true); }}
+                  onClick={() => setShowCheckout(true)}
                   disabled={cart.length === 0}
                   className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-lg shadow-blue-900/15 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] transition-transform"
                 >
-                  Place Order for Doorstep Delivery
+                  Proceed to Checkout ({cart.length} {cart.length === 1 ? 'item' : 'items'})
                 </button>
               )}
             </div>

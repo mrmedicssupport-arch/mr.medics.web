@@ -26,7 +26,7 @@ export default function FounderSection() {
               <div className="sm:hidden">
                 <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block">Leadership</span>
                 <h3 className="text-base font-extrabold text-[#0A1A45]">Praveen Verma</h3>
-                <p className="text-xs text-[#475569]">Founder & CEO, Mrmedics</p>
+                <p className="text-xs text-[#475569]">Founder & CEO, Mr Medics</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                   <span className="text-[10px] font-bold text-[#0A1A45]">Active Visionary</span>
@@ -62,7 +62,7 @@ export default function FounderSection() {
             <div className="relative mb-4 sm:mb-6 text-[#475569] text-xs sm:text-base leading-relaxed space-y-2 sm:space-y-4">
               <Quote className="hidden sm:block w-8 h-8 text-blue-200 absolute -top-4 -left-6 -z-10 opacity-60" />
               <p>
-                "Our mission at Mrmedics is to bridge the healthcare accessibility gap in India by bringing NMC-registered doctors, NABL diagnostics, and licensed pharmacies onto one secure, seamless platform."
+                "Our mission at Mr Medics is to bridge the healthcare accessibility gap in India by bringing NMC-registered doctors, NABL diagnostics, and licensed pharmacies onto one secure, seamless platform."
               </p>
               <p className="text-xs sm:text-sm text-slate-500">
                 Headquartered in A Block, Noida Sector 62 Industrial Area, UP, under our motto <strong>'Health Beyond Border'</strong>.

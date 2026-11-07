@@ -1,12 +1,12 @@
 {
-  "name": "Mrmedics - Health Beyond Border",
-  "short_name": "Mrmedics",
+  "name": "Mr Medics - Health Beyond Border",
+  "short_name": "Mr Medics",
   "description": "Consult verified doctors, book lab tests, and order genuine medicines in one app.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FFFFFF",
-  "theme_color": "#1769E0",
+  "theme_color": "#0A1A45",
   "icons": [
     {
       "src": "/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png",

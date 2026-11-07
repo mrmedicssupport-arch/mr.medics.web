@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Search, Star, Award, MapPin, Video, Calendar, ShieldCheck, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, Award, MapPin, Video, Calendar, ShieldCheck, Sparkles, UserCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import HeartPulse3D from '../components/HeartPulse3D';
 import { config } from '../config';
 import { AnimatedHeading, AnimatedParagraph, AnimatedBadge, FadeInBlock } from '../components/AnimatedTypography';
+import { sampleDoctors } from '../data/content';
 
 export default function DoctorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,80 +14,7 @@ export default function DoctorsPage() {
 
   const specialties = ['All', 'Cardiologist', 'General Physician', 'Pediatrician', 'Dermatologist', 'Orthopedic', 'Gynaecologist'];
 
-  const doctors = [
-    {
-      name: "Dr. Anjali Sharma",
-      specialty: "Cardiologist",
-      qualification: "MBBS, MD - Cardiology (AIIMS)",
-      experience: "12 Years Experience",
-      hospital: "Apollo Hospital, Noida",
-      rating: 4.9,
-      reviews: 142,
-      languages: "English, Hindi",
-      fee: "₹500",
-      available: "Today, 4:00 PM"
-    },
-    {
-      name: "Dr. Rajesh Verma",
-      specialty: "General Physician",
-      qualification: "MBBS, MRCP (UK)",
-      experience: "15 Years Experience",
-      hospital: "Mrmedics Clinic, Sector 63",
-      rating: 4.8,
-      reviews: 210,
-      languages: "English, Hindi",
-      fee: "₹400",
-      available: "Available Now"
-    },
-    {
-      name: "Dr. Priya Nair",
-      specialty: "Pediatrician",
-      qualification: "MBBS, DCH, DNB - Pediatrics",
-      experience: "9 Years Experience",
-      hospital: "Fortis Healthcare",
-      rating: 4.9,
-      reviews: 98,
-      languages: "English, Hindi, Malayalam",
-      fee: "₹450",
-      available: "Tomorrow, 10:00 AM"
-    },
-    {
-      name: "Dr. Vikram Malhotra",
-      specialty: "Orthopedic",
-      qualification: "MBBS, MS - Orthopedics",
-      experience: "14 Years Experience",
-      hospital: "Max Super Speciality",
-      rating: 4.7,
-      reviews: 175,
-      languages: "English, Hindi, Punjabi",
-      fee: "₹600",
-      available: "Today, 6:00 PM"
-    },
-    {
-      name: "Dr. Sneha Kulkarni",
-      specialty: "Dermatologist",
-      qualification: "MBBS, DDVL",
-      experience: "8 Years Experience",
-      hospital: "Skin & Laser Centre, Noida",
-      rating: 4.9,
-      reviews: 115,
-      languages: "English, Hindi, Marathi",
-      fee: "₹500",
-      available: "Today, 5:30 PM"
-    },
-    {
-      name: "Dr. Manish Gupta",
-      specialty: "Gynaecologist",
-      qualification: "MBBS, MS - Obstetrics & Gynaecology",
-      experience: "11 Years Experience",
-      hospital: "Kailash Hospital",
-      rating: 4.8,
-      reviews: 160,
-      languages: "English, Hindi",
-      fee: "₹550",
-      available: "Tomorrow, 11:30 AM"
-    }
-  ];
+  const doctors = sampleDoctors;
 
   const filteredDoctors = doctors.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) || doc.specialty.toLowerCase().includes(searchQuery.toLowerCase());
@@ -196,17 +125,17 @@ export default function DoctorsPage() {
                 </div>
                 <p className="text-xs text-[#1769E0] font-semibold truncate">{doc.specialty} • {doc.experience.replace(' Experience', '')}</p>
                 <div className="flex items-center justify-between gap-2 mt-1.5">
-                  <div className="flex items-center gap-1 text-[11px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-bold">
-                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                    <span>{doc.rating}</span>
+                  <div className="flex items-center gap-1 text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-bold border border-blue-100">
+                    <UserCheck className="w-3 h-3 text-[#1769E0]" />
+                    <span>Sample Profile</span>
                   </div>
-                  <a 
-                    href={`${config.APP_URL}/login`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg health-gradient text-white font-bold text-xs shadow-sm"
+                  <Link 
+                    to="/login"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg health-gradient text-white font-bold text-xs shadow-sm hover:opacity-95"
                   >
                     <Video className="w-3 h-3" />
                     <span>Book</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -239,9 +168,9 @@ export default function DoctorsPage() {
                     <div className="w-16 h-16 rounded-2xl health-gradient text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
                       {doc.name.split(' ')[1]?.[0] || 'Dr'}
                     </div>
-                    <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200/50">
-                      <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
-                      {doc.available}
+                    <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#1769E0] text-xs font-bold px-3 py-1 rounded-full border border-blue-200/50">
+                      <UserCheck className="w-3.5 h-3.5 text-[#1769E0]" />
+                      Sample Profile
                     </span>
                   </div>
 
@@ -255,13 +184,9 @@ export default function DoctorsPage() {
                     <span>{doc.hospital}</span>
                   </div>
 
-                  <div className="flex items-center gap-4 py-3 border-t border-b border-slate-100 mb-6">
-                    <div className="flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-lg text-xs font-bold">
-                      <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                      <span>{doc.rating}</span>
-                      <span className="text-slate-400 font-normal">({doc.reviews})</span>
-                    </div>
-                    <span className="text-xs text-[#475569] font-medium">{doc.languages}</span>
+                  <div className="flex items-center justify-between py-3 border-t border-b border-slate-100 mb-6 text-xs text-slate-500 font-medium">
+                    <span>Slots: {doc.available}</span>
+                    <span className="text-[#0FB5A0] font-bold">NMC Verified</span>
                   </div>
                 </div>
 
@@ -270,15 +195,13 @@ export default function DoctorsPage() {
                     <p className="text-[10px] text-slate-400 uppercase font-bold">Consultation Fee</p>
                     <p className="text-xl font-extrabold text-[#0A1A45]">{doc.fee}</p>
                   </div>
-                  <motion.a 
-                    href={`${config.APP_URL}/login`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 rounded-xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition flex items-center gap-2 cursor-pointer"
+                  <Link 
+                    to="/login"
+                    className="px-6 py-3 rounded-xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition flex items-center gap-2 cursor-pointer active:scale-95"
                   >
                     <Video className="w-4 h-4" />
                     <span>Book Consult</span>
-                  </motion.a>
+                  </Link>
                 </div>
               </motion.div>
             </FadeInBlock>

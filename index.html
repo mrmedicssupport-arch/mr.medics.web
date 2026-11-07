@@ -3,25 +3,97 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#1769E0" />
+    <meta name="theme-color" content="#0A1A45" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <title>Mrmedics | Health Beyond Border | Complete Healthcare in One App</title>
-    <meta name="description" content="Consult verified doctors, schedule lab tests, and order medicines with Mrmedics. Health Beyond Border — Your complete digital healthcare platform." />
-    <meta property="og:title" content="Mrmedics | Health Beyond Border | Complete Healthcare in One App" />
-    <meta property="og:description" content="Consult verified doctors, schedule lab tests, and order medicines with Mrmedics. Health Beyond Border — Your complete digital healthcare platform." />
+    
+    <title>Mr Medics | Health Beyond Border | Complete Healthcare in One App</title>
+    <meta name="description" content="Consult verified doctors, schedule NABL lab tests with free home sample pickup, and order genuine medicines with Mr Medics. Health Beyond Border — Your complete digital healthcare platform." />
+    <link rel="canonical" href="https://mrmedics.in/" />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mrmedics.in/" />
+    <meta property="og:title" content="Mr Medics | Health Beyond Border | Complete Healthcare in One App" />
+    <meta property="og:description" content="Consult verified doctors, schedule NABL lab tests with free home sample pickup, and order genuine medicines with Mr Medics." />
+    <meta property="og:image" content="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://mrmedics.in/" />
+    <meta name="twitter:title" content="Mr Medics | Health Beyond Border | Complete Healthcare in One App" />
+    <meta name="twitter:description" content="Consult verified doctors, schedule NABL lab tests with free home sample pickup, and order genuine medicines with Mr Medics." />
+    <meta name="twitter:image" content="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" />
+
     <link rel="icon" type="image/png" href="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalBusiness",
+      "name": "Mr Medics",
+      "alternateName": "Mr Medics Healthcare",
+      "url": "https://mrmedics.in",
+      "logo": "https://mrmedics.in/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png",
+      "image": "https://mrmedics.in/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png",
+      "description": "Comprehensive digital healthcare platform offering doctor teleconsultations, NABL accredited lab tests with home sample collection, and doorstep medicine delivery.",
+      "telephone": "+91-9311601420",
+      "email": "healthpilot.support@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "A Block, Noida Sector 62 Industrial Area",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "postalCode": "201309",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 28.6280,
+        "longitude": 77.3649
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      ],
+      "medicalSpecialty": [
+        "GeneralPractice",
+        "InternalMedicine",
+        "Pediatrics",
+        "Dermatology",
+        "Cardiovascular",
+        "Gynecology"
+      ],
+      "availableService": [
+        {
+          "@type": "MedicalTherapy",
+          "name": "Online Doctor Consultation"
+        },
+        {
+          "@type": "DiagnosticProcedure",
+          "name": "NABL Lab Tests & Home Sample Collection"
+        },
+        {
+          "@type": "MedicalService",
+          "name": "Doorstep Prescription Medicine Delivery"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

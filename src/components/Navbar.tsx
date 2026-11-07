@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HeartPulse, ChevronDown, Menu, X, Globe, User, ArrowRight, Stethoscope, TestTube, Pill, Sparkles, FileText } from 'lucide-react';
+import { ChevronDown, Menu, X, Globe, User, LogOut, Stethoscope, TestTube, Pill, Sparkles, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { config } from '../config';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar({ language, setLanguage }: { language: string; setLanguage: (lang: string) => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +45,7 @@ export default function Navbar({ language, setLanguage }: { language: string; se
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Services", dropdown: true },
-    { name: "Lab Tests", path: "/lab-tests" },
+    { name: "Lab Tests", path: "/services/lab-tests" },
     { name: "Doctors", path: "/doctors" },
     { name: "How It Works", path: "/how-it-works" },
     { name: "About Us", path: "/about" },
@@ -59,7 +61,7 @@ export default function Navbar({ language, setLanguage }: { language: string; se
           <div className="bg-white p-0.5 rounded-lg flex items-center transition-transform group-hover:scale-105">
             <img 
               src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
-              alt="Mrmedics - Health Beyond Border" 
+              alt="Mr Medics - Health Beyond Border" 
               className="h-8 sm:h-9 md:h-12 w-auto object-contain"
             />
           </div>
@@ -76,7 +78,7 @@ export default function Navbar({ language, setLanguage }: { language: string; se
                   onMouseEnter={() => setServicesOpen(true)}
                   onMouseLeave={() => setServicesOpen(false)}
                 >
-                  <button className="flex items-center gap-1.5 text-[15px] font-semibold text-[#0A1A45] hover:text-[#1769E0] transition-colors whitespace-nowrap">
+                  <button className="flex items-center gap-1.5 text-[15px] font-semibold text-[#0A1A45] hover:text-[#1769E0] transition-colors whitespace-nowrap cursor-pointer">
                     Services <ChevronDown className={`w-4 h-4 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} />
                   </button>
 
@@ -132,26 +134,46 @@ export default function Navbar({ language, setLanguage }: { language: string; se
         </nav>
 
         {/* Right Actions */}
-        <div className="hidden lg:flex items-center gap-5">
+        <div className="hidden lg:flex items-center gap-4">
           {/* Language Toggle Pill */}
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F2F7FF] text-[#0A1A45] text-xs font-bold hover:bg-blue-100 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F2F7FF] text-[#0A1A45] text-xs font-bold hover:bg-blue-100 transition-colors cursor-pointer"
           >
             <Globe className="w-3.5 h-3.5 text-[#1769E0]" />
             <span>{language === 'EN' ? 'EN | हिं' : 'हिं | EN'}</span>
           </button>
 
-          <a href={`${config.APP_URL}/login`} className="text-[15px] font-semibold text-[#0A1A45] hover:text-[#1769E0] transition-colors">
-            Login
-          </a>
-
-          <a 
-            href={`${config.APP_URL}/signup`}
-            className="h-[44px] px-6 rounded-full health-gradient text-white text-[15px] font-bold shadow-md shadow-blue-500/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center whitespace-nowrap"
-          >
-            Get Started
-          </a>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <Link
+                to="/account"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#F2F7FF] hover:bg-blue-100 text-[#0A1A45] text-xs font-bold transition"
+              >
+                <User className="w-3.5 h-3.5 text-[#1769E0]" />
+                <span>My Account</span>
+              </Link>
+              <button
+                onClick={logout}
+                className="text-xs text-rose-600 hover:text-rose-700 font-semibold transition cursor-pointer"
+                title="Sign out"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Link to="/login" className="text-[15px] font-semibold text-[#0A1A45] hover:text-[#1769E0] transition-colors">
+                Login
+              </Link>
+              <Link 
+                to="/signup"
+                className="h-[44px] px-6 rounded-full health-gradient text-white text-[15px] font-bold shadow-md shadow-blue-500/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center whitespace-nowrap"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Hamburger & Actions */}
@@ -191,7 +213,7 @@ export default function Navbar({ language, setLanguage }: { language: string; se
                 <div className="bg-white p-1 rounded-xl">
                   <img 
                     src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
-                    alt="Mrmedics Logo" 
+                    alt="Mr Medics Logo" 
                     className="h-8 w-auto object-contain"
                   />
                 </div>
@@ -206,16 +228,41 @@ export default function Navbar({ language, setLanguage }: { language: string; se
                   ))}
                 </div>
               </div>
-              <Link to="/lab-tests" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Lab Tests</Link>
+              <Link to="/services/lab-tests" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Lab Tests</Link>
               <Link to="/doctors" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Doctors</Link>
               <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">How It Works</Link>
               <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">About Us</Link>
               <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Contact Us</Link>
+              <Link to="/faq" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">FAQs</Link>
             </div>
 
             <div className="pt-4 border-t border-slate-100 flex flex-col gap-2.5 mt-auto">
-              <a href={`${config.APP_URL}/login`} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-[#0A1A45] rounded-xl bg-slate-50 border border-slate-200 active:scale-98">Login</a>
-              <a href={`${config.APP_URL}/signup`} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-white rounded-xl health-gradient shadow-md active:scale-98">Get Started</a>
+              {user ? (
+                <>
+                  <Link 
+                    to="/account" 
+                    onClick={() => setMobileMenuOpen(false)} 
+                    className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-[#0A1A45] rounded-xl bg-blue-50 border border-blue-200"
+                  >
+                    My Account ({user.displayName || user.email?.split('@')[0]})
+                  </Link>
+                  <button 
+                    onClick={() => { logout(); setMobileMenuOpen(false); }} 
+                    className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-rose-600 rounded-xl bg-rose-50 border border-rose-200"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-[#0A1A45] rounded-xl bg-slate-50 border border-slate-200">
+                    Login
+                  </Link>
+                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-white rounded-xl health-gradient shadow-md">
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}

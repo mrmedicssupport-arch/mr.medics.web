@@ -1,18 +1,66 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, Clock, Headphones } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, Clock, Headphones, MessageCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import CrossPulse3D from '../components/CrossPulse3D';
 import { config } from '../config';
 import { AnimatedHeading, AnimatedParagraph, AnimatedBadge } from '../components/AnimatedTypography';
+import { logLeadSafely } from '../lib/leads';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [validationError, setValidationError] = useState('');
+  const [whatsappLink, setWhatsappLink] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    setValidationError('');
+
+    if (!formData.name.trim()) {
+      setValidationError('Please enter your full name.');
+      return;
+    }
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setValidationError('Please enter a valid email address.');
+      return;
+    }
+    const cleanPhone = formData.phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setValidationError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    if (!formData.message.trim()) {
+      setValidationError('Please write your message or query.');
+      return;
+    }
+
+    const text = `Hello Mr Medics Support,
+I have an inquiry from the website:
+• Name: ${formData.name.trim()}
+• Email: ${formData.email.trim()}
+• Phone: ${cleanPhone}
+• Subject: ${formData.subject.trim() || 'General Inquiry'}
+• Message: ${formData.message.trim()}`;
+
+    const encoded = encodeURIComponent(text);
+    const link = `https://wa.me/${config.WHATSAPP_NUMBER}?text=${encoded}`;
+    setWhatsappLink(link);
     setSubmitted(true);
+
+    try {
+      window.open(link, '_blank');
+    } catch (e) {
+      console.warn('Popup blocked, link shown in UI');
+    }
+
+    logLeadSafely({
+      type: 'contact_message',
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: cleanPhone,
+      subject: formData.subject.trim(),
+      message: formData.message.trim(),
+    });
   };
 
   return (
@@ -27,8 +75,8 @@ export default function ContactPage() {
             </AnimatedBadge>
             <h1 className="text-[40px] sm:text-[50px] font-extrabold text-[#0A1A45] mb-4 leading-tight">
               <AnimatedHeading 
-                text="Get in Touch with Mrmedics Support"
-                highlightWords={["Mrmedics", "Support"]}
+                text="Get in Touch with Mr Medics Support"
+                highlightWords={["Mr", "Medics", "Support"]}
                 highlightClass="health-gradient-text"
                 as="span"
               />
@@ -107,7 +155,7 @@ export default function ContactPage() {
 
             <div className="mt-10 p-4 bg-white rounded-2xl border border-slate-200 text-xs text-[#475569] shadow-sm">
               <p className="font-bold text-[#0A1A45] mb-1">Medical Emergency Notice:</p>
-              <p>Mrmedics does not replace emergency care. In case of emergency, please dial your local emergency number immediately.</p>
+              <p>Mr Medics does not provide emergency care. In case of a medical emergency, please dial 112 immediately or reach your nearest emergency department.</p>
             </div>
           </motion.div>
 
@@ -121,25 +169,43 @@ export default function ContactPage() {
           >
             {submitted ? (
               <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-16 flex flex-col items-center"
+                className="text-center py-10 flex flex-col items-center"
               >
-                <div className="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 text-[#0FB5A0] flex items-center justify-center mb-6">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#0A1A45] mb-2">Message Sent Successfully!</h3>
-                <p className="text-[#475569] max-w-md mx-auto mb-8 font-normal">
-                  Thank you for reaching out. Our support team in Noida Sector 62 has received your query and will get back to you within 2–4 hours.
+                <h3 className="text-2xl font-bold text-[#0A1A45] mb-2">Your Message is Ready</h3>
+                <p className="text-[#475569] max-w-md mx-auto mb-6 text-sm">
+                  We have prepared your message. For the fastest response, send it directly to our verified care coordinator on WhatsApp or give us a quick call.
                 </p>
-                <motion.button 
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
+
+                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm mb-6">
+                  <a
+                    href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                      `Hello Mr Medics Team,\nMy name is ${formData.name || 'Patient'}.\nPhone: ${formData.phone || 'N/A'}\nSubject: ${formData.subject || 'General Enquiry'}\n\nMessage: ${formData.message}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition"
+                  >
+                    <span>Open in WhatsApp</span>
+                  </a>
+                  <a
+                    href={`tel:${config.PHONE}`}
+                    className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-[#0A1A45] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition"
+                  >
+                    <span>Call Us</span>
+                  </a>
+                </div>
+
+                <button 
                   onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', subject: '', message: '' }); }}
-                  className="px-6 py-3 rounded-xl health-gradient text-white font-bold text-sm shadow-md"
+                  className="text-xs text-[#1769E0] font-semibold hover:underline"
                 >
-                  Send Another Message
-                </motion.button>
+                  Send another inquiry
+                </button>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">

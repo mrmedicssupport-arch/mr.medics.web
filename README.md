@@ -1,4 +1,4 @@
-# Mrmedics Web App
+# Mr Medics Web App
 
 Health Beyond Border — Complete Healthcare in One App.
 

@@ -15,8 +15,8 @@ export default function HowItWorks() {
         {/* Animated Header */}
         <div className="text-center max-w-2xl mx-auto mb-6 md:mb-16">
           <AnimatedHeading 
-            text="How Mrmedics Works for You"
-            highlightWords={["Mrmedics", "Works"]}
+            text="How Mr Medics Works for You"
+            highlightWords={["Mr", "Medics", "Works"]}
             className="text-[24px] sm:text-[26px] md:text-[36px] font-extrabold text-[#0A1A45] mb-2 md:mb-3 block leading-tight"
           />
           <AnimatedParagraph className="text-[14px] sm:text-[16px] text-[#475569] leading-normal md:leading-relaxed">

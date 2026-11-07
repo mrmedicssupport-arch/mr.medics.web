@@ -68,8 +68,8 @@ export default function HowItWorksPage() {
             </AnimatedBadge>
             <h1 className="text-[40px] sm:text-[50px] font-extrabold text-[#0A1A45] mb-6 leading-tight">
               <AnimatedHeading 
-                text="How Mrmedics Delivers Superior Healthcare"
-                highlightWords={["Mrmedics", "Superior"]}
+                text="How Mr Medics Delivers Superior Healthcare"
+                highlightWords={["Mr Medics", "Superior"]}
                 highlightClass="health-gradient-text"
                 as="span"
               />
@@ -107,12 +107,12 @@ export default function HowItWorksPage() {
         <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <AnimatedHeading 
-              text="Why Patients Trust Mrmedics"
+              text="Why Patients Trust Mr Medics"
               highlightWords={["Trust"]}
               className="text-[32px] font-extrabold text-[#0A1A45] mb-6 block"
             />
             <AnimatedParagraph className="text-base text-[#475569] mb-6 leading-relaxed">
-              Traditional healthcare is often fragmented, opaque, and hard to navigate. Mrmedics integrates <strong>Doctor Consultation, NABL Diagnostics, and Licensed Pharmacies</strong> into a single unified ecosystem.
+              Traditional healthcare is often fragmented, opaque, and hard to navigate. Mr Medics integrates <strong>Doctor Consultation, NABL Diagnostics, and Licensed Pharmacies</strong> into a single unified ecosystem.
             </AnimatedParagraph>
             <ul className="space-y-4">
               {[
@@ -148,7 +148,7 @@ export default function HowItWorksPage() {
               <div className="bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-200">
                 <img 
                   src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
-                  alt="Mrmedics Logo" 
+                  alt="Mr Medics Logo" 
                   className="h-10 sm:h-11 w-auto object-contain"
                 />
               </div>

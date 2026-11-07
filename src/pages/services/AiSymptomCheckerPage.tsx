@@ -123,6 +123,11 @@ export default function AiSymptomCheckerPage() {
         throw new Error(`Service returned HTTP ${response.status}`);
       }
 
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Service returned non-JSON response');
+      }
+
       const data = await response.json();
       if (data && data.success && data.data) {
         setResult(data.data);
@@ -131,7 +136,7 @@ export default function AiSymptomCheckerPage() {
       }
     } catch (err: any) {
       console.error('Symptom analysis error:', err);
-      setErrorMsg('Symptom checker is temporarily unavailable, please contact us on WhatsApp');
+      setErrorMsg('Symptom checker is temporarily unavailable. Please talk to our team on WhatsApp');
     } finally {
       setLoading(false);
     }
@@ -348,7 +353,7 @@ export default function AiSymptomCheckerPage() {
                       <span>{errorMsg}</span>
                     </div>
                     <a
-                      href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mrmedics,%20I%20need%20assistance%20with%20my%20symptoms:%20${encodeURIComponent(symptoms)}`}
+                      href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mr%20Medics,%20I%20need%20assistance%20with%20my%20symptoms:%20${encodeURIComponent(symptoms)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl font-bold text-xs shadow transition-all shrink-0 hover:scale-105"
@@ -385,6 +390,11 @@ export default function AiSymptomCheckerPage() {
                 exit={{ opacity: 0, scale: 0.98 }}
                 className="space-y-8"
               >
+                {/* Disclaimer Above Result */}
+                <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 flex items-center gap-2.5 text-xs text-amber-900 font-medium shadow-sm">
+                  <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
+                  <span>This is general information, not a medical diagnosis. In an emergency call 112 or go to the nearest hospital.</span>
+                </div>
                 {/* Header Strip with Urgency Indicator */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-blue-200/80">
                   <div>
@@ -556,12 +566,13 @@ export default function AiSymptomCheckerPage() {
                   )}
                 </div>
 
-                {/* Clinical Disclaimer */}
-                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-3 text-xs text-amber-900 leading-relaxed">
+                {/* Clinical Disclaimer Below Result */}
+                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-3 text-xs text-amber-900 leading-relaxed shadow-sm">
                   <ShieldAlert className="w-5 h-5 shrink-0 text-amber-600 mt-0.5" />
-                  <p>
-                    <strong>Medical Protocol Notice:</strong> {result.clinicalDisclaimer || 'This AI evaluation serves as educational preliminary triage and does not establish a doctor-patient relationship. In life-threatening emergencies, call your local ambulance or visit the nearest hospital emergency department immediately.'}
-                  </p>
+                  <div>
+                    <p className="font-bold mb-1">Important Medical Disclaimer:</p>
+                    <p>This is general information, not a medical diagnosis. In an emergency call 112 or go to the nearest hospital.</p>
+                  </div>
                 </div>
 
               </motion.div>

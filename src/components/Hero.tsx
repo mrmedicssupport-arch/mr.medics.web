@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import { CheckCircle2, ShieldCheck, Video, FileText, Clock, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
-import { config, i18n } from '../data/config';
+import { config } from '../config';
+import { i18n } from '../i18n';
 import { AnimatedHeading, AnimatedParagraph, AnimatedBadge } from './AnimatedTypography';
 
 export default function Hero({ language }: { language: string }) {
@@ -55,11 +57,9 @@ export default function Hero({ language }: { language: string }) {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 mb-4 sm:mb-6 md:mb-10 w-full sm:w-auto"
           >
-            <motion.a 
-              href={`${config.APP_URL}/signup`}
-              whileHover={{ scale: 1.04, boxShadow: "0 20px 25px -5px rgba(23, 105, 224, 0.35)" }}
-              whileTap={{ scale: 0.97 }}
-              className="h-[48px] sm:h-[54px] px-6 sm:px-8 rounded-xl health-gradient text-white text-[15px] sm:text-[16px] font-bold shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+            <Link 
+              to="/signup"
+              className="h-[48px] sm:h-[54px] px-6 sm:px-8 rounded-xl health-gradient text-white text-[15px] sm:text-[16px] font-bold shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer hover:scale-[1.03] active:scale-[0.98]"
             >
               <span>{t.getStarted}</span>
               <motion.span 
@@ -68,15 +68,13 @@ export default function Hero({ language }: { language: string }) {
               >
                 →
               </motion.span>
-            </motion.a>
-            <motion.a 
-              href="#lab-tests"
-              whileHover={{ scale: 1.03, backgroundColor: "#0A1A45", color: "#FFFFFF" }}
-              whileTap={{ scale: 0.97 }}
-              className="h-[48px] sm:h-[54px] px-6 sm:px-8 rounded-xl border-2 border-[#0A1A45] text-[#0A1A45] text-[15px] sm:text-[16px] font-bold transition-all flex items-center justify-center cursor-pointer"
+            </Link>
+            <Link 
+              to="/services/lab-tests"
+              className="h-[48px] sm:h-[54px] px-6 sm:px-8 rounded-xl border-2 border-[#0A1A45] text-[#0A1A45] text-[15px] sm:text-[16px] font-bold transition-all flex items-center justify-center cursor-pointer hover:bg-[#0A1A45] hover:text-white"
             >
               {t.bookLabTest}
-            </motion.a>
+            </Link>
           </motion.div>
 
           {/* 3 Animated Trust Items - Compact on mobile */}
@@ -180,7 +178,7 @@ export default function Hero({ language }: { language: string }) {
                 <div className="flex items-center gap-2">
                   <img 
                     src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
-                    alt="Mrmedics Logo" 
+                    alt="Mr Medics Logo" 
                     className="h-7 sm:h-8 w-auto object-contain"
                   />
                 </div>

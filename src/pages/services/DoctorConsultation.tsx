@@ -24,22 +24,21 @@ import {
 } from '../../components/AnimatedTypography';
 import FaqSection from '../../components/FaqSection';
 
+import { config } from '../../config';
+import { sampleDoctors } from '../../data/content';
+import { logLeadSafely } from '../../lib/leads';
+
 export default function DoctorConsultation() {
   const [selectedMode, setSelectedMode] = useState<'video' | 'audio' | 'chat' | 'clinic'>('video');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [booked, setBooked] = useState(false);
+  const [validationError, setValidationError] = useState('');
+  const [whatsappLink, setWhatsappLink] = useState('');
   const [bookingDetails, setBookingDetails] = useState({ name: '', phone: '', date: '', time: '', doctor: 'Dr. Anjali Sharma' });
 
-  const specialties = ['All', 'Cardiologist', 'General Physician', 'Pediatrician', 'Orthopedic', 'Dermatologist', 'Gynaecologist', 'Neurologist', 'Diabetologist'];
+  const specialties = ['All', 'Cardiologist', 'General Physician', 'Pediatrician', 'Orthopedic', 'Dermatologist', 'Gynaecologist'];
 
-  const doctors = [
-    { name: "Dr. Anjali Sharma", specialty: "Cardiologist", exp: "14 Years Exp.", qual: "MBBS, MD (Cardiology) - AIIMS", fee: "₹500", rating: 4.9, reviews: 340, nextSlot: "Today, 4:30 PM" },
-    { name: "Dr. Rajesh Verma", specialty: "General Physician", exp: "16 Years Exp.", qual: "MBBS, MRCP (UK)", fee: "₹400", rating: 4.8, reviews: 520, nextSlot: "Today, 5:00 PM" },
-    { name: "Dr. Priya Nair", specialty: "Pediatrician", exp: "10 Years Exp.", qual: "MBBS, DCH, DNB", fee: "₹450", rating: 4.9, reviews: 290, nextSlot: "Today, 6:15 PM" },
-    { name: "Dr. Rohan Kapoor", specialty: "Dermatologist", exp: "12 Years Exp.", qual: "MBBS, MD (Dermatology)", fee: "₹550", rating: 4.8, reviews: 410, nextSlot: "Tomorrow, 10:00 AM" },
-    { name: "Dr. Sunita Deshmukh", specialty: "Gynaecologist", exp: "15 Years Exp.", qual: "MBBS, MS (OBG)", fee: "₹600", rating: 4.9, reviews: 470, nextSlot: "Tomorrow, 11:30 AM" },
-    { name: "Dr. Arvind Mehra", specialty: "Orthopedic", exp: "18 Years Exp.", qual: "MBBS, MS (Ortho), M.Ch", fee: "₹650", rating: 4.9, reviews: 380, nextSlot: "Today, 7:00 PM" },
-  ];
+  const doctors = sampleDoctors;
 
   const filteredDoctors = doctors.filter(doc => 
     selectedSpecialty === 'All' || doc.specialty === selectedSpecialty
@@ -47,8 +46,47 @@ export default function DoctorConsultation() {
 
   const handleBooking = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!bookingDetails.name || !bookingDetails.phone) return;
+    setValidationError('');
+
+    if (!bookingDetails.name.trim()) {
+      setValidationError('Please enter patient full name.');
+      return;
+    }
+    const cleanPhone = bookingDetails.phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setValidationError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
+    const message = `Hello Mr Medics,
+I would like to request a Doctor Consultation:
+• Doctor: ${bookingDetails.doctor}
+• Mode: ${selectedMode.toUpperCase()} Consultation
+• Patient: ${bookingDetails.name.trim()}
+• Phone: ${cleanPhone}
+• Preferred Slot: ${bookingDetails.date || 'Today'} at ${bookingDetails.time || 'Earliest slot'}
+Please confirm doctor availability.`;
+
+    const encoded = encodeURIComponent(message);
+    const link = `https://wa.me/${config.WHATSAPP_NUMBER}?text=${encoded}`;
+    setWhatsappLink(link);
     setBooked(true);
+
+    try {
+      window.open(link, '_blank');
+    } catch (e) {
+      console.warn('Popup blocked, link displayed in UI');
+    }
+
+    logLeadSafely({
+      type: 'doctor_consultation',
+      doctor: bookingDetails.doctor,
+      mode: selectedMode,
+      patientName: bookingDetails.name.trim(),
+      phone: cleanPhone,
+      slotDate: bookingDetails.date,
+      slotTime: bookingDetails.time,
+    });
   };
 
   return (
@@ -148,33 +186,32 @@ export default function DoctorConsultation() {
             <div className="space-y-4">
               {filteredDoctors.map((doc, idx) => (
                 <FadeInBlock key={idx} delay={idx * 0.08}>
-                  <div className="bg-[#F2F7FF] p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 group">
+                  <div className="bg-[#F2F7FF] p-5 sm:p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 group">
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-2xl health-gradient text-white flex items-center justify-center text-xl font-extrabold shrink-0 shadow-md group-hover:scale-105 transition-transform">
-                        Dr
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl health-gradient text-white flex items-center justify-center text-lg sm:text-xl font-extrabold shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                        {doc.name.split(' ')[1]?.[0] || 'Dr'}
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors">{doc.name}</h3>
-                          <span className="w-2 h-2 rounded-full bg-[#0FB5A0]" />
+                          <h3 className="text-base sm:text-lg font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors">{doc.name}</h3>
+                          <span className="text-[10px] font-bold text-[#1769E0] bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                            Sample Profile
+                          </span>
                         </div>
                         <p className="text-xs font-bold text-[#1769E0]">{doc.specialty}</p>
-                        <p className="text-xs text-[#475569] mt-0.5">{doc.qual} • {doc.exp}</p>
+                        <p className="text-xs text-[#475569] mt-0.5">{doc.qualification} • {doc.experience}</p>
                         
                         <div className="flex items-center gap-3 mt-2 text-xs">
-                          <span className="flex items-center gap-1 font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
-                            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                            <span>{doc.rating} ({doc.reviews})</span>
-                          </span>
                           <span className="text-[#0FB5A0] font-semibold text-[11px]">
-                            Next: {doc.nextSlot}
+                            Next: {doc.available}
                           </span>
+                          <span className="text-slate-400 text-[11px]">• NMC Verified</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-blue-100">
-                      <span className="text-2xl font-extrabold text-[#0A1A45] mb-2">{doc.fee}</span>
+                      <span className="text-xl sm:text-2xl font-extrabold text-[#0A1A45] mb-2">{doc.fee}</span>
                       <button 
                         onClick={() => {
                           setBookingDetails(prev => ({ ...prev, doctor: doc.name }));
@@ -183,7 +220,7 @@ export default function DoctorConsultation() {
                         }}
                         className="px-5 py-2.5 rounded-xl health-gradient text-white text-xs font-bold shadow-md shadow-blue-900/15 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
                       >
-                        <span>Book Slot</span>
+                        <span>Select Doctor</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -194,21 +231,21 @@ export default function DoctorConsultation() {
           </div>
 
           {/* Booking Card */}
-          <div id="booking-card" className="lg:col-span-5 bg-white p-8 rounded-3xl shadow-xl border border-blue-100 sticky top-28">
+          <div id="booking-card" className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-blue-100 sticky top-28">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
               <div>
                 <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block">
                   Quick Appointment
                 </span>
-                <h3 className="text-xl font-extrabold text-[#0A1A45]">Book Consultation</h3>
+                <h3 className="text-xl font-extrabold text-[#0A1A45]">Consultation Request</h3>
               </div>
               <span className="px-3 py-1 rounded-full bg-emerald-50 text-[#0FB5A0] text-xs font-bold border border-emerald-100">
-                Live Doctor Available
+                Live Verification
               </span>
             </div>
 
             {booked ? (
-              <div className="text-center py-8">
+              <div className="text-center py-6">
                 <motion.div 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -217,24 +254,40 @@ export default function DoctorConsultation() {
                 >
                   <CheckCircle2 className="w-10 h-10" />
                 </motion.div>
-                <h4 className="text-xl font-bold text-[#0A1A45] mb-2">Appointment Confirmed!</h4>
+                <h4 className="text-xl font-bold text-[#0A1A45] mb-2">Your Request is Ready</h4>
                 <p className="text-xs text-[#475569] mb-4">
-                  Confirmed with <span className="font-bold text-[#0A1A45]">{bookingDetails.doctor}</span> for <span className="font-bold text-[#0A1A45]">{bookingDetails.name}</span>.
+                  Send it on WhatsApp so our team can confirm your consultation slot with <span className="font-bold text-[#0A1A45]">{bookingDetails.doctor}</span>.
                 </p>
                 <div className="p-4 bg-[#F2F7FF] rounded-2xl text-xs space-y-1 mb-6 text-slate-600 text-left">
+                  <div><span className="font-bold">Doctor:</span> {bookingDetails.doctor}</div>
                   <div><span className="font-bold">Mode:</span> {selectedMode.toUpperCase()} Consultation</div>
-                  <div><span className="font-bold">Date & Time:</span> {bookingDetails.date || 'Today'} at {bookingDetails.time || 'Next Immediate Slot'}</div>
-                  <div><span className="font-bold">WhatsApp Updates:</span> Sent to {bookingDetails.phone}</div>
+                  <div><span className="font-bold">Patient:</span> {bookingDetails.name}</div>
+                  <div><span className="font-bold">Slot:</span> {bookingDetails.date || 'Today'} at {bookingDetails.time || 'Earliest available'}</div>
                 </div>
-                <button 
-                  onClick={() => setBooked(false)} 
-                  className="px-6 py-3 rounded-xl health-gradient text-white text-xs font-bold shadow-md"
-                >
-                  Book Another Appointment
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <a 
+                    href={whatsappLink} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 active:scale-95"
+                  >
+                    <span>Open WhatsApp</span>
+                  </a>
+                  <a 
+                    href={`tel:${config.PHONE}`} 
+                    className="px-6 py-3 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 active:scale-95"
+                  >
+                    <span>Call Us</span>
+                  </a>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleBooking} className="space-y-4">
+                {validationError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold">
+                    {validationError}
+                  </div>
+                )}
                 <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 flex items-center justify-between text-xs">
                   <div>
                     <span className="text-slate-500 block text-[10px]">Consulting With</span>

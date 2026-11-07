@@ -99,7 +99,7 @@ export default function ServicesOverview() {
               delay={0.2}
               className="text-lg text-[#475569] leading-relaxed mb-8 max-w-xl"
             >
-              From prompt doctor consultations and NABL diagnostics to doorstep medicine delivery and AI guidance — Mrmedics unifies every health requirement into a single, intuitive patient platform.
+              From prompt doctor consultations and NABL diagnostics to doorstep medicine delivery and AI guidance — Mr Medics unifies every health requirement into a single, intuitive patient platform.
             </AnimatedParagraph>
 
             <FadeInBlock delay={0.35} className="flex flex-wrap items-center gap-4">
@@ -228,7 +228,7 @@ export default function ServicesOverview() {
           <div className="bg-white p-8 sm:p-12 rounded-3xl border border-blue-100 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="max-w-xl">
               <span className="text-xs font-extrabold tracking-wider uppercase text-[#1769E0] mb-2 block">
-                Mrmedics Standard of Care
+                Mr Medics Standard of Care
               </span>
               <AnimatedHeading
                 text="100% NABL Accredited & NMC Certified Providers"
@@ -236,7 +236,7 @@ export default function ServicesOverview() {
                 className="text-2xl sm:text-3xl font-extrabold text-[#0A1A45] mb-3"
               />
               <AnimatedParagraph className="text-sm text-[#475569] leading-relaxed">
-                Every consultation, diagnostic test, and prescription through Mrmedics meets strict regulatory protocols, ensuring unmatched safety, accuracy, and patient trust.
+                Every consultation, diagnostic test, and prescription through Mr Medics meets strict regulatory protocols, ensuring unmatched safety, accuracy, and patient trust.
               </AnimatedParagraph>
             </div>
 

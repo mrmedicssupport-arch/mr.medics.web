@@ -24,11 +24,16 @@ import {
   AnimatedNumber 
 } from '../../components/AnimatedTypography';
 
+import { config } from '../../config';
+import { logLeadSafely } from '../../lib/leads';
+
 export default function LabTestsService() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookingModal, setBookingModal] = useState<any | null>(null);
   const [success, setSuccess] = useState(false);
+  const [validationError, setValidationError] = useState('');
+  const [whatsappLink, setWhatsappLink] = useState('');
   const [patientInfo, setPatientInfo] = useState({ name: '', phone: '', address: '', date: '', time: '' });
 
   const categories = ['All', 'Hematology', 'Biochemistry', 'Hormones', 'Special Panels', 'Cardiology'];
@@ -55,8 +60,54 @@ export default function LabTestsService() {
 
   const handleBook = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!patientInfo.name || !patientInfo.address || !patientInfo.phone) return;
+    setValidationError('');
+    
+    if (!patientInfo.name.trim()) {
+      setValidationError('Please enter patient full name.');
+      return;
+    }
+    const cleanPhone = patientInfo.phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setValidationError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    if (!patientInfo.address.trim()) {
+      setValidationError('Please enter home collection address.');
+      return;
+    }
+
+    const message = `Hello Mr Medics,
+I would like to request a Lab Test Booking:
+• Test: ${bookingModal.name} (${bookingModal.price})
+• Patient: ${patientInfo.name.trim()}
+• Phone: ${cleanPhone}
+• Address: ${patientInfo.address.trim()}
+• Preferred Slot: ${patientInfo.date || 'Earliest'} at ${patientInfo.time || 'Morning'}
+Please confirm my booking.`;
+
+    const encoded = encodeURIComponent(message);
+    const link = `https://wa.me/${config.WHATSAPP_NUMBER}?text=${encoded}`;
+    setWhatsappLink(link);
     setSuccess(true);
+
+    // Open WhatsApp
+    try {
+      window.open(link, '_blank');
+    } catch (e) {
+      console.warn('Popup blocked, link shown in UI');
+    }
+
+    // Log lead safely in Firestore
+    logLeadSafely({
+      type: 'lab_test',
+      testName: bookingModal.name,
+      price: bookingModal.price,
+      patientName: patientInfo.name.trim(),
+      phone: cleanPhone,
+      address: patientInfo.address.trim(),
+      slotDate: patientInfo.date,
+      slotTime: patientInfo.time,
+    });
   };
 
   return (
@@ -246,21 +297,33 @@ export default function LabTestsService() {
                   >
                     <CheckCircle2 className="w-10 h-10" />
                   </motion.div>
-                  <h3 className="text-2xl font-bold text-[#0A1A45] mb-2">Sample Collection Confirmed!</h3>
+                  <h3 className="text-2xl font-bold text-[#0A1A45] mb-2">Your Request is Ready</h3>
                   <p className="text-sm text-[#475569] mb-6">
-                    Our certified phlebotomist has been dispatched for <span className="font-bold text-[#0A1A45]">{patientInfo.name}</span>. Fast digital reports will arrive within 4 hours.
+                    Send it on WhatsApp so our team can confirm your booking.
                   </p>
                   <div className="p-4 bg-blue-50 rounded-2xl text-left text-xs space-y-1 mb-6 text-slate-600">
-                    <div><span className="font-bold">Test:</span> {bookingModal.name}</div>
+                    <div><span className="font-bold">Test:</span> {bookingModal.name} ({bookingModal.price})</div>
+                    <div><span className="font-bold">Patient:</span> {patientInfo.name}</div>
                     <div><span className="font-bold">Address:</span> {patientInfo.address}</div>
-                    <div><span className="font-bold">Slot:</span> {patientInfo.date || 'Today'} at {patientInfo.time || 'Earliest available'}</div>
+                    <div><span className="font-bold">Slot:</span> {patientInfo.date || 'Earliest available'} {patientInfo.time ? `at ${patientInfo.time}` : ''}</div>
                   </div>
-                  <button 
-                    onClick={() => setBookingModal(null)} 
-                    className="px-8 py-3 rounded-xl health-gradient text-white font-bold text-sm shadow-md"
-                  >
-                    Back to Test Catalog
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a 
+                      href={whatsappLink} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      <span>Open WhatsApp</span>
+                    </a>
+                    <a 
+                      href={`tel:${config.PHONE}`} 
+                      className="px-6 py-3 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-sm flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      <Phone className="w-4 h-4 text-[#1769E0]" />
+                      <span>Call Us</span>
+                    </a>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleBook} className="space-y-4">
@@ -271,6 +334,12 @@ export default function LabTestsService() {
                     <h3 className="text-xl font-bold text-[#0A1A45]">{bookingModal.name}</h3>
                     <p className="text-sm font-extrabold text-[#0FB5A0] mt-1">{bookingModal.price} <span className="text-xs text-slate-400 font-normal line-through">{bookingModal.originalPrice}</span> • Free Home Collection</p>
                   </div>
+
+                  {validationError && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold">
+                      {validationError}
+                    </div>
+                  )}
 
                   <div>
                     <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Patient Full Name *</label>
@@ -288,13 +357,14 @@ export default function LabTestsService() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Mobile Number (For WhatsApp Reports) *</label>
+                    <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Mobile Number (10 digits) *</label>
                     <div className="relative">
                       <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input 
                         type="tel" 
                         required 
-                        placeholder="+91 93116 01420"
+                        maxLength={10}
+                        placeholder="9311601420"
                         value={patientInfo.phone}
                         onChange={e => setPatientInfo({ ...patientInfo, phone: e.target.value })}
                         className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#1769E0]"
@@ -344,7 +414,7 @@ export default function LabTestsService() {
                     type="submit"
                     className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-lg shadow-blue-900/20 hover:scale-[1.01] transition-transform mt-3"
                   >
-                    Confirm Booking (Free Home Collection)
+                    Request Sample Collection on WhatsApp
                   </button>
                 </form>
               )}

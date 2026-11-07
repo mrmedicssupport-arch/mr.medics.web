@@ -12,7 +12,7 @@ export default function AppDownloadSection() {
           <div className="relative z-10">
             <div className="hidden sm:block">
               <AnimatedBadge className="bg-white/20 text-white mb-4 backdrop-blur-sm" icon={Sparkles}>
-                Download Mrmedics Mobile App
+                Download Mr Medics Mobile App
               </AnimatedBadge>
             </div>
 
@@ -28,29 +28,43 @@ export default function AppDownloadSection() {
               Book doctor consultations, access lifetime encrypted digital health records, track doorstep medicine deliveries, and get instant 4-hour lab reports right on your smartphone.
             </AnimatedParagraph>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a 
-                href={config.PLAY_STORE_URL} 
-                className="bg-black text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center sm:justify-start gap-3 hover:bg-slate-900 transition shadow-md active:scale-95"
-              >
-                <Smartphone className="w-5 h-5 text-cyan-400 shrink-0" />
-                <div className="text-left">
-                  <p className="text-[9px] text-slate-300 uppercase tracking-wider">GET IT ON</p>
-                  <p className="text-xs sm:text-sm font-extrabold">Google Play</p>
-                </div>
-              </a>
+            {config.PLAY_STORE_URL || config.APP_STORE_URL ? (
+              <div className="flex flex-col sm:flex-row gap-3">
+                {config.PLAY_STORE_URL && (
+                  <a 
+                    href={config.PLAY_STORE_URL} 
+                    className="bg-black text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center sm:justify-start gap-3 hover:bg-slate-900 transition shadow-md active:scale-95"
+                  >
+                    <Smartphone className="w-5 h-5 text-cyan-400 shrink-0" />
+                    <div className="text-left">
+                      <p className="text-[9px] text-slate-300 uppercase tracking-wider">GET IT ON</p>
+                      <p className="text-xs sm:text-sm font-extrabold">Google Play</p>
+                    </div>
+                  </a>
+                )}
 
-              <a 
-                href={config.APP_STORE_URL} 
-                className="bg-black text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center sm:justify-start gap-3 hover:bg-slate-900 transition shadow-md active:scale-95"
-              >
-                <Download className="w-5 h-5 text-teal-400 shrink-0" />
-                <div className="text-left">
-                  <p className="text-[9px] text-slate-300 uppercase tracking-wider">Download on the</p>
-                  <p className="text-xs sm:text-sm font-extrabold">App Store</p>
+                {config.APP_STORE_URL && (
+                  <a 
+                    href={config.APP_STORE_URL} 
+                    className="bg-black text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center sm:justify-start gap-3 hover:bg-slate-900 transition shadow-md active:scale-95"
+                  >
+                    <Download className="w-5 h-5 text-teal-400 shrink-0" />
+                    <div className="text-left">
+                      <p className="text-[9px] text-slate-300 uppercase tracking-wider">Download on the</p>
+                      <p className="text-xs sm:text-sm font-extrabold">App Store</p>
+                    </div>
+                  </a>
+                )}
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-lg">
+                <Smartphone className="w-5 h-5 text-cyan-300 shrink-0" />
+                <div>
+                  <span className="text-xs sm:text-sm font-extrabold block">Mobile App Coming Soon</span>
+                  <span className="text-[11px] text-white/80 block">Native iOS & Android apps currently in private review</span>
                 </div>
-              </a>
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Floating Phone Mockup - Visible on Desktop only */}
@@ -82,7 +96,7 @@ export default function AppDownloadSection() {
                   >
                     <img 
                       src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
-                      alt="Mrmedics Logo" 
+                      alt="Mr Medics Logo" 
                       className="h-11 sm:h-12 w-auto object-contain mx-auto"
                     />
                   </motion.div>
@@ -92,19 +106,19 @@ export default function AppDownloadSection() {
                   {/* Micro Quick Actions */}
                   <div className="grid grid-cols-2 gap-2 w-full mt-4">
                     <div className="p-2 bg-blue-50 rounded-xl text-left border border-blue-100">
-                      <div className="text-[9px] font-extrabold text-[#1769E0]">50+ Doctors</div>
+                      <div className="text-[9px] font-extrabold text-[#1769E0]">Specialists</div>
                       <div className="text-[8px] text-slate-500">Live Video</div>
                     </div>
                     <div className="p-2 bg-teal-50 rounded-xl text-left border border-teal-100">
-                      <div className="text-[9px] font-extrabold text-[#0FB5A0]">500+ Tests</div>
-                      <div className="text-[8px] text-slate-500">Free Home Visit</div>
+                      <div className="text-[9px] font-extrabold text-[#0FB5A0]">Lab Tests</div>
+                      <div className="text-[8px] text-slate-500">Home Visit</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="p-2.5 bg-[#F2F7FF] rounded-2xl text-center border border-blue-100 shadow-sm">
-                  <p className="text-[11px] font-extrabold text-[#0A1A45]">★ 4.9 App Store Rating</p>
-                  <p className="text-[9px] text-[#475569] font-medium">Trusted by 100k+ Patients</p>
+                  <p className="text-[11px] font-extrabold text-[#0A1A45]">Complete Healthcare</p>
+                  <p className="text-[9px] text-[#475569] font-medium">NMC Doctors & NABL Labs</p>
                 </div>
               </div>
             </motion.div>

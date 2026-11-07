@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { config } from '../config';
 import { 
   ChevronDown, 
   HelpCircle, 
@@ -36,7 +37,7 @@ const FAQ_DATA: FaqItem[] = [
     category: 'consultation',
     popular: true,
     badge: 'Video & Audio',
-    question: 'How do online doctor consultations work on Mrmedics?',
+    question: 'How do online doctor consultations work on Mr Medics?',
     answer: 'Select your medical concern or specialty, choose an NMC-registered doctor and a suitable time slot. Once confirmed, you can join the private encrypted video or audio consultation directly from your browser or smartphone with one click—no software downloads required. After the consultation, your certified digital prescription is immediately available in your health records.'
   },
   {
@@ -44,15 +45,15 @@ const FAQ_DATA: FaqItem[] = [
     category: 'consultation',
     popular: true,
     badge: '100% Verified',
-    question: 'Are doctors on Mrmedics verified and qualified?',
-    answer: 'Yes. Every doctor on Mrmedics undergoes a rigorous multi-step credentialing process. We verify their National Medical Commission (NMC) registration number, state medical council licenses, degrees from accredited institutions (like AIIMS, PGI, CMC), and clinical experience. Our specialists possess an average of 10+ years of active hospital and clinical practice.'
+    question: 'Are doctors on Mr Medics verified and qualified?',
+    answer: 'Yes. Every doctor on Mr Medics undergoes a rigorous multi-step credentialing process. We verify their National Medical Commission (NMC) registration number, state medical council licenses, degrees from accredited institutions (like AIIMS, PGI, CMC), and clinical experience. Our specialists possess an average of 10+ years of active hospital and clinical practice.'
   },
   {
     id: 'consult-3',
     category: 'consultation',
     badge: 'Digital Rx',
     question: 'Is the online digital prescription legally valid at pharmacies?',
-    answer: 'Absolutely. Prescriptions generated on Mrmedics strictly comply with the Telemedicine Practice Guidelines issued by the Ministry of Health and Family Welfare and NMC. They contain the doctor’s official digital signature, NMC registration number, diagnosis summary, and recommended drug dosage, making them 100% valid across all licensed pharmacies in India.'
+    answer: 'Absolutely. Prescriptions generated on Mr Medics strictly comply with the Telemedicine Practice Guidelines issued by the Ministry of Health and Family Welfare and NMC. They contain the doctor’s official digital signature, NMC registration number, diagnosis summary, and recommended drug dosage, making them 100% valid across all licensed pharmacies in India.'
   },
   {
     id: 'consult-4',
@@ -74,7 +75,7 @@ const FAQ_DATA: FaqItem[] = [
     category: 'consultation',
     badge: 'Languages',
     question: 'Can I consult doctors in Hindi, English, or regional languages?',
-    answer: 'Yes, Mrmedics connects you with multi-lingual healthcare specialists. You can filter doctors based on language preference including Hindi, English, Bengali, Marathi, Telugu, Tamil, and more to comfortably describe your symptoms.'
+    answer: 'Yes, Mr Medics connects you with multi-lingual healthcare specialists. You can filter doctors based on language preference including Hindi, English, Bengali, Marathi, Telugu, Tamil, and more to comfortably describe your symptoms.'
   },
 
   // Pharmacy & Medicines
@@ -83,7 +84,7 @@ const FAQ_DATA: FaqItem[] = [
     category: 'pharmacy',
     popular: true,
     badge: 'Prescription Upload',
-    question: 'How do I order prescription medicines on Mrmedics?',
+    question: 'How do I order prescription medicines on Mr Medics?',
     answer: 'You can simply snap a clear photo or upload a PDF of your doctor’s prescription. Our registered clinical pharmacists review and verify the dosage within 10 minutes, automatically prepare your cart with required medicines, apply available discounts (up to 20%), and send you a payment confirmation link.'
   },
   {
@@ -99,7 +100,7 @@ const FAQ_DATA: FaqItem[] = [
     category: 'pharmacy',
     badge: 'Authenticity Guarantee',
     question: 'Are all medicines 100% authentic and genuine?',
-    answer: 'All medicines delivered through Mrmedics are sourced exclusively from licensed pharmaceutical manufacturers and authorized distributors. Every order is inspected for batch numbers, expiry dates, and tamper-evident packaging before dispatch from our GMP-certified fulfillment hubs.'
+    answer: 'All medicines delivered through Mr Medics are sourced exclusively from licensed pharmaceutical manufacturers and authorized distributors. Every order is inspected for batch numbers, expiry dates, and tamper-evident packaging before dispatch from our GMP-certified fulfillment hubs.'
   },
   {
     id: 'pharm-4',
@@ -470,7 +471,7 @@ export default function FaqSection({
                   Reset Search
                 </button>
                 <a
-                  href="https://wa.me/919311601420?text=Hi%20Mrmedics%20Support,%20I%20have%20a%20question%20regarding%20healthcare%20services"
+                  href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hi%20Mr%20Medics%20Support,%20I%20have%20a%20question%20regarding%20healthcare%20services`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors inline-flex items-center gap-1.5"
@@ -499,7 +500,7 @@ export default function FaqSection({
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
             <a
-              href="https://wa.me/919311601420?text=Hello%20Mrmedics,%20I%20need%20assistance%20with%20doctor%20consultation%20or%20medicine%20delivery"
+              href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mr%20Medics,%20I%20need%20assistance%20with%20doctor%20consultation%20or%20medicine%20delivery`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm transition-all shadow-md active:scale-95"
@@ -509,11 +510,11 @@ export default function FaqSection({
             </a>
 
             <a
-              href="tel:+919311601420"
+              href={`tel:${config.PHONE}`}
               className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all active:scale-95"
             >
               <PhoneCall className="w-4 h-4 text-blue-300" />
-              <span>+91 9311601420</span>
+              <span>{config.PHONE}</span>
             </a>
         </div>
       </div>

@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom';
 import { Phone, MessageCircle, Calendar } from 'lucide-react';
 import { config } from '../config';
 
 export default function MobileBottomBar() {
-  const whatsappUrl = `https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mrmedics,%20I%20would%20like%20to%20know%20more%20about%20your%20services.`;
+  const whatsappUrl = `https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mr%20Medics,%20I%20would%20like%20to%20know%20more%20about%20your%20services.`;
 
   return (
     <aside 
@@ -31,13 +32,13 @@ export default function MobileBottomBar() {
         </a>
 
         {/* Book / Get Started CTA */}
-        <a 
-          href={`${config.APP_URL}/signup`}
+        <Link 
+          to="/signup"
           className="flex-[1.4] min-h-[44px] px-3 rounded-xl health-gradient text-white flex items-center justify-center gap-1.5 text-xs font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
         >
           <Calendar className="w-4 h-4" />
           <span>Book Consult</span>
-        </a>
+        </Link>
       </div>
     </aside>
   );
