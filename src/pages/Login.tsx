@@ -19,12 +19,46 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form onSubmit={handleLogin} className="p-8 bg-white dark:bg-slate-900 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-2 mb-4 border rounded" />
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="w-full p-2 mb-4 border rounded" />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">Login</button>
+    <div className="min-h-[100svh] flex items-center justify-center p-4 bg-[#F2F7FF]">
+      <form onSubmit={handleLogin} className="p-6 sm:p-8 bg-white rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
+        <h2 className="text-2xl font-bold mb-1 text-[#0A1A45]">Welcome Back</h2>
+        <p className="text-xs text-[#475569] mb-6">Log in to manage your consultations and orders</p>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-[#0A1A45] mb-1">Email Address</label>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={e => setEmail(e.target.value)} 
+              placeholder="name@example.com" 
+              className="w-full px-3.5 py-3 rounded-xl border border-slate-200 text-base text-[#0A1A45] focus:outline-none focus:border-[#1769E0]" 
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-[#0A1A45] mb-1">Password</label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)} 
+              placeholder="••••••••" 
+              className="w-full px-3.5 py-3 rounded-xl border border-slate-200 text-base text-[#0A1A45] focus:outline-none focus:border-[#1769E0]" 
+              required
+            />
+          </div>
+          <button 
+            type="submit" 
+            className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition min-h-[48px]"
+          >
+            Login
+          </button>
+        </div>
+        <p className="mt-5 text-center text-xs text-[#475569]">
+          Don't have an account?{' '}
+          <Link to="/signup" className="text-[#1769E0] font-bold hover:underline">
+            Sign up
+          </Link>
+        </p>
       </form>
     </div>
   );

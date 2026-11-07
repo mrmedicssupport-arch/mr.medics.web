@@ -10,30 +10,28 @@ export default function TrustStrip() {
   ];
 
   return (
-    <section className="bg-white py-16 border-b border-slate-100 overflow-hidden">
-      <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <section className="bg-white py-6 md:py-16 border-b border-slate-100 overflow-hidden">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-6 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
         {items.map((item, idx) => {
           const Icon = item.icon;
           return (
             <motion.div 
               key={idx} 
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10% 0px" }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="flex items-center gap-4 p-5 rounded-2xl bg-[#F2F7FF]/70 border border-blue-50 shadow-sm hover:shadow-md transition-all cursor-default group"
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.06 }}
+              whileHover={{ y: -4 }}
+              className="flex items-center gap-2.5 sm:gap-4 p-3 sm:p-5 rounded-2xl bg-[#F2F7FF]/70 border border-blue-50 shadow-sm transition-all cursor-default group"
             >
-              <div className="w-12 h-12 rounded-xl health-gradient text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                <Icon className="w-6 h-6" />
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl health-gradient text-white flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/20">
+                <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
-              <div>
-                <motion.h4 
-                  className="text-sm font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors"
-                >
+              <div className="min-w-0">
+                <h4 className="text-xs sm:text-sm font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors truncate sm:whitespace-normal">
                   {item.title}
-                </motion.h4>
-                <p className="text-xs text-[#475569]">{item.desc}</p>
+                </h4>
+                <p className="text-[10px] sm:text-xs text-[#475569] truncate sm:whitespace-normal">{item.desc}</p>
               </div>
             </motion.div>
           );

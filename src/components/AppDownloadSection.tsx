@@ -5,64 +5,56 @@ import { AnimatedHeading, AnimatedParagraph, AnimatedBadge } from './AnimatedTyp
 
 export default function AppDownloadSection() {
   return (
-    <section className="py-[96px] bg-white overflow-hidden">
-      <div className="max-w-[1200px] mx-auto px-6">
-        <div className="health-gradient rounded-3xl p-8 sm:p-14 text-white grid lg:grid-cols-2 gap-10 items-center shadow-2xl relative">
+    <section className="py-10 md:py-[96px] bg-white overflow-hidden">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+        <div className="health-gradient rounded-2xl sm:rounded-3xl p-6 sm:p-14 text-white grid lg:grid-cols-2 gap-6 sm:gap-10 items-center shadow-xl sm:shadow-2xl relative">
           
           <div className="relative z-10">
-            <AnimatedBadge className="bg-white/20 text-white mb-6 backdrop-blur-sm" icon={Sparkles}>
-              Download Mrmedics Mobile App
-            </AnimatedBadge>
+            <div className="hidden sm:block">
+              <AnimatedBadge className="bg-white/20 text-white mb-4 backdrop-blur-sm" icon={Sparkles}>
+                Download Mrmedics Mobile App
+              </AnimatedBadge>
+            </div>
 
             <AnimatedHeading
               text="Healthcare in your pocket, anytime, anywhere."
               highlightWords={["Healthcare", "pocket,", "anywhere."]}
               highlightClass="text-cyan-200"
-              className="text-[32px] sm:text-[44px] font-extrabold mb-4 leading-tight text-white block"
+              className="text-[22px] sm:text-[26px] md:text-[44px] font-extrabold mb-2 sm:mb-4 leading-tight text-white block"
               as="h2"
             />
 
-            <AnimatedParagraph className="text-white/85 text-base mb-8 leading-relaxed max-w-lg">
+            <AnimatedParagraph className="text-white/85 text-xs sm:text-base mb-5 sm:mb-8 leading-normal sm:leading-relaxed max-w-lg">
               Book doctor consultations, access lifetime encrypted digital health records, track doorstep medicine deliveries, and get instant 4-hour lab reports right on your smartphone.
             </AnimatedParagraph>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-wrap gap-4"
-            >
-              <motion.a 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a 
                 href={config.PLAY_STORE_URL} 
-                className="bg-black text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-900 transition shadow-lg"
+                className="bg-black text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center sm:justify-start gap-3 hover:bg-slate-900 transition shadow-md active:scale-95"
               >
-                <Smartphone className="w-6 h-6 text-cyan-400" />
+                <Smartphone className="w-5 h-5 text-cyan-400 shrink-0" />
                 <div className="text-left">
-                  <p className="text-[10px] text-slate-300 uppercase tracking-wider">GET IT ON</p>
-                  <p className="text-sm font-extrabold">Google Play</p>
+                  <p className="text-[9px] text-slate-300 uppercase tracking-wider">GET IT ON</p>
+                  <p className="text-xs sm:text-sm font-extrabold">Google Play</p>
                 </div>
-              </motion.a>
+              </a>
 
-              <motion.a 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <a 
                 href={config.APP_STORE_URL} 
-                className="bg-black text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-900 transition shadow-lg"
+                className="bg-black text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center sm:justify-start gap-3 hover:bg-slate-900 transition shadow-md active:scale-95"
               >
-                <Download className="w-6 h-6 text-teal-400" />
+                <Download className="w-5 h-5 text-teal-400 shrink-0" />
                 <div className="text-left">
-                  <p className="text-[10px] text-slate-300 uppercase tracking-wider">Download on the</p>
-                  <p className="text-sm font-extrabold">App Store</p>
+                  <p className="text-[9px] text-slate-300 uppercase tracking-wider">Download on the</p>
+                  <p className="text-xs sm:text-sm font-extrabold">App Store</p>
                 </div>
-              </motion.a>
-            </motion.div>
+              </a>
+            </div>
           </div>
 
-          {/* Floating Phone Mockup with HealthPilot Logo Animation */}
-          <div className="flex justify-center relative">
+          {/* Floating Phone Mockup - Visible on Desktop only */}
+          <div className="hidden lg:flex justify-center relative">
             <motion.div 
               animate={{ 
                 y: [0, -12, 0],

@@ -8,6 +8,22 @@ export default defineConfig(() => {
     base: '/',
     build: {
       outDir: 'dist',
+      target: 'es2020',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router')) {
+              return 'vendor-react';
+            }
+            if (id.includes('node_modules/firebase')) {
+              return 'vendor-firebase';
+            }
+            if (id.includes('node_modules/motion') || id.includes('node_modules/framer-motion')) {
+              return 'vendor-motion';
+            }
+          },
+        },
+      },
     },
     plugins: [react(), tailwindcss()],
     resolve: {

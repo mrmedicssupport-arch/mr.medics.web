@@ -18,6 +18,20 @@ export default function Navbar({ language, setLanguage }: { language: string; se
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.overscrollBehavior = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.overscrollBehavior = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.overscrollBehavior = '';
+    };
+  }, [mobileMenuOpen]);
+
   const servicesList = [
     { title: "Doctor Consultation", desc: "Video, audio & in-clinic with NMC doctors", icon: Stethoscope, path: "/services/doctor-consultation" },
     { title: "Lab Tests & Packages", desc: "Free home sample collection & fast reports", icon: TestTube, path: "/services/lab-tests" },
@@ -37,16 +51,16 @@ export default function Navbar({ language, setLanguage }: { language: string; se
   ];
 
   return (
-    <header className={`sticky top-0 z-50 h-[76px] bg-white transition-all duration-300 border-b border-[#E2E8F0] ${scrolled ? 'shadow-md' : ''}`}>
-      <div className="max-w-[1200px] h-full mx-auto px-6 flex items-center justify-between">
+    <header className={`sticky top-0 z-50 h-[56px] md:h-[76px] bg-white transition-all duration-300 border-b border-[#E2E8F0] ${scrolled ? 'shadow-md' : ''}`}>
+      <div className="max-w-[1200px] h-full mx-auto px-4 md:px-6 flex items-center justify-between">
         
         {/* Left: Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="bg-white p-1 rounded-xl flex items-center transition-transform group-hover:scale-105">
+        <Link to="/" className="flex items-center gap-2 md:gap-3 group">
+          <div className="bg-white p-0.5 rounded-lg flex items-center transition-transform group-hover:scale-105">
             <img 
               src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
               alt="Mrmedics - Health Beyond Border" 
-              className="h-10 sm:h-12 w-auto object-contain"
+              className="h-8 sm:h-9 md:h-12 w-auto object-contain"
             />
           </div>
         </Link>
@@ -140,19 +154,21 @@ export default function Navbar({ language, setLanguage }: { language: string; se
           </a>
         </div>
 
-        {/* Mobile Hamburger */}
-        <div className="lg:hidden flex items-center gap-4">
+        {/* Mobile Hamburger & Actions */}
+        <div className="lg:hidden flex items-center gap-2">
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F2F7FF] text-[#0A1A45] text-xs font-bold"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#F2F7FF] text-[#0A1A45] text-xs font-bold min-h-[36px]"
+            aria-label="Toggle language"
           >
-            <Globe className="w-3 h-3 text-[#1769E0]" />
+            <Globe className="w-3.5 h-3.5 text-[#1769E0]" />
             <span>{language}</span>
           </button>
 
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#0A1A45] hover:text-[#1769E0]"
+            className="w-11 h-11 flex items-center justify-center text-[#0A1A45] hover:text-[#1769E0] active:scale-95 transition-all rounded-lg"
+            aria-label="Open menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -168,38 +184,38 @@ export default function Navbar({ language, setLanguage }: { language: string; se
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-top top-[76px] left-0 w-full h-[calc(100vh-76px)] bg-white z-50 p-6 flex flex-col justify-between overflow-y-auto lg:hidden shadow-2xl"
+            className="fixed inset-top top-[56px] md:top-[76px] left-0 w-full h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] bg-white z-50 p-5 flex flex-col justify-between overflow-y-auto lg:hidden shadow-2xl pb-safe"
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
                 <div className="bg-white p-1 rounded-xl">
                   <img 
                     src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
                     alt="Mrmedics Logo" 
-                    className="h-9 sm:h-10 w-auto object-contain"
+                    className="h-8 w-auto object-contain"
                   />
                 </div>
                 <span className="text-[11px] font-bold text-slate-400">Health Beyond Border</span>
               </div>
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-[#0A1A45] py-2 border-b border-slate-100">Home</Link>
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Home</Link>
               <div className="py-2 border-b border-slate-100">
-                <span className="text-xs font-bold text-[#1769E0] uppercase tracking-wider block mb-2">Services</span>
-                <div className="grid gap-2 pl-2">
+                <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block mb-1">Services</span>
+                <div className="grid gap-1 pl-2">
                   {servicesList.map((s, idx) => (
-                    <Link key={idx} to={s.path} onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-[#0A1A45] py-1">{s.title}</Link>
+                    <Link key={idx} to={s.path} onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-[#0A1A45] min-h-[44px] flex items-center active:text-[#1769E0]">{s.title}</Link>
                   ))}
                 </div>
               </div>
-              <Link to="/lab-tests" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-[#0A1A45] py-2 border-b border-slate-100">Lab Tests</Link>
-              <Link to="/doctors" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-[#0A1A45] py-2 border-b border-slate-100">Doctors</Link>
-              <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-[#0A1A45] py-2 border-b border-slate-100">How It Works</Link>
-              <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-[#0A1A45] py-2 border-b border-slate-100">About Us</Link>
-              <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-[#0A1A45] py-2 border-b border-slate-100">Contact Us</Link>
+              <Link to="/lab-tests" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Lab Tests</Link>
+              <Link to="/doctors" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Doctors</Link>
+              <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">How It Works</Link>
+              <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">About Us</Link>
+              <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Contact Us</Link>
             </div>
 
-            <div className="pt-6 border-t border-slate-100 flex flex-col gap-3">
-              <a href={`${config.APP_URL}/login`} className="w-full py-3 text-center text-base font-bold text-[#0A1A45] rounded-xl bg-slate-50">Login</a>
-              <a href={`${config.APP_URL}/signup`} className="w-full py-3 text-center text-base font-bold text-white rounded-xl health-gradient shadow-md">Get Started</a>
+            <div className="pt-4 border-t border-slate-100 flex flex-col gap-2.5 mt-auto">
+              <a href={`${config.APP_URL}/login`} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-[#0A1A45] rounded-xl bg-slate-50 border border-slate-200 active:scale-98">Login</a>
+              <a href={`${config.APP_URL}/signup`} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-white rounded-xl health-gradient shadow-md active:scale-98">Get Started</a>
             </div>
           </motion.div>
         )}

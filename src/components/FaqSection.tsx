@@ -176,10 +176,8 @@ export default function FaqSection({
 }: FaqSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<FaqCategory>(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
-  const [openItems, setOpenItems] = useState<Record<string, boolean>>({
-    'consult-1': true,
-    'pharm-1': true
-  });
+  const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  const [showMore, setShowMore] = useState(false);
   const [feedbackState, setFeedbackState] = useState<Record<string, 'helpful' | 'unhelpful'>>({});
 
   const categories: { id: FaqCategory; label: string; icon: any; count: number }[] = useMemo(() => [
@@ -206,6 +204,10 @@ export default function FaqSection({
     });
   }, [selectedCategory, searchQuery]);
 
+  const displayedFaqs = useMemo(() => {
+    return showMore || searchQuery ? filteredFaqs : filteredFaqs.slice(0, 5);
+  }, [filteredFaqs, showMore, searchQuery]);
+
   const toggleItem = (id: string) => {
     setOpenItems(prev => ({
       ...prev,
@@ -215,7 +217,7 @@ export default function FaqSection({
 
   const handleExpandAll = () => {
     const allOpen: Record<string, boolean> = {};
-    filteredFaqs.forEach(item => {
+    displayedFaqs.forEach(item => {
       allOpen[item.id] = true;
     });
     setOpenItems(allOpen);
@@ -225,30 +227,32 @@ export default function FaqSection({
     setOpenItems({});
   };
 
-  const areAllExpanded = filteredFaqs.length > 0 && filteredFaqs.every(item => openItems[item.id]);
+  const areAllExpanded = displayedFaqs.length > 0 && displayedFaqs.every(item => openItems[item.id]);
 
   const handleFeedback = (id: string, type: 'helpful' | 'unhelpful') => {
     setFeedbackState(prev => ({ ...prev, [id]: type }));
   };
 
   return (
-    <section className={`py-20 md:py-24 bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] relative overflow-hidden ${className}`}>
+    <section className={`py-10 md:py-24 bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] relative overflow-hidden ${className}`}>
       {/* Background Decorative Rings */}
-      <div className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="hidden md:block absolute top-1/4 -left-48 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="hidden md:block absolute bottom-1/4 -right-48 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-[960px] mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[960px] mx-auto px-4 md:px-6 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center mb-10 md:mb-14">
-          <AnimatedBadge icon={HelpCircle} className="bg-blue-100/80 text-[#1769E0] mb-4">
-            Patient Help Center & FAQs
-          </AnimatedBadge>
+        <div className="text-center mb-6 md:mb-14">
+          <div className="hidden sm:block">
+            <AnimatedBadge icon={HelpCircle} className="bg-blue-100/80 text-[#1769E0] mb-3">
+              Patient Help Center & FAQs
+            </AnimatedBadge>
+          </div>
           
           <AnimatedHeading 
             text={title}
             highlightWords={["Frequently", "Questions", "Doctor", "Pharmacy"]}
-            className="text-[30px] sm:text-[40px] font-extrabold text-[#0A1A45] mb-4 leading-tight tracking-tight"
+            className="text-[24px] sm:text-[26px] md:text-[40px] font-extrabold text-[#0A1A45] mb-2 md:mb-4 leading-tight tracking-tight"
             as="h2"
           />
           
@@ -293,23 +297,26 @@ export default function FaqSection({
 
         {/* Category Pills */}
         {showCategories && (
-          <div className="flex items-center justify-center gap-2 mb-8 flex-wrap">
+          <div className="flex items-center gap-2 mb-6 md:mb-8 overflow-x-auto scrollbar-none pb-2 justify-start sm:justify-center -mx-4 px-4 sm:mx-0 sm:px-0">
             {categories.map(cat => {
               const Icon = cat.icon;
               const isActive = selectedCategory === cat.id;
               return (
                 <button
                   key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                  onClick={() => {
+                    setSelectedCategory(cat.id);
+                    setShowMore(false);
+                  }}
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${
                     isActive
-                      ? 'bg-[#1769E0] text-white shadow-md shadow-blue-500/20 scale-105'
-                      : 'bg-white text-slate-600 hover:text-[#0A1A45] border border-slate-200/80 hover:border-blue-300'
+                      ? 'bg-[#1769E0] text-white shadow-md shadow-blue-500/20'
+                      : 'bg-white text-slate-600 hover:text-[#0A1A45] border border-slate-200/80'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                   <span>{cat.label}</span>
-                  <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${
+                  <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full ${
                     isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
                   }`}>
                     {cat.count}
@@ -321,11 +328,11 @@ export default function FaqSection({
         )}
 
         {/* List Header / Controls */}
-        <div className="flex items-center justify-between text-xs text-slate-500 mb-4 px-2">
+        <div className="flex items-center justify-between text-xs text-slate-500 mb-3 px-1">
           <span>
-            Showing <strong className="text-[#0A1A45]">{filteredFaqs.length}</strong> {filteredFaqs.length === 1 ? 'question' : 'questions'}
+            Showing <strong className="text-[#0A1A45]">{displayedFaqs.length}</strong> of {filteredFaqs.length} questions
           </span>
-          {filteredFaqs.length > 0 && (
+          {displayedFaqs.length > 0 && (
             <button
               onClick={areAllExpanded ? handleCollapseAll : handleExpandAll}
               className="text-[#1769E0] font-bold hover:underline transition-colors"
@@ -336,17 +343,17 @@ export default function FaqSection({
         </div>
 
         {/* Accordion List */}
-        <div className="space-y-3.5">
-          {filteredFaqs.map((faq, idx) => {
+        <div className="space-y-2.5 sm:space-y-3.5">
+          {displayedFaqs.map((faq, idx) => {
             const isOpen = !!openItems[faq.id];
             const feedback = feedbackState[faq.id];
 
             return (
               <motion.div 
                 key={faq.id} 
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.04 }}
+                transition={{ duration: 0.25, delay: idx * 0.03 }}
                 className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden shadow-sm ${
                   isOpen 
                     ? 'border-blue-300 ring-2 ring-blue-500/10 shadow-md' 
@@ -357,18 +364,18 @@ export default function FaqSection({
                 <button 
                   onClick={() => toggleItem(faq.id)}
                   aria-expanded={isOpen}
-                  className="w-full p-5 sm:p-6 text-left flex items-start sm:items-center justify-between gap-4 font-bold text-[#0A1A45] text-[15px] sm:text-base hover:text-[#1769E0] transition-colors"
+                  className="w-full p-4 sm:p-6 text-left flex items-start sm:items-center justify-between gap-3 sm:gap-4 font-bold text-[#0A1A45] text-[14px] sm:text-base hover:text-[#1769E0] transition-colors"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 flex-1">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 flex-1">
+                    <div className="flex items-center gap-1.5">
                       {faq.popular && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md border border-amber-200/60 shrink-0">
-                          <Sparkles className="w-3 h-3 text-amber-500" />
+                        <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded-md border border-amber-200/60 shrink-0">
+                          <Sparkles className="w-2.5 h-2.5 text-amber-500" />
                           Popular
                         </span>
                       )}
                       {faq.badge && (
-                        <span className="text-[11px] font-semibold text-[#1769E0] bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100 shrink-0">
+                        <span className="text-[10px] sm:text-[11px] font-semibold text-[#1769E0] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 shrink-0">
                           {faq.badge}
                         </span>
                       )}
@@ -381,7 +388,7 @@ export default function FaqSection({
                     transition={{ duration: 0.25 }}
                     className="p-1 rounded-full bg-slate-50 text-[#1769E0] shrink-0 mt-0.5 sm:mt-0"
                   >
-                    <ChevronDown className="w-5 h-5" />
+                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
                   </motion.div>
                 </button>
 
@@ -393,34 +400,34 @@ export default function FaqSection({
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.28, ease: "easeInOut" }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
                     >
-                      <div className="px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100">
-                        <p className="text-[14px] sm:text-[15px] text-[#475569] leading-relaxed font-normal">
+                      <div className="px-4 sm:px-6 pb-4 sm:pb-6 pt-1 sm:pt-2 border-t border-slate-100">
+                        <p className="text-xs sm:text-[15px] text-[#475569] leading-relaxed font-normal">
                           {faq.answer}
                         </p>
 
                         {/* Interactive Helpful Poll */}
-                        <div className="mt-4 pt-3 border-t border-slate-100/80 flex items-center justify-between text-xs text-slate-400">
+                        <div className="mt-3 pt-2.5 border-t border-slate-100/80 flex items-center justify-between text-[11px] sm:text-xs text-slate-400">
                           <span className="text-slate-500">Was this answer helpful?</span>
                           {feedback ? (
                             <span className="text-emerald-600 font-semibold flex items-center gap-1">
                               ✓ Thanks for your feedback!
                             </span>
                           ) : (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
                               <button
                                 onClick={() => handleFeedback(faq.id, 'helpful')}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
                               >
-                                <ThumbsUp className="w-3.5 h-3.5" />
+                                <ThumbsUp className="w-3 h-3" />
                                 <span>Yes</span>
                               </button>
                               <button
                                 onClick={() => handleFeedback(faq.id, 'unhelpful')}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-rose-400 hover:text-rose-700 hover:bg-rose-50 transition-colors"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-slate-200 hover:border-rose-400 hover:text-rose-700 hover:bg-rose-50 transition-colors"
                               >
-                                <ThumbsDown className="w-3.5 h-3.5" />
+                                <ThumbsDown className="w-3 h-3" />
                                 <span>No</span>
                               </button>
                             </div>
@@ -435,12 +442,24 @@ export default function FaqSection({
             );
           })}
 
+          {/* Show More Questions Toggle */}
+          {!showMore && !searchQuery && filteredFaqs.length > 5 && (
+            <div className="text-center pt-3">
+              <button
+                onClick={() => setShowMore(true)}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border border-blue-200 text-[#1769E0] font-bold text-xs sm:text-sm hover:bg-blue-50 transition-all shadow-sm"
+              >
+                Show More Questions ({filteredFaqs.length - 5} more)
+              </button>
+            </div>
+          )}
+
           {/* Empty Search Fallback */}
           {filteredFaqs.length === 0 && (
-            <div className="text-center py-12 px-6 bg-white rounded-2xl border border-dashed border-slate-300">
-              <HelpCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <h3 className="text-base font-bold text-[#0A1A45] mb-1">No matching questions found</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto mb-5">
+            <div className="text-center py-10 px-4 bg-white rounded-2xl border border-dashed border-slate-300">
+              <HelpCircle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <h3 className="text-sm sm:text-base font-bold text-[#0A1A45] mb-1">No matching questions found</h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto mb-4">
                 We couldn&apos;t find any FAQs matching &ldquo;{searchQuery}&rdquo;. Try another keyword or reach out directly to our 24/7 care team.
               </p>
               <div className="flex items-center justify-center gap-3">
@@ -465,12 +484,12 @@ export default function FaqSection({
         </div>
 
         {/* Bottom Support Callout Card */}
-        <div className="mt-12 p-6 sm:p-8 bg-gradient-to-r from-[#0A1A45] to-[#0E2E72] rounded-3xl text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mt-8 sm:mt-12 p-5 sm:p-8 bg-gradient-to-r from-[#0A1A45] to-[#0E2E72] rounded-2xl sm:rounded-3xl text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6">
           <div>
-            <span className="text-xs font-bold tracking-wider uppercase text-blue-300 mb-1 block">
+            <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-blue-300 mb-1 block">
               Still have questions?
             </span>
-            <h4 className="text-lg sm:text-xl font-bold text-white mb-2">
+            <h4 className="text-base sm:text-xl font-bold text-white mb-1.5 sm:mb-2">
               Speak directly with our Medical Care Coordinator
             </h4>
             <p className="text-xs sm:text-sm text-blue-100/90 max-w-lg leading-relaxed">
@@ -478,12 +497,12 @@ export default function FaqSection({
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
             <a
               href="https://wa.me/919311601420?text=Hello%20Mrmedics,%20I%20need%20assistance%20with%20doctor%20consultation%20or%20medicine%20delivery"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-950/20 hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm transition-all shadow-md active:scale-95"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Support</span>
@@ -491,15 +510,15 @@ export default function FaqSection({
 
             <a
               href="tel:+919311601420"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all active:scale-95"
             >
               <PhoneCall className="w-4 h-4 text-blue-300" />
               <span>+91 9311601420</span>
             </a>
-          </div>
         </div>
-
       </div>
-    </section>
-  );
+
+    </div>
+  </section>
+);
 }

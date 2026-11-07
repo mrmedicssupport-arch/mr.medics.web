@@ -4,90 +4,81 @@ import { AnimatedHeading, AnimatedParagraph, AnimatedBadge } from './AnimatedTyp
 
 export default function FounderSection() {
   return (
-    <section className="py-[96px] bg-white">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section className="py-10 md:py-[96px] bg-white">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="bg-[#F2F7FF] rounded-3xl p-8 sm:p-14 border border-blue-100 shadow-xl grid lg:grid-cols-12 gap-12 items-center"
+          transition={{ duration: 0.5 }}
+          className="bg-[#F2F7FF] rounded-2xl sm:rounded-3xl p-5 sm:p-14 border border-blue-100 shadow-md sm:shadow-xl grid lg:grid-cols-12 gap-6 sm:gap-12 items-center"
         >
           
-          {/* Founder Photo with smooth parallax and floating badge */}
+          {/* Founder Photo - Compact on mobile */}
           <div className="lg:col-span-5 flex justify-center">
-            <motion.div 
-              whileHover={{ scale: 1.03 }}
-              className="relative"
-            >
-              <div className="absolute inset-0 rounded-3xl health-gradient rotate-3 scale-105 opacity-30 blur-sm" />
+            <div className="relative flex items-center gap-4 sm:block">
+              <div className="hidden sm:block absolute inset-0 rounded-3xl health-gradient rotate-3 scale-105 opacity-30 blur-sm" />
               <img 
                 src="/assets/aistudio/WhatsApp_Image_2026-10-18_at_5.30.08_PM_d24be501.jpeg" 
                 alt="Praveen Verma - Founder & CEO" 
-                className="relative z-10 w-[300px] sm:w-[340px] h-[400px] object-cover rounded-3xl shadow-2xl border-4 border-white"
+                className="relative z-10 w-24 h-24 sm:w-[300px] sm:h-[400px] object-cover rounded-2xl sm:rounded-3xl shadow-md sm:shadow-2xl border-2 sm:border-4 border-white shrink-0"
               />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="absolute -bottom-4 -right-4 z-20 bg-white py-2.5 px-4 rounded-2xl shadow-xl border border-blue-50 flex items-center gap-2"
-              >
+              <div className="sm:hidden">
+                <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block">Leadership</span>
+                <h3 className="text-base font-extrabold text-[#0A1A45]">Praveen Verma</h3>
+                <p className="text-xs text-[#475569]">Founder & CEO, Mrmedics</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="text-[10px] font-bold text-[#0A1A45]">Active Visionary</span>
+                </div>
+              </div>
+
+              <div className="hidden sm:flex absolute -bottom-4 -right-4 z-20 bg-white py-2.5 px-4 rounded-2xl shadow-xl border border-blue-50 items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-emerald-500 animate-ping" />
                 <span className="text-xs font-bold text-[#0A1A45]">Active Visionary</span>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
 
           {/* Founder Bio */}
           <div className="lg:col-span-7 flex flex-col items-start">
-            <AnimatedBadge icon={Award} className="bg-blue-50 text-[#1769E0] mb-6">
-              Leadership & Vision
-            </AnimatedBadge>
+            <div className="hidden sm:block">
+              <AnimatedBadge icon={Award} className="bg-blue-50 text-[#1769E0] mb-4">
+                Leadership & Vision
+              </AnimatedBadge>
+            </div>
 
-            <h2 className="text-[32px] sm:text-[40px] font-extrabold text-[#0A1A45] mb-2 leading-tight">
+            <h2 className="text-[22px] sm:text-[26px] md:text-[40px] font-extrabold text-[#0A1A45] mb-2 leading-tight">
               <AnimatedHeading 
                 text="Meet Our Founder & CEO"
                 highlightWords={["Founder", "CEO"]}
                 as="span"
               />
             </h2>
-            <motion.h3 
-              initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="text-xl font-extrabold text-[#1769E0] mb-6"
-            >
+            <div className="hidden sm:block text-xl font-extrabold text-[#1769E0] mb-4">
               Praveen Verma
-            </motion.h3>
-
-            <div className="relative mb-8 text-[#475569] text-base leading-relaxed space-y-4">
-              <Quote className="w-10 h-10 text-blue-200 absolute -top-4 -left-6 -z-10 opacity-60" />
-              <AnimatedParagraph delay={0.25}>
-                "Our mission at Mrmedics is to bridge the healthcare accessibility gap in India by bringing NMC-registered doctors, NABL diagnostics, and licensed pharmacies onto one secure, seamless platform."
-              </AnimatedParagraph>
-              <AnimatedParagraph delay={0.35}>
-                Headquartered in A Block, Noida Sector 62 Industrial Area, Uttar Pradesh, we are committed to upholding the highest standards of trust, data privacy, and affordable patient care under our motto <strong>'Health Beyond Border'</strong>.
-              </AnimatedParagraph>
             </div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.45 }}
-              className="flex flex-wrap items-center gap-6 pt-6 border-t border-slate-200 w-full"
-            >
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-[#1769E0]" />
-                <span className="text-sm font-semibold text-[#0A1A45]">Noida Sector 62, UP</span>
+            <div className="relative mb-4 sm:mb-6 text-[#475569] text-xs sm:text-base leading-relaxed space-y-2 sm:space-y-4">
+              <Quote className="hidden sm:block w-8 h-8 text-blue-200 absolute -top-4 -left-6 -z-10 opacity-60" />
+              <p>
+                "Our mission at Mrmedics is to bridge the healthcare accessibility gap in India by bringing NMC-registered doctors, NABL diagnostics, and licensed pharmacies onto one secure, seamless platform."
+              </p>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Headquartered in A Block, Noida Sector 62 Industrial Area, UP, under our motto <strong>'Health Beyond Border'</strong>.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 sm:pt-6 border-t border-slate-200 w-full text-xs sm:text-sm">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <MapPin className="w-4 h-4 text-[#1769E0]" />
+                <span className="font-semibold text-[#0A1A45]">Noida Sector 62, UP</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#0FB5A0] animate-pulse" />
-                <span className="text-sm font-semibold text-[#0A1A45]">Verified Enterprise</span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#0FB5A0] animate-pulse" />
+                <span className="font-semibold text-[#0A1A45]">Verified Enterprise</span>
               </div>
-            </motion.div>
+            </div>
 
           </div>
 
