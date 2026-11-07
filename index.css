@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --color-navy: #0A1A45;
+  --color-slate: #475569;
+  --color-blue: #1769E0;
+  --color-teal: #0FB5A0;
+  --color-soft-bg: #F2F7FF;
+}
+
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #FFFFFF;
+  color: #475569;
+  min-height: 100svh;
+}
+
+/* Prevent auto-zoom on iOS when tapping form fields */
+input, select, textarea {
+  font-size: 16px;
+  touch-action: manipulation;
+}
+
+button, a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: #0A1A45;
+}
+
+.health-gradient {
+  background: linear-gradient(135deg, #1769E0, #0FB5A0);
+}
+
+.health-gradient-text {
+  background: linear-gradient(135deg, #1769E0, #0FB5A0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hide scrollbar for mobile swipeable carousels */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area padding utilities */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 16px);
+}
+
+/* Touch device adjustments */
+@media (pointer: coarse) {
+  .hover-elevate {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
