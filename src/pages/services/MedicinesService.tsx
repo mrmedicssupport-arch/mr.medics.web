@@ -116,8 +116,8 @@ Please verify prescription and confirm my medicine delivery.`;
   return (
     <div className="bg-white">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-20 border-b border-blue-50">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-blue-50">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <AnimatedBadge className="bg-emerald-50 text-[#0FB5A0] mb-5 border border-emerald-100" icon={ShieldCheck}>
               100% Genuine Certified Pharmacy
@@ -126,13 +126,13 @@ Please verify prescription and confirm my medicine delivery.`;
             <AnimatedHeading
               text="Online Pharmacy With Fast Doorstep Delivery & Verified Prescriptions"
               highlightWords={["Online", "Pharmacy", "Doorstep", "Delivery", "Verified"]}
-              className="text-[38px] sm:text-[50px] font-extrabold text-[#0A1A45] mb-6 leading-[1.15]"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A1A45] mb-6 leading-[1.15]"
               as="h1"
             />
 
             <AnimatedParagraph
               delay={0.2}
-              className="text-lg text-[#475569] mb-8 leading-relaxed max-w-xl"
+              className="text-base text-[#475569] mb-8 leading-relaxed max-w-xl"
             >
               Order all chronic and acute medications with licensed pharmacist verification. Enjoy up to 20% savings, tamper-proof temperature-controlled delivery, and auto-refill reminders.
             </AnimatedParagraph>
@@ -149,14 +149,14 @@ Please verify prescription and confirm my medicine delivery.`;
             </FadeInBlock>
           </div>
 
-          <div className="h-[380px] w-full hidden sm:block relative">
+          <div className="h-[380px] w-full hidden lg:block relative">
             <Hero3D />
           </div>
         </div>
       </section>
 
       {/* Catalogue & Prescription Upload */}
-      <section className="py-16 max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           
           {/* Catalogue */}

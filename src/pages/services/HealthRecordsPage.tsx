@@ -67,14 +67,14 @@ export default function HealthRecordsPage() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-12 md:py-20 border-b border-blue-50">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-blue-50">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <AnimatedBadge className="bg-emerald-50 text-[#0FB5A0] mb-4 border border-emerald-100" icon={Lock}>
               256-Bit Encrypted Medical Vault
             </AnimatedBadge>
 
-            <h1 className="text-[30px] sm:text-[40px] md:text-[52px] font-extrabold text-[#0A1A45] mb-4 md:mb-6 leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A1A45] mb-4 md:mb-6 leading-tight">
               <AnimatedHeading
                 text="Secure Digital Health Records for You & Your Family"
                 highlightWords={["Secure", "Digital", "Health", "Records"]}
@@ -126,7 +126,7 @@ export default function HealthRecordsPage() {
       </section>
 
       {/* Feature Pillars */}
-      <section className="py-12 md:py-20 max-w-[1200px] mx-auto px-4 sm:px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-10 md:mb-16">
           <AnimatedBadge icon={ShieldCheck} className="bg-blue-50 text-[#1769E0] mb-3 text-xs">
             Patient Data Privacy
@@ -160,8 +160,8 @@ export default function HealthRecordsPage() {
       </section>
 
       {/* How it Works Workflow */}
-      <section className="py-12 md:py-20 bg-slate-50 border-t border-b border-slate-100">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <section className="py-8 sm:py-12 lg:py-16 bg-slate-50 border-t border-b border-slate-100">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0A1A45] mb-3">
               How Your Records Stay Safe

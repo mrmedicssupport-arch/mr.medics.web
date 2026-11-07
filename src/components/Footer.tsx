@@ -4,8 +4,8 @@ import { config } from '../config';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0A1A45] text-[#CBD5E1] pt-10 md:pt-20 pb-8 md:pb-12">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <footer className="bg-[#0A1A45] text-[#CBD5E1] pt-8 sm:pt-12 lg:pt-16 pb-8 sm:pb-12 lg:pb-16">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12 pb-10 md:pb-16 border-b border-slate-800">
@@ -27,7 +27,7 @@ export default function Footer() {
             <div className="flex flex-wrap gap-2.5 mb-4">
               <a 
                 href={`tel:${config.PHONE}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-xs text-white font-medium border border-slate-700 transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-white font-medium border border-slate-600 transition"
               >
                 <Phone className="w-3.5 h-3.5 text-[#1769E0]" />
                 <span>Call: {config.PHONE}</span>
@@ -43,9 +43,9 @@ export default function Footer() {
               </a>
             </div>
 
-            <p className="text-xs text-slate-400 mb-1">Founder & CEO: Praveen Verma</p>
-            <p className="text-xs text-slate-400 flex items-start gap-1">
-              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+            <p className="text-xs text-[#CBD5E1] mb-1">Founder & CEO: Praveen Verma</p>
+            <p className="text-xs text-[#CBD5E1] flex items-start gap-1">
+              <MapPin className="w-3.5 h-3.5 text-[#94A3B8] shrink-0 mt-0.5" />
               <span>Location: {config.ADDRESS}</span>
             </p>
           </div>

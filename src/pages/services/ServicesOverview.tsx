@@ -81,8 +81,8 @@ export default function ServicesOverview() {
   return (
     <div className="bg-white">
       {/* Hero with DNA Helix background */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-20 border-b border-blue-50">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-blue-50">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="relative z-10">
             <AnimatedBadge className="bg-blue-100/80 text-[#1769E0] mb-5" icon={Zap}>
               Complete Healthcare Ecosystem
@@ -91,13 +91,13 @@ export default function ServicesOverview() {
             <AnimatedHeading
               text="Explore Our Full Spectrum of Clinical Services"
               highlightWords={["Full", "Spectrum", "Clinical", "Services"]}
-              className="text-[40px] sm:text-[52px] font-extrabold text-[#0A1A45] mb-6 leading-[1.15]"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A1A45] mb-6 leading-[1.15]"
               as="h1"
             />
 
             <AnimatedParagraph
               delay={0.2}
-              className="text-lg text-[#475569] leading-relaxed mb-8 max-w-xl"
+              className="text-base text-[#475569] leading-relaxed mb-8 max-w-xl"
             >
               From prompt doctor consultations and NABL diagnostics to doorstep medicine delivery and AI guidance — Mr Medics unifies every health requirement into a single, intuitive patient platform.
             </AnimatedParagraph>
@@ -120,7 +120,7 @@ export default function ServicesOverview() {
             </FadeInBlock>
           </div>
 
-          <div className="h-[380px] w-full hidden sm:block relative">
+          <div className="h-[380px] w-full hidden lg:block relative">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-50/50 to-transparent pointer-events-none" />
             <Hero3D />
           </div>
@@ -128,8 +128,8 @@ export default function ServicesOverview() {
       </section>
 
       {/* Metrics Strip */}
-      <section className="py-12 bg-white border-b border-slate-100">
-        <div className="max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white border-b border-slate-100">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {highlights.map((h, i) => {
               const Icon = h.icon;
@@ -156,7 +156,7 @@ export default function ServicesOverview() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-[80px] max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <AnimatedBadge className="bg-emerald-50 text-[#0FB5A0] mb-3" icon={ShieldCheck}>
             Patient-Centric Care
@@ -164,7 +164,7 @@ export default function ServicesOverview() {
           <AnimatedHeading
             text="Choose What You Need Today"
             highlightWords={["Need", "Today"]}
-            className="text-3xl sm:text-4xl font-extrabold text-[#0A1A45] mb-4"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A1A45] mb-4"
           />
           <AnimatedParagraph className="text-base text-[#475569]">
             Click any service to view comprehensive features, instant pricing, and seamless one-tap booking.
@@ -223,8 +223,8 @@ export default function ServicesOverview() {
       </section>
 
       {/* Assurance Section */}
-      <section className="py-16 bg-gradient-to-b from-[#F2F7FF] to-white border-t border-blue-100/60">
-        <div className="max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-[#F2F7FF] to-white border-t border-blue-100/60">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white p-8 sm:p-12 rounded-3xl border border-blue-100 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="max-w-xl">
               <span className="text-xs font-extrabold tracking-wider uppercase text-[#1769E0] mb-2 block">

@@ -235,12 +235,12 @@ export default function FaqSection({
   };
 
   return (
-    <section className={`py-10 md:py-24 bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] relative overflow-hidden ${className}`}>
+    <section className={`py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] relative overflow-hidden ${className}`}>
       {/* Background Decorative Rings */}
       <div className="hidden md:block absolute top-1/4 -left-48 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
       <div className="hidden md:block absolute bottom-1/4 -right-48 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-[960px] mx-auto px-4 md:px-6 relative z-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center mb-6 md:mb-14">

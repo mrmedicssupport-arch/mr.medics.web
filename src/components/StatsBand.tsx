@@ -6,12 +6,12 @@ export default function StatsBand() {
   const stats = platformStats;
 
   return (
-    <section className="bg-[#0A1A45] py-8 md:py-20 text-white relative overflow-hidden">
+    <section className="bg-[#0A1A45] py-8 sm:py-12 lg:py-16 text-white relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="hidden md:block absolute top-0 left-1/4 w-[300px] h-[300px] bg-blue-600/10 blur-[100px] pointer-events-none" />
       <div className="hidden md:block absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-teal-500/10 blur-[100px] pointer-events-none" />
 
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-10 text-center relative z-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-10 text-center relative z-10">
         {stats.map((stat, idx) => (
           <div 
             key={idx} 

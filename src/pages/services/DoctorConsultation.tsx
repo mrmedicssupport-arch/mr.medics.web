@@ -92,8 +92,8 @@ Please confirm doctor availability.`;
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-20 border-b border-blue-50">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-blue-50">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <AnimatedBadge className="bg-blue-100/80 text-[#1769E0] mb-5" icon={UserCheck}>
               Verified NMC-Registered Specialists
@@ -102,13 +102,13 @@ Please confirm doctor availability.`;
             <AnimatedHeading
               text="Instant Online Doctor Consultation & Digital Prescriptions"
               highlightWords={["Online", "Doctor", "Consultation", "Digital", "Prescriptions"]}
-              className="text-[38px] sm:text-[50px] font-extrabold text-[#0A1A45] mb-6 leading-[1.15]"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A1A45] mb-6 leading-[1.15]"
               as="h1"
             />
 
             <AnimatedParagraph
               delay={0.2}
-              className="text-lg text-[#475569] mb-8 leading-relaxed max-w-xl"
+              className="text-base text-[#475569] mb-8 leading-relaxed max-w-xl"
             >
               Consult India's top doctors across 50+ medical specialties within 15 minutes. Secure end-to-end encrypted consultations with downloadable digital prescriptions.
             </AnimatedParagraph>
@@ -141,14 +141,14 @@ Please confirm doctor availability.`;
             </FadeInBlock>
           </div>
 
-          <div className="h-[380px] w-full hidden sm:block relative">
+          <div className="h-[380px] w-full hidden lg:block relative">
             <HeartPulse3D />
           </div>
         </div>
       </section>
 
       {/* Main Consultation Section */}
-      <section className="py-16 max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           
           {/* Doctors Listing */}

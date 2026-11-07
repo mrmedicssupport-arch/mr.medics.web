@@ -5,8 +5,8 @@ import { AnimatedHeading, AnimatedParagraph, AnimatedBadge } from './AnimatedTyp
 
 export default function AppDownloadSection() {
   return (
-    <section className="py-10 md:py-[96px] bg-white overflow-hidden">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+    <section className="py-8 sm:py-12 lg:py-16 bg-white overflow-hidden">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="health-gradient rounded-2xl sm:rounded-3xl p-6 sm:p-14 text-white grid lg:grid-cols-2 gap-6 sm:gap-10 items-center shadow-xl sm:shadow-2xl relative">
           
           <div className="relative z-10">

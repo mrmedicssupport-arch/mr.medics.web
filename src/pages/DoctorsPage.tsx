@@ -28,8 +28,8 @@ export default function DoctorsPage() {
     <div className="bg-white">
       
       {/* Hero Section with animated text and beating heart 3D */}
-      <section className="bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 md:py-16 border-b border-slate-100 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <section className="bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-slate-100 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <AnimatedBadge icon={ShieldCheck} className="bg-blue-50 text-[#1769E0] mb-3 text-xs">
               NMC-Registered Medical Specialists
@@ -69,7 +69,7 @@ export default function DoctorsPage() {
 
       {/* Search & Filter Bar - Sticky */}
       <section className="py-4 md:py-8 bg-[#F2F7FF] border-b border-slate-200/60 sticky top-14 md:top-[76px] z-30 backdrop-blur-md bg-[#F2F7FF]/95">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-stretch md:items-center justify-between">
             
             {/* Search Input */}
@@ -106,7 +106,7 @@ export default function DoctorsPage() {
       </section>
 
       {/* Doctors List */}
-      <section className="py-8 md:py-16 max-w-[1200px] mx-auto px-4 sm:px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Mobile View: Single-column compact card */}
         <div className="md:hidden space-y-3">

@@ -67,13 +67,13 @@ I have an inquiry from the website:
     <div className="bg-white">
       
       {/* Hero Header with 3D CrossPulse */}
-      <section className="bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-16 border-b border-slate-100 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-slate-100 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <AnimatedBadge icon={Headphones} className="bg-blue-50 text-[#1769E0] mb-4">
               24/7 Patient Support
             </AnimatedBadge>
-            <h1 className="text-[40px] sm:text-[50px] font-extrabold text-[#0A1A45] mb-4 leading-tight">
+            <h1 className="text-[32px] sm:text-[40px] font-extrabold text-[#0A1A45] mb-4 leading-tight">
               <AnimatedHeading 
                 text="Get in Touch with Mr Medics Support"
                 highlightWords={["Mr", "Medics", "Support"]}
@@ -81,18 +81,18 @@ I have an inquiry from the website:
                 as="span"
               />
             </h1>
-            <AnimatedParagraph className="text-lg text-[#475569] leading-relaxed">
+            <AnimatedParagraph className="text-base text-[#475569] leading-relaxed">
               Have questions about doctor consultations, lab tests, or pharmacy orders? Reach out to our dedicated support team in A Block, Noida Sector 62 Industrial Area.
             </AnimatedParagraph>
           </div>
-          <div className="h-[350px] w-full hidden sm:block">
+          <div className="h-[350px] w-full hidden lg:block">
             <CrossPulse3D />
           </div>
         </div>
       </section>
 
       {/* Contact Content Grid */}
-      <section className="py-16 max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           
           {/* Info Column */}

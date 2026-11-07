@@ -60,13 +60,13 @@ export default function HowItWorksPage() {
     <div className="bg-white">
       
       {/* Hero with Animated Typography & 3D DNA Helix */}
-      <section className="bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-16 border-b border-slate-100 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-slate-100 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <AnimatedBadge icon={Sparkles} className="bg-blue-50 text-[#1769E0] mb-4">
               Our Vision & Operational Excellence
             </AnimatedBadge>
-            <h1 className="text-[40px] sm:text-[50px] font-extrabold text-[#0A1A45] mb-6 leading-tight">
+            <h1 className="text-[32px] sm:text-[40px] font-extrabold text-[#0A1A45] mb-6 leading-tight">
               <AnimatedHeading 
                 text="How Mr Medics Delivers Superior Healthcare"
                 highlightWords={["Mr Medics", "Superior"]}
@@ -74,7 +74,7 @@ export default function HowItWorksPage() {
                 as="span"
               />
             </h1>
-            <AnimatedParagraph className="text-lg text-[#475569] mb-8 leading-relaxed font-normal">
+            <AnimatedParagraph className="text-base text-[#475569] mb-8 leading-relaxed font-normal">
               We are on a mission to redefine digital healthcare under our motto <strong className="text-[#0A1A45]">"Health Beyond Border"</strong> — connecting patients with verified medical excellence and effortless home care.
             </AnimatedParagraph>
             <div className="flex items-center gap-3 p-1.5 bg-slate-100 rounded-2xl w-fit">
@@ -96,15 +96,15 @@ export default function HowItWorksPage() {
               </motion.button>
             </div>
           </div>
-          <div className="h-[350px] w-full hidden sm:block">
+          <div className="h-[350px] w-full hidden lg:block">
             <Hero3D />
           </div>
         </div>
       </section>
 
       {/* Vision & Philosophy Section */}
-      <section className="py-20 bg-white border-b border-slate-100">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white border-b border-slate-100">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <AnimatedHeading 
               text="Why Patients Trust Mr Medics"
@@ -166,7 +166,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Steps Content with Stagger & Animation */}
-      <section className="py-[96px] max-w-[1200px] mx-auto px-6">
+      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <AnimatedHeading 
             text={activeTab === 'patient' ? "The 4-Step Patient Journey" : "3-Step Partner Verification"}

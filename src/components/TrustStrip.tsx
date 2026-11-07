@@ -10,8 +10,8 @@ export default function TrustStrip() {
   ];
 
   return (
-    <section className="bg-white py-6 md:py-16 border-b border-slate-100 overflow-hidden">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+    <section className="bg-white py-8 sm:py-12 lg:py-16 border-b border-slate-100 overflow-hidden">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
         {items.map((item, idx) => {
           const Icon = item.icon;
           return (
@@ -31,7 +31,7 @@ export default function TrustStrip() {
                 <h4 className="text-xs sm:text-sm font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors truncate sm:whitespace-normal">
                   {item.title}
                 </h4>
-                <p className="text-[10px] sm:text-xs text-[#475569] truncate sm:whitespace-normal">{item.desc}</p>
+                <p className="text-xs text-[#475569] truncate sm:whitespace-normal">{item.desc}</p>
               </div>
             </motion.div>
           );

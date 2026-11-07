@@ -9,7 +9,7 @@ export default function Hero({ language }: { language: string }) {
   const t = i18n[language as keyof typeof i18n];
 
   return (
-    <section className="relative min-h-[calc(100svh-56px)] md:min-h-[calc(100vh-76px)] bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] overflow-hidden flex items-center py-6 sm:py-10 md:py-16">
+    <section className="relative min-h-[calc(100svh-56px)] md:min-h-0 lg:min-h-[min(calc(100vh-76px),720px)] bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] overflow-hidden flex items-center py-8 sm:py-12 lg:py-16">
       
       {/* Background Decorative Pulsing Blurred Circles - Hidden on mobile to save performance */}
       <motion.div 
@@ -23,7 +23,7 @@ export default function Hero({ language }: { language: string }) {
         className="hidden md:block absolute bottom-10 right-[-100px] w-[500px] h-[500px] rounded-full bg-teal-400/15 blur-[130px] pointer-events-none" 
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 w-full grid lg:grid-cols-12 gap-6 md:gap-12 items-center relative z-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 w-full grid lg:grid-cols-12 gap-6 md:gap-12 items-center relative z-10">
         
         {/* Left Column (Text & CTAs) */}
         <div className="lg:col-span-7 flex flex-col items-start text-left">
@@ -35,7 +35,7 @@ export default function Hero({ language }: { language: string }) {
 
           {/* Animated H1 Headline with Word Splitting and Gradient Effect */}
           <div className="mb-2 sm:mb-4 md:mb-6">
-            <h1 className="text-[30px] sm:text-[34px] md:text-[52px] lg:text-[64px] font-extrabold text-[#0A1A45] leading-[1.15] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A1A45] leading-[1.15] tracking-tight">
               <AnimatedHeading 
                 text={`${t.heroTitle1} ${t.heroTitle2}`}
                 highlightWords={[t.heroTitle2, "One", "App", "ऐप", "में"]}
