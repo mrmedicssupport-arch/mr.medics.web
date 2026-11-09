@@ -1,6 +1,6 @@
 import { config } from '../config';
 import FounderSection from '../components/FounderSection';
-import StatsBand from '../components/StatsBand';
+import WhyChooseUs from '../components/WhyChooseUs';
 import { ShieldCheck, HeartPulse, Stethoscope, FlaskConical, Pill, CheckCircle2, MapPin, Phone, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -65,8 +65,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Platform Stats */}
-      <StatsBand />
+      {/* Why Choose Us */}
+      <WhyChooseUs />
 
       {/* Founder Section */}
       <FounderSection />
