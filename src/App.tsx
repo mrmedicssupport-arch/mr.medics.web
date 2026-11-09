@@ -8,7 +8,6 @@ import ServicesOverview from './pages/services/ServicesOverview';
 import DoctorConsultation from './pages/services/DoctorConsultation';
 import LabTestsService from './pages/services/LabTestsService';
 import MedicinesService from './pages/services/MedicinesService';
-import AiSymptomCheckerPage from './pages/services/AiSymptomCheckerPage';
 import HealthRecordsPage from './pages/services/HealthRecordsPage';
 
 import DoctorsPage from './pages/DoctorsPage';
@@ -19,6 +18,7 @@ import AboutPage from './pages/AboutPage';
 import FaqPage from './pages/FaqPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
+import RefundPage from './pages/RefundPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AccountPage from './pages/AccountPage';
@@ -48,7 +48,6 @@ export default function App() {
             <Route path="/services/doctor-consultation" element={<DoctorConsultation />} />
             <Route path="/services/lab-tests" element={<LabTestsService />} />
             <Route path="/services/medicines" element={<MedicinesService />} />
-            <Route path="/services/ai-symptom-checker" element={<AiSymptomCheckerPage />} />
             <Route path="/services/health-records" element={<HealthRecordsPage />} />
             
             <Route path="/lab-tests" element={<LabTestsService />} />
@@ -59,6 +58,7 @@ export default function App() {
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/refund" element={<RefundPage />} />
             
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

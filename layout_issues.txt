@@ -1,0 +1,138 @@
+src/pages/services/AiSymptomCheckerPage.tsx:183:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/services/AiSymptomCheckerPage.tsx:219:          <div className="h-[380px] w-full hidden lg:block relative">
+src/pages/services/AiSymptomCheckerPage.tsx:226:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/ServicesOverview.tsx:85:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/services/ServicesOverview.tsx:123:          <div className="h-[380px] w-full hidden lg:block relative">
+src/pages/services/ServicesOverview.tsx:124:            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-50/50 to-transparent pointer-events-none" />
+src/pages/services/ServicesOverview.tsx:132:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/ServicesOverview.tsx:159:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/ServicesOverview.tsx:227:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/HealthRecordsPage.tsx:71:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/HealthRecordsPage.tsx:129:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/HealthRecordsPage.tsx:164:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/MedicinesService.tsx:120:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/services/MedicinesService.tsx:152:          <div className="h-[380px] w-full hidden lg:block relative">
+src/pages/services/MedicinesService.tsx:159:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/MedicinesService.tsx:176:              <div className="relative w-full sm:w-[320px]">
+src/pages/services/MedicinesService.tsx:177:                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+src/pages/services/MedicinesService.tsx:275:                <div className="space-y-3 mb-6 max-h-[220px] overflow-y-auto pr-1">
+src/pages/services/LabTestsService.tsx:117:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/services/LabTestsService.tsx:161:          <div className="h-[380px] w-full hidden lg:block relative">
+src/pages/services/LabTestsService.tsx:168:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/services/LabTestsService.tsx:185:          <div className="relative w-full md:w-[420px]">
+src/pages/services/LabTestsService.tsx:186:            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+src/pages/services/LabTestsService.tsx:276:          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+src/pages/services/LabTestsService.tsx:285:                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition-colors"
+src/pages/services/LabTestsService.tsx:347:                      <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+src/pages/services/LabTestsService.tsx:362:                      <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+src/pages/services/LabTestsService.tsx:378:                      <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+src/pages/services/DoctorConsultation.tsx:123:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/services/DoctorConsultation.tsx:171:          <div className="h-[380px] w-full hidden lg:block relative">
+src/pages/services/DoctorConsultation.tsx:178:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/Signup.tsx:104:    <div className="min-h-[100svh] flex items-center justify-center p-4 bg-[#F2F7FF] relative py-12">
+src/pages/Signup.tsx:187:                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+src/pages/Signup.tsx:225:            className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition min-h-[48px] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 mt-2"
+src/pages/Signup.tsx:233:          <div className="absolute inset-0 flex items-center">
+src/pages/Signup.tsx:243:          className="w-full py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-[#0A1A45] font-semibold text-xs transition flex items-center justify-center gap-2.5 min-h-[46px] cursor-pointer"
+src/pages/FaqPage.tsx:7:    <div className="bg-[#F2F7FF] min-h-screen">
+src/pages/HowItWorksPage.tsx:64:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/HowItWorksPage.tsx:99:          <div className="h-[350px] w-full hidden lg:block">
+src/pages/HowItWorksPage.tsx:107:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+src/pages/HowItWorksPage.tsx:169:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/DoctorsPage.tsx:59:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/DoctorsPage.tsx:76:          <div className="h-[320px] w-full hidden lg:block">
+src/pages/DoctorsPage.tsx:84:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/DoctorsPage.tsx:86:            <div className="relative w-full md:w-[380px]">
+src/pages/DoctorsPage.tsx:87:              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+src/pages/DoctorsPage.tsx:116:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/pages/Login.tsx:92:    <div className="min-h-[100svh] flex items-center justify-center p-4 bg-[#F2F7FF] relative">
+src/pages/Login.tsx:157:                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+src/pages/Login.tsx:167:            className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition min-h-[48px] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+src/pages/Login.tsx:175:          <div className="absolute inset-0 flex items-center">
+src/pages/Login.tsx:185:          className="w-full py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-[#0A1A45] font-semibold text-xs transition flex items-center justify-center gap-2.5 min-h-[46px] cursor-pointer"
+src/pages/Login.tsx:210:        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+src/pages/NotFoundPage.tsx:7:    <div className="min-h-[75vh] flex items-center justify-center px-4 py-16 bg-[#F2F7FF]">
+src/pages/PrivacyPage.tsx:7:    <div className="bg-[#F2F7FF] min-h-screen py-12 px-4 sm:px-6">
+src/pages/TermsPage.tsx:7:    <div className="bg-[#F2F7FF] min-h-screen py-12 px-4 sm:px-6">
+src/pages/AccountPage.tsx:72:      <div className="min-h-[85vh] bg-[#F2F7FF] py-10 px-4 sm:px-6 animate-pulse">
+src/pages/AccountPage.tsx:119:      <div className="min-h-[75vh] flex items-center justify-center px-4 py-16 bg-[#F2F7FF]">
+src/pages/AccountPage.tsx:151:    <div className="min-h-[85vh] bg-[#F2F7FF] py-10 px-4 sm:px-6">
+src/pages/AboutPage.tsx:9:    <div className="bg-[#F2F7FF] min-h-screen">
+src/pages/ContactPage.tsx:71:        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+src/pages/ContactPage.tsx:88:          <div className="h-[350px] w-full hidden lg:block">
+src/pages/ContactPage.tsx:95:      <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/ServicesSection.tsx:33:      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+src/components/ServicesSection.tsx:52:              <div key={idx} className="w-[82vw] sm:w-[320px] md:w-auto shrink-0 snap-start h-full">
+src/components/Layout.tsx:9:    <div className="flex flex-col min-h-[100svh] bg-white text-[#475569] relative">
+src/components/Navbar.tsx:56:    <header className={`sticky top-0 z-50 h-[56px] md:h-[76px] bg-white transition-all duration-300 border-b border-[#E2E8F0] ${scrolled ? 'shadow-md' : ''}`}>
+src/components/Navbar.tsx:57:      <div className="max-w-[1200px] h-full mx-auto px-4 md:px-6 flex items-center justify-between">
+src/components/Navbar.tsx:92:                        className="absolute top-full left-[-80px] w-[360px] bg-white rounded-2xl shadow-xl border border-slate-100 p-3 grid gap-1 z-50"
+src/components/Navbar.tsx:129:                  <span className="absolute bottom-0 left-0 w-full h-[2px] health-gradient rounded-full" />
+src/components/Navbar.tsx:171:                className="h-[44px] px-6 rounded-full health-gradient text-white text-[15px] font-bold shadow-md shadow-blue-500/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center whitespace-nowrap"
+src/components/Navbar.tsx:183:            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#F2F7FF] text-[#0A1A45] text-xs font-bold min-h-[36px]"
+src/components/Navbar.tsx:209:            className="fixed inset-top top-[56px] md:top-[76px] left-0 w-full h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] bg-white z-50 p-5 flex flex-col justify-between overflow-y-auto lg:hidden shadow-2xl pb-safe"
+src/components/Navbar.tsx:222:              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Home</Link>
+src/components/Navbar.tsx:227:                    <Link key={idx} to={s.path} onClick={() => setMobileMenuOpen(false)} className="text-sm font-semibold text-[#0A1A45] min-h-[44px] flex items-center active:text-[#1769E0]">{s.title}</Link>
+src/components/Navbar.tsx:231:              <Link to="/services/lab-tests" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Lab Tests</Link>
+src/components/Navbar.tsx:232:              <Link to="/doctors" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Doctors</Link>
+src/components/Navbar.tsx:233:              <Link to="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">How It Works</Link>
+src/components/Navbar.tsx:234:              <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">About Us</Link>
+src/components/Navbar.tsx:235:              <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">Contact Us</Link>
+src/components/Navbar.tsx:236:              <Link to="/faq" onClick={() => setMobileMenuOpen(false)} className="text-base font-bold text-[#0A1A45] min-h-[48px] flex items-center border-b border-slate-100 active:text-[#1769E0]">FAQs</Link>
+src/components/Navbar.tsx:245:                    className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-[#0A1A45] rounded-xl bg-blue-50 border border-blue-200"
+src/components/Navbar.tsx:251:                    className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-rose-600 rounded-xl bg-rose-50 border border-rose-200"
+src/components/Navbar.tsx:258:                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-[#0A1A45] rounded-xl bg-slate-50 border border-slate-200">
+src/components/Navbar.tsx:261:                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)} className="w-full min-h-[48px] flex items-center justify-center text-center text-sm font-bold text-white rounded-xl health-gradient shadow-md">
+src/components/TrustStrip.tsx:14:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+src/components/HealthPackages.tsx:43:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/HealthPackages.tsx:64:              <div key={pkg.id} className="w-[80vw] sm:w-auto shrink-0 snap-start h-full">
+src/components/HealthPackages.tsx:70:                    <span className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-gradient-to-r from-blue-600 to-teal-500 text-white text-[9px] sm:text-[10px] font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
+src/components/MobileBottomBar.tsx:11:      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(10,26,69,0.08)] pb-safe"
+src/components/MobileBottomBar.tsx:13:      <div className="h-[56px] px-3 flex items-center justify-between gap-2 max-w-md mx-auto">
+src/components/MobileBottomBar.tsx:17:          className="flex-1 min-h-[44px] px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0A1A45] flex items-center justify-center gap-1.5 text-xs font-bold transition-all active:scale-95"
+src/components/MobileBottomBar.tsx:28:          className="flex-1 min-h-[44px] px-2 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] flex items-center justify-center gap-1.5 text-xs font-bold transition-all active:scale-95 border border-[#25D366]/30"
+src/components/MobileBottomBar.tsx:37:          className="flex-[1.4] min-h-[44px] px-3 rounded-xl health-gradient text-white flex items-center justify-center gap-1.5 text-xs font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
+src/components/StatsBand.tsx:11:      <div className="hidden md:block absolute top-0 left-1/4 w-[300px] h-[300px] bg-blue-600/10 blur-[100px] pointer-events-none" />
+src/components/StatsBand.tsx:12:      <div className="hidden md:block absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-teal-500/10 blur-[100px] pointer-events-none" />
+src/components/StatsBand.tsx:14:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-10 text-center relative z-10">
+src/components/Footer.tsx:8:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/AppDownloadSection.tsx:9:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/AppDownloadSection.tsx:82:              className="w-[250px] h-[490px] bg-[#0A1A45] rounded-[38px] p-3 shadow-2xl border-4 border-white/20 relative"
+src/components/SpecialtiesGrid.tsx:23:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/SymptomCheckerTeaser.tsx:22:      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+src/components/SymptomCheckerTeaser.tsx:31:          <div className="hidden sm:block absolute top-0 right-0 w-80 h-80 bg-purple-200/30 rounded-full blur-3xl pointer-events-none" />
+src/components/SymptomCheckerTeaser.tsx:55:                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
+src/components/SymptomCheckerTeaser.tsx:68:                  className="inline-flex items-center justify-center gap-2 h-[48px] px-6 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm shadow-md shadow-purple-600/25 transition active:scale-95 cursor-pointer w-full sm:w-auto"
+src/components/SymptomCheckerTeaser.tsx:76:                  className="inline-flex items-center justify-center gap-2 h-[48px] px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0A1A45] font-bold text-xs transition active:scale-95 w-full sm:w-auto"
+src/components/HowItWorks.tsx:13:      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+src/components/HowItWorks.tsx:36:            className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-[3px] bg-gradient-to-r from-blue-300 via-teal-300 to-blue-300 z-0 origin-left" 
+src/components/HowItWorks.tsx:40:            <div key={idx} className="w-[82vw] sm:w-[320px] md:w-auto shrink-0 snap-start h-full">
+src/components/WhatsappButton.tsx:13:      className="hidden md:flex fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-2xl items-center justify-center hover:scale-110 active:scale-95 transition-all group"
+src/components/WhatsappButton.tsx:16:      <span className="absolute right-full mr-3 bg-white text-[#0A1A45] text-xs font-bold px-3 py-1.5 rounded-xl shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+src/components/CoFoundersSection.tsx:45:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/CoFoundersSection.tsx:78:              <div className="w-[180px] sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[260px] aspect-[4/5] max-h-[320px] bg-white rounded-2xl overflow-hidden shrink-0 mx-auto md:mx-0 relative">
+src/components/CoFoundersSection.tsx:96:                <div style={{ backgroundColor: founder.accent }} className="absolute bottom-0 left-0 right-0 h-1" />
+src/components/CtaBand.tsx:10:      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+src/components/CtaBand.tsx:19:          <div className="hidden md:block absolute top-0 right-10 w-64 h-64 bg-white/20 rounded-full blur-3xl pointer-events-none" />
+src/components/CtaBand.tsx:20:          <div className="hidden md:block absolute bottom-0 left-10 w-72 h-72 bg-white/15 rounded-full blur-3xl pointer-events-none" />
+src/components/FaqSection.tsx:240:      <div className="hidden md:block absolute top-1/4 -left-48 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+src/components/FaqSection.tsx:241:      <div className="hidden md:block absolute bottom-1/4 -right-48 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none" />
+src/components/FaqSection.tsx:243:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+src/components/FaqSection.tsx:268:            <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
+src/components/FaqSection.tsx:279:                className="absolute right-3.5 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+src/components/FounderSection.tsx:8:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+src/components/FounderSection.tsx:20:              <div className="hidden sm:block absolute inset-0 rounded-3xl bg-[#E6F0FF] rotate-3 scale-105 blur-sm" />
+src/components/FounderSection.tsx:24:                className="relative z-10 w-24 sm:w-44 lg:w-[300px] aspect-[3/4] h-auto object-cover object-top rounded-2xl sm:rounded-3xl shadow-md sm:shadow-2xl border-2 sm:border-4 border-white shrink-0"
+src/components/FounderSection.tsx:36:              <div className="hidden sm:flex absolute -bottom-4 -right-4 z-20 bg-white py-2.5 px-4 rounded-2xl shadow-xl border border-blue-50 items-center gap-2">
+src/components/FounderSection.tsx:63:              <Quote className="hidden sm:block w-8 h-8 text-blue-400 absolute -top-4 -left-6 -z-10 opacity-30" />
+src/components/Hero.tsx:12:    <section className="relative min-h-[calc(100svh-56px)] md:min-h-0 lg:min-h-[min(calc(100vh-76px),720px)] bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] overflow-hidden flex items-center py-8 sm:py-12 lg:py-16">
+src/components/Hero.tsx:18:        className="hidden md:block absolute top-10 left-[-100px] w-[450px] h-[450px] rounded-full bg-blue-500/15 blur-[120px] pointer-events-none" 
+src/components/Hero.tsx:23:        className="hidden md:block absolute bottom-10 right-[-100px] w-[500px] h-[500px] rounded-full bg-teal-400/15 blur-[130px] pointer-events-none" 
+src/components/Hero.tsx:26:      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 w-full grid lg:grid-cols-12 gap-6 md:gap-12 items-center relative z-10">
+src/components/Hero.tsx:49:          <AnimatedParagraph className="text-[15px] sm:text-[16px] md:text-[18px] text-[#475569] max-w-[540px] mb-4 sm:mb-6 md:mb-8 leading-normal sm:leading-relaxed font-normal" delay={0.25}>
+src/components/Hero.tsx:62:              className="h-[48px] sm:h-[54px] px-6 sm:px-8 rounded-xl health-gradient text-white text-[15px] sm:text-[16px] font-bold shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer hover:scale-[1.03] active:scale-[0.98]"
+src/components/Hero.tsx:74:              className="h-[48px] sm:h-[54px] px-6 sm:px-8 rounded-xl border-2 border-[#0A1A45] text-[#0A1A45] text-[15px] sm:text-[16px] font-bold transition-all flex items-center justify-center cursor-pointer hover:bg-[#0A1A45] hover:text-white"
+src/components/Hero.tsx:110:            className="hidden md:flex absolute -top-4 left-0 sm:left-2 z-20 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-blue-50 items-center gap-3 cursor-pointer"
+src/components/Hero.tsx:126:            className="hidden md:flex absolute bottom-6 -left-6 sm:left-[-20px] z-20 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-teal-50 items-center gap-3 cursor-pointer"
+src/components/Hero.tsx:142:            className="hidden md:flex absolute top-1/2 -right-4 sm:right-[-12px] z-20 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-purple-50 items-center gap-3 cursor-pointer"
+src/components/Hero.tsx:157:            className="relative w-[240px] sm:w-[280px] md:w-[315px] h-[360px] sm:h-[440px] md:h-[585px] max-h-[290px] sm:max-h-[360px] md:max-h-none bg-[#0A1A45] rounded-[32px] sm:rounded-[42px] p-2.5 sm:p-3 shadow-xl md:shadow-2xl shadow-blue-900/30 border border-slate-700/40 overflow-hidden"

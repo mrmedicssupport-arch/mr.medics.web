@@ -59,7 +59,6 @@ export default function Footer() {
                 <li><Link to="/services/doctor-consultation" className="hover:text-white transition-colors py-1 inline-block">Consult Doctors</Link></li>
                 <li><Link to="/services/lab-tests" className="hover:text-white transition-colors py-1 inline-block">Lab Tests</Link></li>
                 <li><Link to="/services/medicines" className="hover:text-white transition-colors py-1 inline-block">Online Pharmacy</Link></li>
-                <li><Link to="/services/ai-symptom-checker" className="hover:text-white transition-colors py-1 inline-block">Symptom Checker</Link></li>
                 <li><Link to="/services/health-records" className="hover:text-white transition-colors py-1 inline-block">Health Records</Link></li>
               </ul>
             </div>
@@ -97,11 +96,12 @@ export default function Footer() {
         {/* Disclaimer & Bottom Bar */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <p className="text-center md:text-left text-[11px] md:text-xs">
-            Medical Disclaimer: Mr Medics does not provide emergency care and our symptom checker is not a diagnosis. In an emergency, call 112 or visit the nearest hospital.
+            Medical Disclaimer: Mr Medics does not provide emergency care. In an emergency, call 112 or visit the nearest hospital.
           </p>
           <div className="flex gap-4 sm:gap-6 whitespace-nowrap text-[11px] md:text-xs">
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
             <Link to="/faq" className="hover:text-white transition-colors">FAQ</Link>
           </div>
         </div>

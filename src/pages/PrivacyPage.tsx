@@ -85,9 +85,9 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-[#0A1A45] mb-2">7. Medical & AI Guidance Disclaimer</h2>
+            <h2 className="text-lg font-bold text-[#0A1A45] mb-2">7. Medical Disclaimer</h2>
             <p>
-              The {config.BRAND_NAME} AI Symptom Checker and informational content provide educational suggestions only. They do not constitute formal medical diagnosis, clinical prognosis, or prescription therapy. Always seek the advice of your qualified physician or healthcare provider with any questions you may have regarding a medical condition.
+              The {config.BRAND_NAME} informational content provides educational suggestions only. They do not constitute formal medical diagnosis, clinical prognosis, or prescription therapy. Always seek the advice of your qualified physician or healthcare provider with any questions you may have regarding a medical condition.
             </p>
           </section>
 

@@ -7,7 +7,6 @@ import HealthPackages from '../components/HealthPackages';
 import SpecialtiesGrid from '../components/SpecialtiesGrid';
 import FounderSection from '../components/FounderSection';
 import CoFoundersSection from '../components/CoFoundersSection';
-import SymptomCheckerTeaser from '../components/SymptomCheckerTeaser';
 import AppDownloadSection from '../components/AppDownloadSection';
 import FaqSection from '../components/FaqSection';
 import CtaBand from '../components/CtaBand';
@@ -24,7 +23,6 @@ export default function Home({ language }: { language: string }) {
       <SpecialtiesGrid />
       <FounderSection />
       <CoFoundersSection />
-      <SymptomCheckerTeaser />
       <AppDownloadSection />
       <FaqSection />
       <CtaBand />

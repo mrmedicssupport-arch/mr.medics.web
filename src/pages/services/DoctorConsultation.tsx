@@ -1,17 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Video, 
   Mic, 
   MessageSquare, 
   MapPin, 
   CheckCircle2, 
-  Calendar, 
-  Clock, 
-  Star, 
   ShieldCheck, 
-  Award,
   ArrowRight,
-  UserCheck
+  Loader2
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import HeartPulse3D from '../../components/HeartPulse3D';
@@ -19,14 +15,23 @@ import {
   AnimatedHeading, 
   AnimatedParagraph, 
   AnimatedBadge, 
-  FadeInBlock, 
-  AnimatedNumber 
+  FadeInBlock 
 } from '../../components/AnimatedTypography';
 import FaqSection from '../../components/FaqSection';
-
 import { config } from '../../config';
-import { sampleDoctors } from '../../data/content';
 import { logLeadSafely } from '../../lib/leads';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+
+interface Doctor {
+  id: string;
+  name: string;
+  specialty: string;
+  qualification: string;
+  experience: string;
+  fee: string;
+  available: string;
+}
 
 export default function DoctorConsultation() {
   const [selectedMode, setSelectedMode] = useState<'video' | 'audio' | 'chat' | 'clinic'>('video');
@@ -34,11 +39,33 @@ export default function DoctorConsultation() {
   const [booked, setBooked] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [whatsappLink, setWhatsappLink] = useState('');
-  const [bookingDetails, setBookingDetails] = useState({ name: '', phone: '', date: '', time: '', doctor: 'Dr. Anjali Sharma' });
+  const [bookingDetails, setBookingDetails] = useState({ name: '', phone: '', date: '', time: '', doctor: '' });
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const q = query(collection(db, 'users'), where('role', '==', 'doctor'), where('status', '==', 'Active'));
+        const querySnapshot = await getDocs(q);
+        const fetchedDoctors: Doctor[] = [];
+        querySnapshot.forEach((doc) => {
+          fetchedDoctors.push({ id: doc.id, ...doc.data() } as Doctor);
+        });
+        setDoctors(fetchedDoctors);
+        if (fetchedDoctors.length > 0) {
+          setBookingDetails(prev => ({ ...prev, doctor: fetchedDoctors[0].name }));
+        }
+      } catch (error) {
+        console.error("Error fetching doctors: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDoctors();
+  }, []);
 
   const specialties = ['All', 'Cardiologist', 'General Physician', 'Pediatrician', 'Orthopedic', 'Dermatologist', 'Gynaecologist'];
-
-  const doctors = sampleDoctors;
 
   const filteredDoctors = doctors.filter(doc => 
     selectedSpecialty === 'All' || doc.specialty === selectedSpecialty
@@ -95,7 +122,7 @@ Please confirm doctor availability.`;
       <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-blue-50">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
-            <AnimatedBadge className="bg-blue-100/80 text-[#1769E0] mb-5" icon={UserCheck}>
+            <AnimatedBadge className="bg-blue-100/80 text-[#1769E0] mb-5" icon={ShieldCheck}>
               Verified NMC-Registered Specialists
             </AnimatedBadge>
 
@@ -184,49 +211,56 @@ Please confirm doctor availability.`;
             </div>
 
             <div className="space-y-4">
-              {filteredDoctors.map((doc, idx) => (
-                <FadeInBlock key={idx} delay={idx * 0.08}>
-                  <div className="bg-[#F2F7FF] p-5 sm:p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl health-gradient text-white flex items-center justify-center text-lg sm:text-xl font-extrabold shrink-0 shadow-md group-hover:scale-105 transition-transform">
-                        {doc.name.split(' ')[1]?.[0] || 'Dr'}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-base sm:text-lg font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors">{doc.name}</h3>
-                          <span className="text-[10px] font-bold text-[#1769E0] bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
-                            Sample Profile
-                          </span>
+              {loading ? (
+                <div className="text-center py-16 flex flex-col items-center">
+                  <Loader2 className="w-8 h-8 text-[#1769E0] animate-spin mb-4" />
+                  <p className="text-[#475569]">Loading doctors...</p>
+                </div>
+              ) : filteredDoctors.length > 0 ? (
+                filteredDoctors.map((doc, idx) => (
+                  <FadeInBlock key={doc.id} delay={idx * 0.08}>
+                    <div className="bg-[#F2F7FF] p-5 sm:p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl health-gradient text-white flex items-center justify-center text-lg sm:text-xl font-extrabold shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                          {doc.name.split(' ')[1]?.[0] || 'Dr'}
                         </div>
-                        <p className="text-xs font-bold text-[#1769E0]">{doc.specialty}</p>
-                        <p className="text-xs text-[#475569] mt-0.5">{doc.qualification} • {doc.experience}</p>
-                        
-                        <div className="flex items-center gap-3 mt-2 text-xs">
-                          <span className="text-[#0FB5A0] font-semibold text-[11px]">
-                            Next: {doc.available}
-                          </span>
-                          <span className="text-slate-400 text-[11px]">• NMC Verified</span>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-base sm:text-lg font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors">{doc.name}</h3>
+                          </div>
+                          <p className="text-xs font-bold text-[#1769E0]">{doc.specialty}</p>
+                          <p className="text-xs text-[#475569] mt-0.5">{doc.qualification} • {doc.experience}</p>
+                          
+                          <div className="flex items-center gap-3 mt-2 text-xs">
+                            <span className="text-[#0FB5A0] font-semibold text-[11px]">
+                              Next: {doc.available}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-blue-100">
-                      <span className="text-xl sm:text-2xl font-extrabold text-[#0A1A45] mb-2">{doc.fee}</span>
-                      <button 
-                        onClick={() => {
-                          setBookingDetails(prev => ({ ...prev, doctor: doc.name }));
-                          const elem = document.getElementById('booking-card');
-                          elem?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className="px-5 py-2.5 rounded-xl health-gradient text-white text-xs font-bold shadow-md shadow-blue-900/15 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
-                      >
-                        <span>Select Doctor</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-blue-100">
+                        <span className="text-xl sm:text-2xl font-extrabold text-[#0A1A45] mb-2">{doc.fee}</span>
+                        <button 
+                          onClick={() => {
+                            setBookingDetails(prev => ({ ...prev, doctor: doc.name }));
+                            const elem = document.getElementById('booking-card');
+                            elem?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className="px-5 py-2.5 rounded-xl health-gradient text-white text-xs font-bold shadow-md shadow-blue-900/15 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
+                        >
+                          <span>Select Doctor</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </FadeInBlock>
-              ))}
+                  </FadeInBlock>
+                ))
+              ) : (
+                <div className="text-center py-16">
+                  <p className="text-base font-bold text-[#0A1A45]">No doctors match your criteria.</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -239,9 +273,6 @@ Please confirm doctor availability.`;
                 </span>
                 <h3 className="text-xl font-extrabold text-[#0A1A45]">Consultation Request</h3>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-50 text-[#0FB5A0] text-xs font-bold border border-emerald-100">
-                Live Verification
-              </span>
             </div>
 
             {booked ? (
@@ -291,7 +322,7 @@ Please confirm doctor availability.`;
                 <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 flex items-center justify-between text-xs">
                   <div>
                     <span className="text-slate-500 block text-[10px]">Consulting With</span>
-                    <span className="font-bold text-[#0A1A45]">{bookingDetails.doctor}</span>
+                    <span className="font-bold text-[#0A1A45]">{bookingDetails.doctor || 'Select a doctor'}</span>
                   </div>
                   <span className="font-extrabold text-[#1769E0]">Mode: {selectedMode}</span>
                 </div>

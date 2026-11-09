@@ -38,7 +38,6 @@ export default function Navbar({ language, setLanguage }: { language: string; se
     { title: "Doctor Consultation", desc: "Video, audio & in-clinic with NMC doctors", icon: Stethoscope, path: "/services/doctor-consultation" },
     { title: "Lab Tests & Packages", desc: "Free home sample collection & fast reports", icon: TestTube, path: "/services/lab-tests" },
     { title: "Online Pharmacy", desc: "Doorstep delivery of genuine medicines", icon: Pill, path: "/services/medicines" },
-    { title: "AI Symptom Checker", desc: "Instant preliminary guidance & advice", icon: Sparkles, path: "/services/ai-symptom-checker" },
     { title: "Health Records", desc: "Secure digital vault for family reports", icon: FileText, path: "/services/health-records" },
   ];
 

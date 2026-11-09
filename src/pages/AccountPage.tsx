@@ -243,23 +243,6 @@ export default function AccountPage() {
                 <ChevronRight className="w-3.5 h-3.5" />
               </div>
             </Link>
-
-            <Link
-              to="/services/ai-symptom-checker"
-              className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-sky-200 transition group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-                <h3 className="text-sm font-bold text-[#0A1A45] mb-1">AI Symptom Checker</h3>
-                <p className="text-xs text-[#475569]">Clinical AI guidance to understand symptoms before speaking to a doctor.</p>
-              </div>
-              <div className="mt-4 flex items-center text-xs font-bold text-sky-600 gap-1">
-                <span>Check Symptoms</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </div>
-            </Link>
           </div>
         </div>
 

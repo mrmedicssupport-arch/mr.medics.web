@@ -52,15 +52,6 @@ export default function ServicesOverview() {
       accent: "from-blue-600 to-indigo-600"
     },
     { 
-      title: "AI Symptom Checker", 
-      path: "/services/ai-symptom-checker", 
-      desc: "Describe your symptoms to receive instant clinical-grade triage, suggested specialist consultations, and recommended diagnostic tests.",
-      icon: Sparkles,
-      badge: "Instant Clinical AI",
-      stats: "Free 24/7 Access",
-      accent: "from-purple-600 to-pink-500"
-    },
-    { 
       title: "Health Records Vault", 
       path: "/services/health-records", 
       desc: "256-bit encrypted digital vault for all prescriptions, lab reports, and vitals. Manage your entire family's health under one account.",
