@@ -18,7 +18,7 @@ export function AnimatedHeading({
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const isInView = useInView(ref, { once: true });
 
   const words = text.split(" ");
 
@@ -32,8 +32,8 @@ export function AnimatedHeading({
         return (
           <motion.span
             key={i}
-            initial={{ opacity: 0, y: 35, rotateX: 25 }}
-            animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+            initial={{ opacity: 0, y: 25 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
             transition={{
               duration: 0.55,
               delay: delay + i * 0.05,

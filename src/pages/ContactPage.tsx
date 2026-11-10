@@ -93,7 +93,7 @@ I have an inquiry from the website:
 
       {/* Contact Content Grid */}
       <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* Info Column */}
           <motion.div 
@@ -101,11 +101,11 @@ I have an inquiry from the website:
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5 bg-[#F2F7FF] p-8 sm:p-10 rounded-3xl border border-blue-100 flex flex-col justify-between shadow-sm"
+            className="lg:col-span-5 bg-[#F2F7FF] p-6 sm:p-8 lg:p-10 rounded-3xl border border-blue-100 flex flex-col justify-between shadow-sm w-full max-w-full min-w-0"
           >
             <div>
-              <h3 className="text-2xl font-bold text-[#0A1A45] mb-6">Contact Information</h3>
-              <p className="text-sm text-[#475569] mb-8 leading-relaxed font-normal">
+              <h3 className="text-xl sm:text-2xl font-bold text-[#0A1A45] mb-6">Contact Information</h3>
+              <p className="text-sm text-[#475569] mb-8 leading-relaxed font-normal break-words">
                 Our support team is available 24/7 to assist you with emergency queries, report downloads, prescription questions, and partner verifications.
               </p>
 
@@ -114,9 +114,9 @@ I have an inquiry from the website:
                   <div className="w-12 h-12 rounded-xl health-gradient text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-400 uppercase">Support Email</p>
-                    <a href={`mailto:${config.EMAIL}`} className="text-base font-bold text-[#0A1A45] hover:text-[#1769E0] transition-colors">{config.EMAIL}</a>
+                    <a href={`mailto:${config.EMAIL}`} className="text-sm sm:text-base font-bold text-[#0A1A45] hover:text-[#1769E0] transition-colors break-words">{config.EMAIL}</a>
                   </div>
                 </motion.div>
 
@@ -124,9 +124,9 @@ I have an inquiry from the website:
                   <div className="w-12 h-12 rounded-xl health-gradient text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-400 uppercase">Phone Support</p>
-                    <a href={`tel:${config.PHONE}`} className="text-base font-bold text-[#0A1A45] hover:text-[#1769E0] transition-colors">{config.PHONE}</a>
+                    <a href={`tel:${config.PHONE}`} className="text-sm sm:text-base font-bold text-[#0A1A45] hover:text-[#1769E0] transition-colors">{config.PHONE}</a>
                   </div>
                 </motion.div>
 
@@ -134,9 +134,9 @@ I have an inquiry from the website:
                   <div className="w-12 h-12 rounded-xl health-gradient text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-400 uppercase">Headquarters</p>
-                    <p className="text-base font-bold text-[#0A1A45]">{config.ADDRESS}</p>
+                    <p className="text-sm sm:text-base font-bold text-[#0A1A45] break-words">{config.ADDRESS}</p>
                     <p className="text-xs text-[#475569] mt-0.5">Founder & CEO: Praveen Verma</p>
                   </div>
                 </motion.div>
@@ -145,15 +145,15 @@ I have an inquiry from the website:
                   <div className="w-12 h-12 rounded-xl health-gradient text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20">
                     <Clock className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-400 uppercase">Working Hours</p>
-                    <p className="text-base font-bold text-[#0A1A45]">Mon - Sun: 24/7 Available</p>
+                    <p className="text-sm sm:text-base font-bold text-[#0A1A45]">Mon - Sun: 24/7 Available</p>
                   </div>
                 </motion.div>
               </div>
             </div>
 
-            <div className="mt-10 p-4 bg-white rounded-2xl border border-slate-200 text-xs text-[#475569] shadow-sm">
+            <div className="mt-8 p-4 bg-white rounded-2xl border border-slate-200 text-xs text-[#475569] shadow-sm leading-relaxed">
               <p className="font-bold text-[#0A1A45] mb-1">Medical Emergency Notice:</p>
               <p>Mr Medics does not provide emergency care. In case of a medical emergency, please dial 112 immediately or reach your nearest emergency department.</p>
             </div>
@@ -165,19 +165,19 @@ I have an inquiry from the website:
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-7 bg-white p-8 sm:p-12 rounded-3xl shadow-xl border border-slate-100"
+            className="lg:col-span-7 bg-white p-6 sm:p-8 lg:p-12 rounded-3xl shadow-xl border border-slate-100 w-full max-w-full min-w-0"
           >
             {submitted ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-10 flex flex-col items-center"
+                className="text-center py-6 sm:py-10 flex flex-col items-center"
               >
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-[#0FB5A0] flex items-center justify-center mb-6">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#0A1A45] mb-2">Your Message is Ready</h3>
-                <p className="text-[#475569] max-w-md mx-auto mb-6 text-sm">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0A1A45] mb-2">Your Message is Ready</h3>
+                <p className="text-[#475569] max-w-md mx-auto mb-6 text-sm leading-relaxed">
                   We have prepared your message. For the fastest response, send it directly to our verified care coordinator on WhatsApp or give us a quick call.
                 </p>
 
@@ -188,13 +188,13 @@ I have an inquiry from the website:
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition"
+                    className="flex-1 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition whitespace-normal break-words"
                   >
                     <span>Open in WhatsApp</span>
                   </a>
                   <a
                     href={`tel:${config.PHONE}`}
-                    className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-[#0A1A45] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition"
+                    className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-[#0A1A45] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition whitespace-normal"
                   >
                     <span>Call Us</span>
                   </a>
@@ -208,10 +208,10 @@ I have an inquiry from the website:
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <h3 className="text-2xl font-bold text-[#0A1A45] mb-6">Send Us a Direct Message</h3>
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0A1A45] mb-6">Send Us a Direct Message</h3>
 
-                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-2">Your Name *</label>
                     <input 
@@ -220,7 +220,7 @@ I have an inquiry from the website:
                       placeholder="Praveen Kumar"
                       value={formData.name}
                       onChange={e => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
+                      className="w-full min-w-0 max-w-full px-4 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
                     />
                   </div>
                   <div>
@@ -231,12 +231,12 @@ I have an inquiry from the website:
                       placeholder="praveen@example.com"
                       value={formData.email}
                       onChange={e => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
+                      className="w-full min-w-0 max-w-full px-4 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
                     />
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-2">Phone Number</label>
                     <input 
@@ -244,7 +244,7 @@ I have an inquiry from the website:
                       placeholder="+91 98765 43210"
                       value={formData.phone}
                       onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
+                      className="w-full min-w-0 max-w-full px-4 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
                     />
                   </div>
                   <div>
@@ -254,7 +254,7 @@ I have an inquiry from the website:
                       placeholder="Booking query / Lab report"
                       value={formData.subject}
                       onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
+                      className="w-full min-w-0 max-w-full px-4 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
                     />
                   </div>
                 </div>
@@ -263,21 +263,21 @@ I have an inquiry from the website:
                   <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-2">Message *</label>
                   <textarea 
                     required
-                    rows={5}
+                    rows={4}
                     placeholder="How can we help you today?"
                     value={formData.message}
                     onChange={e => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
+                    className="w-full min-w-0 max-w-full px-4 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#1769E0] text-[#0A1A45] text-sm transition"
                   />
                 </div>
 
                 <motion.button 
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-xl health-gradient text-white font-bold text-base shadow-lg shadow-blue-500/25 hover:shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full min-w-0 max-w-full py-4 rounded-xl health-gradient text-white font-bold text-base shadow-lg shadow-blue-500/25 hover:shadow-xl transition flex items-center justify-center gap-2 cursor-pointer whitespace-normal break-words"
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-5 h-5 shrink-0" />
                   <span>Send Message</span>
                 </motion.button>
               </form>

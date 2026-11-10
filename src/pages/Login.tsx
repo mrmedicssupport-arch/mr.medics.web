@@ -89,13 +89,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[100svh] flex items-center justify-center p-4 bg-[#F2F7FF] relative">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10 relative">
+    <div className="min-h-[100svh] flex items-center justify-center p-3 sm:p-4 bg-[#F2F7FF] relative w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-md min-w-0 bg-white rounded-3xl shadow-xl border border-slate-100 p-5 sm:p-8 lg:p-10 relative">
         <Link 
           to="/" 
           className="inline-flex items-center gap-1.5 text-xs text-[#475569] hover:text-[#1769E0] font-semibold mb-6 transition"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 shrink-0" />
           <span>Back to Home</span>
         </Link>
 
@@ -103,18 +103,18 @@ export default function Login() {
           <img 
             src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
             alt="Mr Medics Logo" 
-            className="h-10 w-auto object-contain"
+            className="h-9 sm:h-10 w-auto object-contain shrink-0"
           />
-          <div>
-            <h2 className="text-xl font-extrabold text-[#0A1A45]">Welcome Back</h2>
-            <p className="text-xs text-[#475569]">Sign in to your {config.BRAND_NAME} account</p>
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-xl font-extrabold text-[#0A1A45] truncate">Welcome Back</h2>
+            <p className="text-xs text-[#475569] truncate">Sign in to your {config.BRAND_NAME} account</p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-start gap-2.5">
+          <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-start gap-2.5 break-words">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span className="leading-relaxed">{error}</span>
+            <span className="leading-relaxed min-w-0">{error}</span>
           </div>
         )}
 
@@ -126,7 +126,7 @@ export default function Login() {
               value={email} 
               onChange={e => setEmail(e.target.value)} 
               placeholder="patient@example.com" 
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
+              className="w-full min-w-0 max-w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
               required
             />
           </div>

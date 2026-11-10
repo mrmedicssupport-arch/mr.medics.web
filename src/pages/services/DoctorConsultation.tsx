@@ -120,8 +120,8 @@ Please confirm doctor availability.`;
     <div className="bg-white">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7FF] via-[#F8FAFF] to-[#FFFFFF] py-8 sm:py-12 lg:py-16 border-b border-blue-50">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div>
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="min-w-0">
             <AnimatedBadge className="bg-blue-100/80 text-[#1769E0] mb-5" icon={ShieldCheck}>
               Verified NMC-Registered Specialists
             </AnimatedBadge>
@@ -168,7 +168,7 @@ Please confirm doctor availability.`;
             </FadeInBlock>
           </div>
 
-          <div className="h-[380px] w-full hidden lg:block relative">
+          <div className="h-[380px] w-full hidden lg:block relative min-w-0">
             <HeartPulse3D />
           </div>
         </div>
@@ -176,12 +176,12 @@ Please confirm doctor availability.`;
 
       {/* Main Consultation Section */}
       <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* Doctors Listing */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
+          <div className="lg:col-span-7 space-y-6 min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 min-w-0">
+              <div className="min-w-0">
                 <AnimatedHeading
                   text="Select Your Specialist"
                   highlightWords={["Specialist"]}
@@ -194,7 +194,7 @@ Please confirm doctor availability.`;
             </div>
 
             {/* Specialty Filter Buttons */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none min-w-0">
               {specialties.map((spec, idx) => (
                 <button
                   key={idx}
@@ -210,7 +210,7 @@ Please confirm doctor availability.`;
               ))}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-0">
               {loading ? (
                 <div className="text-center py-16 flex flex-col items-center">
                   <Loader2 className="w-8 h-8 text-[#1769E0] animate-spin mb-4" />
@@ -219,27 +219,27 @@ Please confirm doctor availability.`;
               ) : filteredDoctors.length > 0 ? (
                 filteredDoctors.map((doc, idx) => (
                   <FadeInBlock key={doc.id} delay={idx * 0.08}>
-                    <div className="bg-[#F2F7FF] p-5 sm:p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 group">
-                      <div className="flex items-center gap-4">
+                    <div className="bg-[#F2F7FF] p-5 sm:p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 group min-w-0">
+                      <div className="flex items-center gap-4 min-w-0">
                         <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl health-gradient text-white flex items-center justify-center text-lg sm:text-xl font-extrabold shrink-0 shadow-md group-hover:scale-105 transition-transform">
                           {doc.name.split(' ')[1]?.[0] || 'Dr'}
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="text-base sm:text-lg font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors">{doc.name}</h3>
+                            <h3 className="text-base sm:text-lg font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors truncate">{doc.name}</h3>
                           </div>
-                          <p className="text-xs font-bold text-[#1769E0]">{doc.specialty}</p>
-                          <p className="text-xs text-[#475569] mt-0.5">{doc.qualification} • {doc.experience}</p>
+                          <p className="text-xs font-bold text-[#1769E0] truncate">{doc.specialty}</p>
+                          <p className="text-xs text-[#475569] mt-0.5 truncate">{doc.qualification} • {doc.experience}</p>
                           
                           <div className="flex items-center gap-3 mt-2 text-xs">
-                            <span className="text-[#0FB5A0] font-semibold text-[11px]">
+                            <span className="text-[#0FB5A0] font-semibold text-[11px] truncate">
                               Next: {doc.available}
                             </span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-blue-100">
+                      <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-blue-100 shrink-0">
                         <span className="text-xl sm:text-2xl font-extrabold text-[#0A1A45] mb-2">{doc.fee}</span>
                         <button 
                           onClick={() => {
@@ -247,10 +247,10 @@ Please confirm doctor availability.`;
                             const elem = document.getElementById('booking-card');
                             elem?.scrollIntoView({ behavior: 'smooth' });
                           }}
-                          className="px-5 py-2.5 rounded-xl health-gradient text-white text-xs font-bold shadow-md shadow-blue-900/15 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
+                          className="px-5 py-2.5 rounded-xl health-gradient text-white text-xs font-bold shadow-md shadow-blue-900/15 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 whitespace-normal"
                         >
                           <span>Select Doctor</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                         </button>
                       </div>
                     </div>
@@ -265,18 +265,18 @@ Please confirm doctor availability.`;
           </div>
 
           {/* Booking Card */}
-          <div id="booking-card" className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-blue-100 sticky top-28">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-              <div>
-                <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block">
+          <div id="booking-card" className="lg:col-span-5 bg-white p-5 sm:p-8 rounded-3xl shadow-xl border border-blue-100 w-full max-w-full overflow-hidden lg:sticky lg:top-28 min-w-0">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 min-w-0">
+              <div className="min-w-0">
+                <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block truncate">
                   Quick Appointment
                 </span>
-                <h3 className="text-xl font-extrabold text-[#0A1A45]">Consultation Request</h3>
+                <h3 className="text-xl font-extrabold text-[#0A1A45] truncate">Consultation Request</h3>
               </div>
             </div>
 
             {booked ? (
-              <div className="text-center py-6">
+              <div className="text-center py-6 min-w-0">
                 <motion.div 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -286,48 +286,48 @@ Please confirm doctor availability.`;
                   <CheckCircle2 className="w-10 h-10" />
                 </motion.div>
                 <h4 className="text-xl font-bold text-[#0A1A45] mb-2">Your Request is Ready</h4>
-                <p className="text-xs text-[#475569] mb-4">
+                <p className="text-xs text-[#475569] mb-4 break-words">
                   Send it on WhatsApp so our team can confirm your consultation slot with <span className="font-bold text-[#0A1A45]">{bookingDetails.doctor}</span>.
                 </p>
-                <div className="p-4 bg-[#F2F7FF] rounded-2xl text-xs space-y-1 mb-6 text-slate-600 text-left">
-                  <div><span className="font-bold">Doctor:</span> {bookingDetails.doctor}</div>
-                  <div><span className="font-bold">Mode:</span> {selectedMode.toUpperCase()} Consultation</div>
-                  <div><span className="font-bold">Patient:</span> {bookingDetails.name}</div>
-                  <div><span className="font-bold">Slot:</span> {bookingDetails.date || 'Today'} at {bookingDetails.time || 'Earliest available'}</div>
+                <div className="p-4 bg-[#F2F7FF] rounded-2xl text-xs space-y-1 mb-6 text-slate-600 text-left min-w-0">
+                  <div className="truncate"><span className="font-bold">Doctor:</span> {bookingDetails.doctor}</div>
+                  <div className="truncate"><span className="font-bold">Mode:</span> {selectedMode.toUpperCase()} Consultation</div>
+                  <div className="truncate"><span className="font-bold">Patient:</span> {bookingDetails.name}</div>
+                  <div className="truncate"><span className="font-bold">Slot:</span> {bookingDetails.date || 'Today'} at {bookingDetails.time || 'Earliest available'}</div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center min-w-0">
                   <a 
                     href={whatsappLink} 
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 active:scale-95"
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 active:scale-95 whitespace-normal"
                   >
                     <span>Open WhatsApp</span>
                   </a>
                   <a 
                     href={`tel:${config.PHONE}`} 
-                    className="px-6 py-3 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 active:scale-95"
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 whitespace-normal"
                   >
                     <span>Call Us</span>
                   </a>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleBooking} className="space-y-4">
+              <form onSubmit={handleBooking} className="space-y-4 min-w-0">
                 {validationError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold">
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold break-words">
                     {validationError}
                   </div>
                 )}
-                <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 flex items-center justify-between text-xs">
-                  <div>
+                <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 flex items-center justify-between text-xs min-w-0 gap-2">
+                  <div className="min-w-0">
                     <span className="text-slate-500 block text-[10px]">Consulting With</span>
-                    <span className="font-bold text-[#0A1A45]">{bookingDetails.doctor || 'Select a doctor'}</span>
+                    <span className="font-bold text-[#0A1A45] truncate block">{bookingDetails.doctor || 'Select a doctor'}</span>
                   </div>
-                  <span className="font-extrabold text-[#1769E0]">Mode: {selectedMode}</span>
+                  <span className="font-extrabold text-[#1769E0] shrink-0">Mode: {selectedMode}</span>
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1.5">Patient Full Name *</label>
                   <input 
                     type="text" 
@@ -335,11 +335,11 @@ Please confirm doctor availability.`;
                     placeholder="e.g. Praveen Kumar"
                     value={bookingDetails.name}
                     onChange={e => setBookingDetails({ ...bookingDetails, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
+                    className="w-full min-w-0 max-w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1.5">Phone Number (For Video Call Link) *</label>
                   <input 
                     type="tel" 
@@ -347,36 +347,36 @@ Please confirm doctor availability.`;
                     placeholder="+91 93116 01420"
                     value={bookingDetails.phone}
                     onChange={e => setBookingDetails({ ...bookingDetails, phone: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
+                    className="w-full min-w-0 max-w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
+                  <div className="min-w-0">
                     <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1.5">Date *</label>
                     <input 
                       type="date" 
                       required
                       value={bookingDetails.date}
                       onChange={e => setBookingDetails({ ...bookingDetails, date: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
+                      className="w-full min-w-0 max-w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                     />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1.5">Time Slot *</label>
                     <input 
                       type="time" 
                       required
                       value={bookingDetails.time}
                       onChange={e => setBookingDetails({ ...bookingDetails, time: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
+                      className="w-full min-w-0 max-w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                     />
                   </div>
                 </div>
 
                 <button 
                   type="submit"
-                  className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-lg shadow-blue-500/20 hover:scale-[1.01] transition-transform mt-3"
+                  className="w-full min-w-0 max-w-full py-3.5 px-4 rounded-xl health-gradient text-white font-bold text-sm shadow-lg shadow-blue-500/20 hover:scale-[1.01] transition-transform mt-3 whitespace-normal leading-snug cursor-pointer"
                 >
                   Confirm & Join Video Room
                 </button>
