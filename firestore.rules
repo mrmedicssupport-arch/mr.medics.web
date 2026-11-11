@@ -13,5 +13,17 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+    match /labBookings/{bookingId} {
+      allow create: if request.resource.data.status == 'Pending'
+                   && request.resource.data.patientName is string
+                   && request.resource.data.phone is string
+                   && request.resource.data.address is string;
+      allow read, update: if request.auth != null && (
+        request.auth.uid == resource.data.userId ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'lab'])
+      );
+      allow delete: if false;
+    }
   }
 }

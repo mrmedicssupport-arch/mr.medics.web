@@ -11,12 +11,33 @@
         "status": { "type": "string", "enum": ["Active", "Pending", "Suspended", "Blocked"] }
       },
       "required": ["uid", "email", "role", "status"]
+    },
+    "LabBooking": {
+      "title": "LabBooking",
+      "description": "Lab test and health package booking requests",
+      "type": "object",
+      "properties": {
+        "patientName": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "slotDate": { "type": "string" },
+        "slotTime": { "type": "string" },
+        "notes": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Pending", "Confirmed", "Completed", "Cancelled"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["patientName", "phone", "address", "totalAmount", "status"]
     }
   },
   "firestore": {
     "/users/{userId}": {
       "schema": { "$ref": "User" },
       "description": "User profiles"
+    },
+    "/labBookings/{bookingId}": {
+      "schema": { "$ref": "LabBooking" },
+      "description": "Lab test booking requests"
     }
   }
 }

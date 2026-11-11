@@ -27,7 +27,7 @@ export default function Footer() {
             <div className="flex flex-wrap gap-2.5 mb-4">
               <a 
                 href={`tel:${config.PHONE}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-xs text-white font-medium border border-slate-700 transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-white font-medium border border-slate-600 transition"
               >
                 <Phone className="w-3.5 h-3.5 text-[#1769E0]" />
                 <span>Call: {config.PHONE}</span>
@@ -43,9 +43,9 @@ export default function Footer() {
               </a>
             </div>
 
-            <p className="text-xs text-slate-400 mb-1">Founder & CEO: Praveen Verma</p>
-            <p className="text-xs text-slate-400 flex items-start gap-1">
-              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+            <p className="text-xs text-[#CBD5E1] mb-1">Founder & CEO: Praveen Verma</p>
+            <p className="text-xs text-[#CBD5E1] flex items-start gap-1">
+              <MapPin className="w-3.5 h-3.5 text-[#94A3B8] shrink-0 mt-0.5" />
               <span>Location: {config.ADDRESS}</span>
             </p>
           </div>
@@ -59,7 +59,6 @@ export default function Footer() {
                 <li><Link to="/services/doctor-consultation" className="hover:text-white transition-colors py-1 inline-block">Consult Doctors</Link></li>
                 <li><Link to="/services/lab-tests" className="hover:text-white transition-colors py-1 inline-block">Lab Tests</Link></li>
                 <li><Link to="/services/medicines" className="hover:text-white transition-colors py-1 inline-block">Online Pharmacy</Link></li>
-                <li><Link to="/services/ai-symptom-checker" className="hover:text-white transition-colors py-1 inline-block">Symptom Checker</Link></li>
                 <li><Link to="/services/health-records" className="hover:text-white transition-colors py-1 inline-block">Health Records</Link></li>
               </ul>
             </div>
@@ -97,11 +96,12 @@ export default function Footer() {
         {/* Disclaimer & Bottom Bar */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <p className="text-center md:text-left text-[11px] md:text-xs">
-            Medical Disclaimer: Mr Medics does not provide emergency care and our symptom checker is not a diagnosis. In an emergency, call 112 or visit the nearest hospital.
+            Medical Disclaimer: Mr Medics does not provide emergency care. In an emergency, call 112 or visit the nearest hospital.
           </p>
           <div className="flex gap-4 sm:gap-6 whitespace-nowrap text-[11px] md:text-xs">
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
             <Link to="/faq" className="hover:text-white transition-colors">FAQ</Link>
           </div>
         </div>

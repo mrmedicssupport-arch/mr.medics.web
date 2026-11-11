@@ -137,13 +137,13 @@ Please verify prescription and confirm my medicine delivery.`;
               Order all chronic and acute medications with licensed pharmacist verification. Enjoy up to 20% savings, tamper-proof temperature-controlled delivery, and auto-refill reminders.
             </AnimatedParagraph>
 
-            <FadeInBlock delay={0.3} className="flex items-center gap-6">
+            <FadeInBlock delay={0.3} className="flex items-center gap-4 sm:gap-6 flex-wrap">
               <div className="flex items-center gap-2.5">
-                <Truck className="w-5 h-5 text-[#0FB5A0]" />
+                <Truck className="w-5 h-5 text-[#0FB5A0] shrink-0" />
                 <span className="text-sm font-bold text-[#0A1A45]">Doorstep Express Delivery</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <ShoppingBag className="w-5 h-5 text-[#1769E0]" />
+                <ShoppingBag className="w-5 h-5 text-[#1769E0] shrink-0" />
                 <span className="text-sm font-bold text-[#0A1A45]">{cart.length} In Cart</span>
               </div>
             </FadeInBlock>
@@ -157,64 +157,64 @@ Please verify prescription and confirm my medicine delivery.`;
 
       {/* Catalogue & Prescription Upload */}
       <section className="py-8 sm:py-12 lg:py-16 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* Catalogue */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 min-w-0 w-full max-w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-              <div>
+              <div className="min-w-0">
                 <AnimatedHeading
                   text="Genuine Medicines & Healthcare Essentials"
                   highlightWords={["Genuine", "Medicines"]}
-                  className="text-2xl font-extrabold text-[#0A1A45]"
+                  className="text-xl sm:text-2xl font-extrabold text-[#0A1A45]"
                 />
                 <AnimatedParagraph className="text-xs text-[#475569] mt-0.5">
                   Showing {filteredMeds.length} verified products available for instant order
                 </AnimatedParagraph>
               </div>
 
-              <div className="relative w-full sm:w-[320px]">
+              <div className="relative w-full max-w-full sm:w-[320px] min-w-0">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text" 
                   placeholder="Search tablet, syrup, brand..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-2.5 bg-[#F2F7FF] rounded-2xl border border-blue-100 text-[#0A1A45] font-medium text-xs focus:outline-none focus:border-[#1769E0] focus:bg-white transition-all shadow-inner"
+                  className="w-full min-w-0 max-w-full pl-11 pr-4 py-2.5 bg-[#F2F7FF] rounded-2xl border border-blue-100 text-[#0A1A45] font-medium text-xs focus:outline-none focus:border-[#1769E0] focus:bg-white transition-all shadow-inner"
                 />
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {filteredMeds.map((med, idx) => (
-                <FadeInBlock key={idx} delay={idx * 0.06}>
-                  <div className="bg-[#F2F7FF] p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between h-full group">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-bold text-[#1769E0] bg-blue-50 px-2.5 py-1 rounded-lg">
+                <FadeInBlock key={idx} delay={idx * 0.06} className="w-full min-w-0">
+                  <div className="bg-[#F2F7FF] p-5 sm:p-6 rounded-3xl border border-blue-100 shadow-md shadow-blue-900/5 hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between h-full group w-full min-w-0">
+                    <div className="w-full min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="text-xs font-bold text-[#1769E0] bg-blue-50 px-2.5 py-1 rounded-lg truncate">
                           {med.category}
                         </span>
                         {med.rx ? (
-                          <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold shrink-0">
                             Rx Required
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold shrink-0">
                             OTC
                           </span>
                         )}
                       </div>
 
-                      <h3 className="text-lg font-bold text-[#0A1A45] mb-1 group-hover:text-[#1769E0] transition-colors">
+                      <h3 className="text-base sm:text-lg font-bold text-[#0A1A45] mb-1 group-hover:text-[#1769E0] transition-colors break-words">
                         {med.name}
                       </h3>
                       
-                      <p className="text-xs text-[#475569] mb-4 leading-relaxed">
+                      <p className="text-xs text-[#475569] mb-4 leading-relaxed break-words">
                         {med.desc}
                       </p>
 
-                      <div className="flex items-baseline gap-2 mb-4">
-                        <span className="text-2xl font-extrabold text-[#0A1A45]">{med.price}</span>
+                      <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+                        <span className="text-xl sm:text-2xl font-extrabold text-[#0A1A45]">{med.price}</span>
                         <span className="text-xs text-slate-400 line-through">{med.mrp}</span>
                         <span className="text-xs font-extrabold text-[#0FB5A0] bg-emerald-50 px-2 py-0.5 rounded">
                           {med.discount}
@@ -224,9 +224,9 @@ Please verify prescription and confirm my medicine delivery.`;
 
                     <button 
                       onClick={() => addToCart(med)}
-                      className="w-full py-2.5 rounded-xl health-gradient text-white font-bold text-xs shadow-md shadow-blue-900/15 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl health-gradient text-white font-bold text-xs shadow-md shadow-blue-900/15 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5 whitespace-normal break-words"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-4 h-4 shrink-0" />
                       <span>Add to Medicine Bag</span>
                     </button>
                   </div>
@@ -236,29 +236,29 @@ Please verify prescription and confirm my medicine delivery.`;
           </div>
 
           {/* Rx Upload & Cart Summary */}
-          <div className="lg:col-span-4 space-y-8 sticky top-28">
+          <div className="lg:col-span-4 space-y-6 lg:space-y-8 w-full max-w-full min-w-0 overflow-hidden lg:sticky lg:top-28">
             
             {/* Prescription Upload Card */}
-            <div className="bg-white p-6 rounded-3xl shadow-xl border border-blue-100">
+            <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-xl border border-blue-100 w-full min-w-0">
               <span className="text-[11px] font-bold text-[#1769E0] uppercase tracking-wider block mb-1">
                 Direct Pharmacy WhatsApp
               </span>
               <h3 className="text-lg font-extrabold text-[#0A1A45] mb-2">Order Via Prescription</h3>
-              <p className="text-xs text-[#475569] mb-4">Send your physical prescription photo directly to our licensed pharmacist on WhatsApp.</p>
+              <p className="text-xs text-[#475569] mb-4 leading-relaxed">Send your physical prescription photo directly to our licensed pharmacist on WhatsApp.</p>
               
               <a 
                 href={`https://wa.me/${config.WHATSAPP_NUMBER}?text=Hello%20Mr%20Medics%20Pharmacy,%20I%20would%20like%20to%20share%20my%20prescription%20photo%20for%20medicine%20delivery.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
+                className="w-full py-3.5 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-95 whitespace-normal break-words"
               >
-                <Upload className="w-4 h-4" />
+                <Upload className="w-4 h-4 shrink-0" />
                 <span>Send Prescription on WhatsApp</span>
               </a>
             </div>
 
             {/* Cart Summary Card */}
-            <div className="bg-white p-6 rounded-3xl shadow-xl border border-blue-100">
+            <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-xl border border-blue-100 w-full min-w-0">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                 <h3 className="text-lg font-bold text-[#0A1A45]">Cart Summary</h3>
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#1769E0] text-xs font-bold">
@@ -274,12 +274,12 @@ Please verify prescription and confirm my medicine delivery.`;
               ) : (
                 <div className="space-y-3 mb-6 max-h-[220px] overflow-y-auto pr-1">
                   {cart.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center text-xs p-2 rounded-xl bg-slate-50">
-                      <div>
-                        <span className="font-bold text-[#0A1A45] block">{item.name}</span>
+                    <div key={i} className="flex justify-between items-center text-xs p-2 rounded-xl bg-slate-50 gap-2">
+                      <div className="min-w-0">
+                        <span className="font-bold text-[#0A1A45] block truncate">{item.name}</span>
                         <span className="text-[10px] text-slate-400">{item.category}</span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 shrink-0">
                         <span className="font-extrabold text-[#1769E0]">{item.price}</span>
                         <button 
                           onClick={() => removeFromCart(i)}
@@ -312,13 +312,13 @@ Please verify prescription and confirm my medicine delivery.`;
                       href={whatsappLink} 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 active:scale-95"
+                      className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 active:scale-95 whitespace-normal break-words"
                     >
                       <span>Open WhatsApp</span>
                     </a>
                     <a 
                       href={`tel:${config.PHONE}`} 
-                      className="w-full py-2.5 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 active:scale-95"
+                      className="w-full py-2.5 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 whitespace-normal"
                     >
                       <span>Call Us: {config.PHONE}</span>
                     </a>
@@ -327,7 +327,7 @@ Please verify prescription and confirm my medicine delivery.`;
               ) : showCheckout ? (
                 <form onSubmit={handlePlaceOrder} className="space-y-3 pt-2">
                   {validationError && (
-                    <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold">
+                    <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold break-words">
                       {validationError}
                     </div>
                   )}
@@ -339,7 +339,7 @@ Please verify prescription and confirm my medicine delivery.`;
                       placeholder="e.g. Praveen Kumar"
                       value={customer.name}
                       onChange={e => setCustomer({ ...customer, name: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
+                      className="w-full min-w-0 max-w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
                     />
                   </div>
                   <div>
@@ -351,7 +351,7 @@ Please verify prescription and confirm my medicine delivery.`;
                       placeholder="9311601420"
                       value={customer.phone}
                       onChange={e => setCustomer({ ...customer, phone: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
+                      className="w-full min-w-0 max-w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
                     />
                   </div>
                   <div>
@@ -362,12 +362,12 @@ Please verify prescription and confirm my medicine delivery.`;
                       placeholder="Flat / House no, Landmark, Noida / City"
                       value={customer.address}
                       onChange={e => setCustomer({ ...customer, address: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
+                      className="w-full min-w-0 max-w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#1769E0]"
                     />
                   </div>
                   <button 
                     type="submit"
-                    className="w-full py-3 rounded-xl health-gradient text-white font-bold text-xs shadow-md hover:scale-[1.01] transition-transform"
+                    className="w-full min-w-0 max-w-full py-3 rounded-xl health-gradient text-white font-bold text-xs shadow-md hover:scale-[1.01] transition-transform whitespace-normal break-words"
                   >
                     Send Medicine Order on WhatsApp
                   </button>
@@ -383,7 +383,7 @@ Please verify prescription and confirm my medicine delivery.`;
                 <button 
                   onClick={() => setShowCheckout(true)}
                   disabled={cart.length === 0}
-                  className="w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-lg shadow-blue-900/15 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] transition-transform"
+                  className="w-full min-w-0 max-w-full py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-lg shadow-blue-900/15 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] transition-transform whitespace-normal break-words"
                 >
                   Proceed to Checkout ({cart.length} {cart.length === 1 ? 'item' : 'items'})
                 </button>

@@ -17,7 +17,7 @@ export default function FounderSection() {
           {/* Founder Photo - Compact on mobile */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative flex items-center gap-4 sm:block">
-              <div className="hidden sm:block absolute inset-0 rounded-3xl health-gradient rotate-3 scale-105 opacity-30 blur-sm" />
+              <div className="hidden sm:block absolute inset-0 rounded-3xl bg-[#E6F0FF] rotate-3 scale-105 blur-sm" />
               <img 
                 src="/assets/aistudio/WhatsApp_Image_2026-10-18_at_5.30.08_PM_d24be501.jpeg" 
                 alt="Praveen Verma - Founder & CEO" 
@@ -29,7 +29,7 @@ export default function FounderSection() {
                 <p className="text-xs text-[#475569]">Founder & CEO, Mr Medics</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-[10px] font-bold text-[#0A1A45]">Active Visionary</span>
+                  <span className="text-xs font-bold text-[#0A1A45]">Active Visionary</span>
                 </div>
               </div>
 
@@ -60,7 +60,7 @@ export default function FounderSection() {
             </div>
 
             <div className="relative mb-4 sm:mb-6 text-[#475569] text-xs sm:text-base leading-relaxed space-y-2 sm:space-y-4">
-              <Quote className="hidden sm:block w-8 h-8 text-blue-200 absolute -top-4 -left-6 -z-10 opacity-60" />
+              <Quote className="hidden sm:block w-8 h-8 text-blue-400 absolute -top-4 -left-6 -z-10 opacity-30" />
               <p>
                 "Our mission at Mr Medics is to bridge the healthcare accessibility gap in India by bringing NMC-registered doctors, NABL diagnostics, and licensed pharmacies onto one secure, seamless platform."
               </p>

@@ -2,12 +2,11 @@ import Hero from '../components/Hero';
 import TrustStrip from '../components/TrustStrip';
 import ServicesSection from '../components/ServicesSection';
 import HowItWorks from '../components/HowItWorks';
-import StatsBand from '../components/StatsBand';
+import WhyChooseUs from '../components/WhyChooseUs';
 import HealthPackages from '../components/HealthPackages';
 import SpecialtiesGrid from '../components/SpecialtiesGrid';
 import FounderSection from '../components/FounderSection';
 import CoFoundersSection from '../components/CoFoundersSection';
-import SymptomCheckerTeaser from '../components/SymptomCheckerTeaser';
 import AppDownloadSection from '../components/AppDownloadSection';
 import FaqSection from '../components/FaqSection';
 import CtaBand from '../components/CtaBand';
@@ -19,12 +18,11 @@ export default function Home({ language }: { language: string }) {
       <TrustStrip />
       <ServicesSection />
       <HowItWorks />
-      <StatsBand />
+      <WhyChooseUs />
       <HealthPackages />
       <SpecialtiesGrid />
       <FounderSection />
       <CoFoundersSection />
-      <SymptomCheckerTeaser />
       <AppDownloadSection />
       <FaqSection />
       <CtaBand />

@@ -11,6 +11,13 @@
   --color-soft-bg: #F2F7FF;
 }
 
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: #0A1A45;
+  }
+}
+
 html, body {
   overflow-x: clip;
   max-width: 100%;
@@ -28,6 +35,15 @@ body {
 input, select, textarea {
   font-size: 16px;
   touch-action: manipulation;
+  min-width: 0;
+  max-width: 100%;
+}
+
+input[type="date"], input[type="time"] {
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 button, a {
@@ -35,18 +51,15 @@ button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: #0A1A45;
-}
-
 .health-gradient {
   background: linear-gradient(135deg, #1769E0, #0FB5A0);
 }
 
 .health-gradient-text {
+  color: #1769E0;
   background: linear-gradient(135deg, #1769E0, #0FB5A0);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

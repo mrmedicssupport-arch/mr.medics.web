@@ -32,7 +32,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-bold text-[#0A1A45] mb-2">1. Agreement to Terms</h2>
             <p>
-              These Terms of Service constitute a legally binding agreement between you and <strong>{config.BRAND_NAME}</strong>, having its operating address at {config.ADDRESS}. By accessing our website, booking doctor consultations, scheduling laboratory tests, ordering pharmaceutical products, or utilizing our AI symptom checker, you acknowledge that you have read, understood, and agreed to these terms.
+              These Terms of Service constitute a legally binding agreement between you and <strong>{config.BRAND_NAME}</strong>, having its operating address at {config.ADDRESS}. By accessing our website, booking doctor consultations, scheduling laboratory tests, or ordering pharmaceutical products, you acknowledge that you have read, understood, and agreed to these terms.
             </p>
           </section>
 
@@ -52,13 +52,6 @@ export default function TermsPage() {
             <h2 className="text-lg font-bold text-[#0A1A45] mb-2">3. Teleconsultations & Doctor-Patient Relationship</h2>
             <p>
               Teleconsultations facilitated via audio, video, or chat are subject to the professional discretion of the consulting physician. If the doctor determines that an in-person physical examination is medically required, you must follow the practitioner's advice and schedule an in-clinic visit. Doctors maintain independent medical liability for their clinical opinions and prescribed regimens.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold text-[#0A1A45] mb-2">4. AI Health Guidance</h2>
-            <p>
-              Our AI symptom checker tool is powered by computational clinical algorithms designed solely for preliminary health awareness and triage education. It does not generate medical diagnoses or recommend prescription pharmaceuticals. Reliance on any algorithmic information is at your own risk.
             </p>
           </section>
 

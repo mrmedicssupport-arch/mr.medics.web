@@ -31,7 +31,7 @@ export default function TrustStrip() {
                 <h4 className="text-xs sm:text-sm font-bold text-[#0A1A45] group-hover:text-[#1769E0] transition-colors truncate sm:whitespace-normal">
                   {item.title}
                 </h4>
-                <p className="text-[10px] sm:text-xs text-[#475569] truncate sm:whitespace-normal">{item.desc}</p>
+                <p className="text-xs text-[#475569] truncate sm:whitespace-normal">{item.desc}</p>
               </div>
             </motion.div>
           );

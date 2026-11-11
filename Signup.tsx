@@ -101,13 +101,13 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-[100svh] flex items-center justify-center p-4 bg-[#F2F7FF] relative py-12">
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10 relative">
+    <div className="min-h-[100svh] flex items-center justify-center p-3 sm:p-4 bg-[#F2F7FF] relative py-8 sm:py-12 w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-lg min-w-0 bg-white rounded-3xl shadow-xl border border-slate-100 p-5 sm:p-8 lg:p-10 relative">
         <Link 
           to="/" 
           className="inline-flex items-center gap-1.5 text-xs text-[#475569] hover:text-[#1769E0] font-semibold mb-6 transition"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 shrink-0" />
           <span>Back to Home</span>
         </Link>
 
@@ -115,23 +115,23 @@ export default function Signup() {
           <img 
             src="/assets/aistudio/file_000000003e70821192f55344a196d9e8_50f4da26.png" 
             alt="Mr Medics Logo" 
-            className="h-10 w-auto object-contain"
+            className="h-9 sm:h-10 w-auto object-contain shrink-0"
           />
-          <div>
-            <h2 className="text-xl font-extrabold text-[#0A1A45]">Create Account</h2>
-            <p className="text-xs text-[#475569]">Join {config.BRAND_NAME} for healthcare at your fingertips</p>
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-xl font-extrabold text-[#0A1A45] truncate">Create Account</h2>
+            <p className="text-xs text-[#475569] truncate">Join {config.BRAND_NAME} for healthcare at your fingertips</p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-start gap-2.5">
+          <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-start gap-2.5 break-words">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span className="leading-relaxed">{error}</span>
+            <span className="leading-relaxed min-w-0">{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSignup} className="space-y-3.5">
-          <div className="grid sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-bold text-[#0A1A45] mb-1.5">Full Name *</label>
               <input 
@@ -139,7 +139,7 @@ export default function Signup() {
                 value={name} 
                 onChange={e => setName(e.target.value)} 
                 placeholder="Praveen Kumar" 
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
+                className="w-full min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
                 required
               />
             </div>
@@ -151,7 +151,7 @@ export default function Signup() {
                 onChange={e => setPhone(e.target.value)} 
                 placeholder="9876543210" 
                 maxLength={10}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
+                className="w-full min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
                 required
               />
             </div>
@@ -164,12 +164,12 @@ export default function Signup() {
               value={email} 
               onChange={e => setEmail(e.target.value)} 
               placeholder="patient@example.com" 
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
+              className="w-full min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
               required
             />
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-bold text-[#0A1A45] mb-1.5">Password *</label>
               <div className="relative">
@@ -178,7 +178,7 @@ export default function Signup() {
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                   placeholder="Min 6 chars" 
-                  className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
+                  className="w-full min-w-0 max-w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
                   required
                 />
                 <button
@@ -198,7 +198,7 @@ export default function Signup() {
                 value={confirmPassword} 
                 onChange={e => setConfirmPassword(e.target.value)} 
                 placeholder="Re-type password" 
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
+                className="w-full min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#0A1A45] focus:outline-none focus:border-[#1769E0] transition" 
                 required
               />
             </div>
