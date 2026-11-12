@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 
@@ -39,9 +40,10 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Layout language={language} setLanguage={setLanguage}>
+      <CartProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Layout language={language} setLanguage={setLanguage}>
           <Routes>
             <Route path="/" element={<Home language={language} />} />
             <Route path="/services" element={<ServicesOverview />} />
@@ -70,6 +72,7 @@ export default function App() {
           </Routes>
         </Layout>
       </BrowserRouter>
-    </AuthProvider>
-  );
+    </CartProvider>
+  </AuthProvider>
+);
 }

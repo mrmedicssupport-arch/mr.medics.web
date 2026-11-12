@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Search, 
   TestTube, 
@@ -10,14 +11,17 @@ import {
   User, 
   Phone, 
   Sparkles, 
-  Plus,
-  Check,
-  Trash2,
-  FileText,
-  AlertCircle,
-  Loader2,
-  X,
-  ShoppingBag
+  Plus, 
+  Check, 
+  Trash2, 
+  FileText, 
+  AlertCircle, 
+  Loader2, 
+  X, 
+  ShoppingBag,
+  ArrowRight,
+  ArrowLeft,
+  MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Hero3D from '../../components/Hero3D';
@@ -29,13 +33,66 @@ import {
 import { config, LAB_PRICING } from '../../config';
 import { labTests, getPatientPrice, getCategories, LabItem } from '../../data/labTests';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import { db } from '../../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-const LOCAL_STORAGE_CART_KEY = 'mrmedics_lab_cart_items';
+interface ConfirmedBooking {
+  bookingRef: string;
+  items: {
+    id: string;
+    name: string;
+    price: number;
+    category?: string;
+    type?: string;
+    sample?: string;
+    turnaround?: string;
+  }[];
+  total: number;
+  homeCollectionFee: number;
+  patient: {
+    name: string;
+    phone: string;
+    address: string;
+    pincode: string;
+  };
+  slotDate: string;
+  slotLabel: string;
+  notes?: string;
+}
+
+const getTodayString = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const getMaxDateString = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 30);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 export default function LabTestsService() {
   const { user } = useAuth();
+  const { 
+    cart, 
+    toggleCartItem, 
+    removeFromCart, 
+    isInCart, 
+    clearCart, 
+    subtotal, 
+    homeFee, 
+    totalPrice,
+    isCartOpen,
+    setIsCartOpen
+  } = useCart();
+
   const categories = getCategories();
 
   // Search & Filter state
@@ -44,35 +101,30 @@ export default function LabTestsService() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [visibleCount, setVisibleCount] = useState(24);
 
-  // Cart state stored in localStorage with try/catch
-  const [cart, setCart] = useState<LabItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_CART_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-      console.warn('Could not read cart from localStorage:', e);
-      return [];
-    }
-  });
-
-  // UI Drawer / Modal states
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  // Booking Form & Flow State
+  // Step 1: Cart, Step 2: Details Form, Step 3: Confirmation
+  const [activeStep, setActiveStep] = useState<1 | 2 | 3>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [whatsappLink, setWhatsappLink] = useState('');
+  const [bookingId, setBookingId] = useState('');
+  const [confirmedBooking, setConfirmedBooking] = useState<ConfirmedBooking | null>(null);
 
-  // Booking Form fields
+  // Form Fields & Validation
+  const todayStr = getTodayString();
+  const maxDateStr = getMaxDateString();
+
   const [patientInfo, setPatientInfo] = useState({
     name: '',
     phone: '',
     address: '',
-    date: '',
+    pincode: '',
+    date: todayStr,
     time: 'Morning (07:00 AM - 11:00 AM)',
     notes: ''
   });
-  const [formValidation, setFormValidation] = useState<string | null>(null);
+
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Debounce search input
   useEffect(() => {
@@ -83,16 +135,22 @@ export default function LabTestsService() {
     return () => clearTimeout(handler);
   }, [searchInput]);
 
-  // Sync cart to localStorage
+  // Lock body scroll when cart/booking sheet is open on mobile/desktop
   useEffect(() => {
-    try {
-      localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify(cart));
-    } catch (e) {
-      console.warn('Could not save cart to localStorage:', e);
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.overscrollBehavior = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.overscrollBehavior = '';
     }
-  }, [cart]);
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.overscrollBehavior = '';
+    };
+  }, [isCartOpen]);
 
-  // Reset pagination when category changes
+  // Reset category pagination
   const handleSelectCategory = (cat: string) => {
     setSelectedCategory(cat);
     setVisibleCount(24);
@@ -101,7 +159,6 @@ export default function LabTestsService() {
   // Filter items based on category & search query
   const filteredItems = useMemo(() => {
     return labTests.filter((item) => {
-      // Category filter
       let matchesCategory = true;
       if (selectedCategory === 'Health Packages') {
         matchesCategory = item.type === 'package';
@@ -109,7 +166,6 @@ export default function LabTestsService() {
         matchesCategory = item.category === selectedCategory;
       }
 
-      // Search filter
       let matchesSearch = true;
       if (debouncedQuery) {
         const nameMatch = item.name.toLowerCase().includes(debouncedQuery);
@@ -123,7 +179,7 @@ export default function LabTestsService() {
     });
   }, [selectedCategory, debouncedQuery]);
 
-  // Order items: Packages first when in "All" view
+  // Packages shown first in 'All' view
   const sortedAndFiltered = useMemo(() => {
     if (selectedCategory === 'All') {
       const packages = filteredItems.filter(i => i.type === 'package');
@@ -137,127 +193,186 @@ export default function LabTestsService() {
     return sortedAndFiltered.slice(0, visibleCount);
   }, [sortedAndFiltered, visibleCount]);
 
-  // Cart operations
-  const isInCart = (id: string) => cart.some(item => item.id === id);
+  // Open booking flow at Step 1 or Step 2
+  const handleOpenBooking = (step: 1 | 2 = 1) => {
+    setActiveStep(step);
+    setBookingError(null);
+    setFieldErrors({});
+    setIsCartOpen(true);
+  };
 
-  const toggleCartItem = (item: LabItem) => {
-    if (isInCart(item.id)) {
-      setCart(prev => prev.filter(i => i.id !== item.id));
-    } else {
-      setCart(prev => [...prev, item]);
+  // Close and reset modal flow
+  const handleCloseModal = () => {
+    setIsCartOpen(false);
+    setConfirmedBooking(null);
+    setActiveStep(1);
+    setPatientInfo({
+      name: '',
+      phone: '',
+      address: '',
+      pincode: '',
+      date: getTodayString(),
+      time: 'Morning (07:00 AM - 11:00 AM)',
+      notes: ''
+    });
+    setFieldErrors({});
+    setBookingError(null);
+  };
+
+  // Validate Step 2 details form
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (patientInfo.name.trim().length < 2) {
+      errors.name = 'Enter full name (min 2 letters).';
     }
+
+    const cleanPhone = patientInfo.phone.replace(/\D/g, '');
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      errors.phone = 'Enter a valid 10-digit mobile number starting with 6-9.';
+    }
+
+    if (patientInfo.address.trim().length < 10) {
+      errors.address = 'Enter complete home address (min 10 characters).';
+    }
+
+    const cleanPincode = patientInfo.pincode.replace(/\D/g, '');
+    if (!/^\d{6}$/.test(cleanPincode)) {
+      errors.pincode = 'Enter a valid 6-digit pincode.';
+    }
+
+    if (!patientInfo.date) {
+      errors.date = 'Select preferred collection date.';
+    } else {
+      const today = getTodayString();
+      const maxDate = getMaxDateString();
+      if (patientInfo.date < today || patientInfo.date > maxDate) {
+        errors.date = 'Date must be today or within the next 30 days.';
+      }
+    }
+
+    if (!patientInfo.time) {
+      errors.time = 'Select preferred time slot.';
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  const removeFromCart = (id: string) => {
-    setCart(prev => prev.filter(i => i.id !== id));
-  };
-
-  const clearCart = () => {
-    setCart([]);
-  };
-
-  // Pricing calculations
-  const subtotal = useMemo(() => {
-    return cart.reduce((sum, item) => sum + getPatientPrice(item), 0);
-  }, [cart]);
-
-  const homeFee = LAB_PRICING.homeCollectionFee || 0;
-  const totalPrice = subtotal + homeFee;
-
-  // Form Submit Handler
+  // Submit Booking Form to Firestore
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormValidation(null);
     setBookingError(null);
 
-    if (cart.length === 0) {
-      setFormValidation('Your cart is empty. Please select at least one test or package.');
+    if (cart.length === 0 || totalPrice <= 0) {
+      setBookingError('Your cart is empty. Add a test first.');
+      setActiveStep(1);
       return;
     }
-    if (!patientInfo.name.trim()) {
-      setFormValidation('Please enter patient full name.');
-      return;
-    }
-    const cleanPhone = patientInfo.phone.replace(/\D/g, '');
-    if (cleanPhone.length !== 10) {
-      setFormValidation('Please enter a valid 10-digit mobile number.');
-      return;
-    }
-    if (!patientInfo.address.trim()) {
-      setFormValidation('Please enter complete home collection address.');
-      return;
-    }
-    if (!patientInfo.date) {
-      setFormValidation('Please select a preferred collection date.');
+
+    if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
+    const cleanPhone = patientInfo.phone.replace(/\D/g, '');
+    const cleanPincode = patientInfo.pincode.replace(/\D/g, '');
+    const generatedRef = `LB-${Math.floor(100000 + Math.random() * 900000)}`;
 
     try {
-      const bookingData = {
-        patientName: patientInfo.name.trim(),
-        phone: cleanPhone,
-        address: patientInfo.address.trim(),
-        slotDate: patientInfo.date,
-        slotTime: patientInfo.time,
-        notes: patientInfo.notes.trim() || '',
-        items: cart.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: getPatientPrice(item),
-          category: item.category,
-          type: item.type
-        })),
-        totalAmount: totalPrice,
+      // 1) Build immutable order snapshot FIRST
+      const snapshotItems = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: getPatientPrice(item),
+        category: item.category || undefined,
+        type: item.type || undefined,
+        sample: item.sample || undefined,
+        turnaround: item.turnaround || undefined,
+      }));
+
+      const computedSubtotal = snapshotItems.reduce((acc, i) => acc + i.price, 0);
+      const computedTotal = computedSubtotal + homeFee;
+
+      const orderSnapshot: ConfirmedBooking = {
+        bookingRef: generatedRef,
+        items: snapshotItems,
+        total: computedTotal,
         homeCollectionFee: homeFee,
+        patient: {
+          name: patientInfo.name.trim(),
+          phone: cleanPhone,
+          address: patientInfo.address.trim(),
+          pincode: cleanPincode,
+        },
+        slotDate: patientInfo.date,
+        slotLabel: patientInfo.time,
+        notes: patientInfo.notes.trim() || undefined,
+      };
+
+      // 2) Prepare exact Firestore payload (never write undefined)
+      const firestorePayload = {
+        bookingRef: generatedRef,
+        bookingId: generatedRef,
+        items: snapshotItems.map(i => ({
+          id: i.id,
+          name: i.name,
+          price: i.price,
+          category: i.category || null,
+          type: i.type || null,
+          sample: i.sample || null,
+          turnaround: i.turnaround || null,
+        })),
+        totalAmount: computedTotal,
+        homeCollectionFee: homeFee,
+        patientName: orderSnapshot.patient.name,
+        phone: orderSnapshot.patient.phone,
+        address: orderSnapshot.patient.address,
+        pincode: orderSnapshot.patient.pincode,
+        slotDate: orderSnapshot.slotDate,
+        slotTime: orderSnapshot.slotLabel,
+        notes: orderSnapshot.notes || null,
         status: 'Pending',
         createdAt: serverTimestamp(),
         userId: user?.uid || null,
         userEmail: user?.email || null,
       };
 
-      // Save to Firestore collection "labBookings"
-      await addDoc(collection(db, 'labBookings'), bookingData);
+      // Save to Firestore labBookings collection
+      await addDoc(collection(db, 'labBookings'), firestorePayload);
 
-      // Build WhatsApp prefilled message
-      const itemsListText = cart
-        .map(i => `• ${i.name} - ₹${getPatientPrice(i)}`)
-        .join('\n');
+      // 3) Only AFTER write succeeds: set confirmedBooking and build WhatsApp message from snapshot
+      setConfirmedBooking(orderSnapshot);
+      setBookingId(generatedRef);
 
-      const message = `Hello Mr Medics,
-I have requested a Lab Test / Health Package Booking:
+      const testItemsStr = orderSnapshot.items
+        .map((item, idx) => `${idx + 1}) ${item.name} ₹${item.price}`)
+        .join(', ');
 
-📋 *Selected Items:*
-${itemsListText}
+      const whatsappMessage = `Hello Mr Medics, I want to book a lab test.
+Ref: ${orderSnapshot.bookingRef}
+Name: ${orderSnapshot.patient.name}, Mobile: ${orderSnapshot.patient.phone}
+Address: ${orderSnapshot.patient.address}, Pincode: ${orderSnapshot.patient.pincode}
+Slot: ${orderSnapshot.slotDate} (${orderSnapshot.slotLabel})
+Tests: ${testItemsStr}
+Total: ₹${orderSnapshot.total}`;
 
-💰 *Total Amount:* ₹${totalPrice}${homeFee > 0 ? ` (Includes ₹${homeFee} Home Pickup)` : ' (Free Home Collection)'}
-
-👤 *Patient Details:*
-• Name: ${patientInfo.name.trim()}
-• Mobile: ${cleanPhone}
-• Address: ${patientInfo.address.trim()}
-• Preferred Slot: ${patientInfo.date} at ${patientInfo.time}
-${patientInfo.notes.trim() ? `• Notes: ${patientInfo.notes.trim()}` : ''}
-
-Please confirm my home collection booking slot.`;
-
-      const encodedMsg = encodeURIComponent(message);
+      const encodedMsg = encodeURIComponent(whatsappMessage);
       const link = `https://wa.me/${config.WHATSAPP_NUMBER}?text=${encodedMsg}`;
       setWhatsappLink(link);
 
-      setBookingSuccess(true);
+      // Clear cart ONLY AFTER successful write & snapshot saving
       clearCart();
+      setActiveStep(3);
 
-      // Open WhatsApp safely
       try {
         window.open(link, '_blank');
       } catch (err) {
-        console.warn('Popup blocked, link shown in UI');
+        console.warn('Popup blocked, link presented in UI');
       }
     } catch (err: any) {
-      console.error('Error saving lab booking to Firestore:', err);
-      setBookingError('Unable to save your booking request. Please check your network connection or tap "Send on WhatsApp" directly.');
+      console.error('Error saving lab booking:', err);
+      setBookingError('Unable to complete booking right now. Please check your network or try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -271,7 +386,7 @@ Please confirm my home collection booking slot.`;
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <AnimatedBadge className="bg-teal-50 text-[#0FB5A0] mb-4 border border-teal-100" icon={ShieldCheck}>
-              140 Certified Tests & Health Packages
+              140 NABL & ICMR Accredited Tests
             </AnimatedBadge>
 
             <AnimatedHeading
@@ -285,7 +400,7 @@ Please confirm my home collection booking slot.`;
               delay={0.2}
               className="text-sm sm:text-base text-[#475569] mb-6 leading-relaxed max-w-xl"
             >
-              Order blood & urine tests online. Certified phlebotomists collect samples from your doorstep with 100% safety protocols. Fast digital report delivery on WhatsApp & App.
+              Order certified blood & urine tests online. Certified phlebotomists collect samples right from your doorstep. Digital reports on WhatsApp & App within hours.
             </AnimatedParagraph>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -301,7 +416,7 @@ Please confirm my home collection booking slot.`;
 
               <div className="p-3 bg-white rounded-2xl border border-blue-100 shadow-sm col-span-2 sm:col-span-1">
                 <div className="text-xl sm:text-2xl font-extrabold text-[#0A1A45]">₹0 Fee</div>
-                <div className="text-xs font-semibold text-[#475569]">Doorstep Pickup</div>
+                <div className="text-xs font-semibold text-[#475569]">Home Pickup</div>
               </div>
             </div>
           </div>
@@ -312,11 +427,11 @@ Please confirm my home collection booking slot.`;
         </div>
       </section>
 
-      {/* Main Catalogue Section */}
+      {/* Main Grid Section with Desktop Cart Panel */}
       <section className="py-6 sm:py-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Important Patient Notes Banner */}
-        <div className="mb-6 p-3.5 bg-blue-50/80 rounded-2xl border border-blue-100 text-xs text-[#475569] space-y-1">
+        <div className="mb-6 p-4 bg-blue-50/80 rounded-2xl border border-blue-100 text-xs text-[#475569] space-y-1.5">
           <p className="flex items-center gap-1.5 font-semibold text-[#0A1A45]">
             <CheckCircle2 className="w-4 h-4 text-[#1769E0] shrink-0" />
             <span>Prices are inclusive of lab charges. Final price is confirmed on WhatsApp/call.</span>
@@ -327,294 +442,260 @@ Please confirm my home collection booking slot.`;
           </p>
         </div>
 
-        {/* Search & Category Controls */}
-        <div className="space-y-4 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Search Bar */}
-          <div className="relative w-full max-w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-            <input 
-              type="text" 
-              placeholder="Search 140+ tests or packages (e.g. CBC, HbA1c, Thyroid, Lipid, Akshaya)..."
-              value={searchInput}
-              onChange={e => setSearchInput(e.target.value)}
-              className="w-full min-h-[48px] pl-12 pr-10 py-3 bg-[#F2F7FF] rounded-2xl border border-blue-100 text-[#0A1A45] font-medium text-base focus:outline-none focus:border-[#1769E0] focus:bg-white shadow-inner transition"
-            />
-            {searchInput && (
-              <button 
-                onClick={() => setSearchInput('')} 
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-full"
-                aria-label="Clear search"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          {/* Left Column: Search, Categories & Test Cards */}
+          <div className="lg:col-span-8 min-w-0 w-full">
+            
+            {/* Search Bar */}
+            <div className="space-y-4 mb-8">
+              <div className="relative w-full max-w-full">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                <input 
+                  type="text" 
+                  placeholder="Search 140+ tests or packages (e.g. CBC, HbA1c, Thyroid, Lipid, Akshaya)..."
+                  value={searchInput}
+                  onChange={e => setSearchInput(e.target.value)}
+                  className="w-full min-h-[48px] pl-12 pr-10 py-3 bg-[#F2F7FF] rounded-2xl border border-blue-100 text-[#0A1A45] font-medium text-base focus:outline-none focus:border-[#1769E0] focus:bg-white shadow-inner transition"
+                />
+                {searchInput && (
+                  <button 
+                    onClick={() => setSearchInput('')} 
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-full cursor-pointer"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
 
-          {/* Horizontally Scrollable Category Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto w-full min-w-0 max-w-full pb-2 scrollbar-none">
-            {categories.map((cat) => {
-              const isActive = selectedCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => handleSelectCategory(cat)}
-                  className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
-                    isActive 
-                      ? 'health-gradient text-white shadow-md scale-105' 
-                      : 'bg-[#F2F7FF] text-[#0A1A45] border border-blue-100 hover:bg-white'
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Results Summary Bar */}
-          <div className="flex items-center justify-between text-xs font-semibold text-[#475569] pt-2 border-t border-slate-100">
-            <span>Showing {displayedItems.length} of {filteredItems.length} items</span>
-            {cart.length > 0 && (
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="text-[#1769E0] font-bold hover:underline flex items-center gap-1"
-              >
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span>View Cart ({cart.length})</span>
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Empty State */}
-        {filteredItems.length === 0 && (
-          <div className="bg-[#F2F7FF] border border-blue-100 rounded-3xl p-8 sm:p-12 text-center my-8">
-            <TestTube className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-[#0A1A45] mb-1">No Tests or Packages Found</h3>
-            <p className="text-xs text-[#475569] mb-4 max-w-md mx-auto">
-              We couldn't find any test matching "{searchInput}". Try checking your spelling or search for common terms like "Blood", "Sugar", "Thyroid", or "CBC".
-            </p>
-            <button
-              onClick={() => { setSearchInput(''); setSelectedCategory('All'); }}
-              className="min-h-[44px] px-6 py-2.5 rounded-xl health-gradient text-white font-bold text-xs shadow-md"
-            >
-              Reset Filters
-            </button>
-          </div>
-        )}
-
-        {/* Tests & Packages Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {displayedItems.map((item) => {
-            const isPkg = item.type === 'package';
-            const price = getPatientPrice(item);
-            const added = isInCart(item.id);
-            const includesList = item.includes ? item.includes.split(',').map(s => s.trim()) : [];
-
-            if (isPkg) {
-              // Highlighted Package Card
-              return (
-                <div 
-                  key={item.id}
-                  className="bg-white rounded-3xl p-5 sm:p-6 border-2 border-blue-200 shadow-md shadow-blue-900/5 flex flex-col justify-between h-full relative overflow-hidden group hover:border-[#1769E0] transition"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-extrabold uppercase tracking-wider bg-blue-100 text-[#1769E0] px-2.5 py-0.5 rounded-md">
-                        {item.category}
-                      </span>
-                      <span className="flex items-center gap-1 text-[10px] font-extrabold text-white bg-amber-500 px-2 py-0.5 rounded-full shadow-sm shrink-0">
-                        <Sparkles className="w-3 h-3" /> Health Package
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg sm:text-xl font-bold text-[#0A1A45] leading-snug group-hover:text-[#1769E0] transition-colors break-words">
-                      {item.name}
-                    </h3>
-
-                    {includesList.length > 0 && (
-                      <div>
-                        <p className="text-[11px] font-bold text-slate-400 uppercase mb-1.5">Includes {includesList.length} Tests:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {includesList.map((inc, i) => (
-                            <span key={i} className="text-[11px] bg-blue-50 text-[#1769E0] font-semibold px-2 py-0.5 rounded border border-blue-100">
-                              {inc}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-2 text-xs text-[#475569]">
-                      <Clock className="w-3.5 h-3.5 text-[#0FB5A0] shrink-0" />
-                      <span>Reports in {item.turnaround}</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-                    <div>
-                      <div className="text-2xl font-extrabold text-[#0A1A45]">₹{price}</div>
-                      <span className="text-[10px] font-extrabold text-[#0FB5A0] uppercase block">Free Home Pickup</span>
-                    </div>
-
+              {/* Horizontally Scrollable Category Chips */}
+              <div className="flex items-center gap-2 overflow-x-auto w-full min-w-0 max-w-full pb-2 scrollbar-none">
+                {categories.map((cat) => {
+                  const isActive = selectedCategory === cat;
+                  return (
                     <button
-                      onClick={() => toggleCartItem(item)}
-                      className={`min-h-[44px] px-5 py-2.5 rounded-xl font-bold text-xs shadow-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                        added
-                          ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                          : 'health-gradient text-white hover:opacity-95'
+                      key={cat}
+                      onClick={() => handleSelectCategory(cat)}
+                      className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                        isActive 
+                          ? 'health-gradient text-white shadow-md scale-105' 
+                          : 'bg-[#F2F7FF] text-[#0A1A45] border border-blue-100 hover:bg-white'
                       }`}
                     >
-                      {added ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                      <span>{added ? 'Added' : 'Add'}</span>
+                      {cat}
                     </button>
-                  </div>
-                </div>
-              );
-            }
-
-            // Standard Test Card
-            return (
-              <div 
-                key={item.id}
-                className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between h-full group hover:border-blue-300 hover:shadow-md transition"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[11px] font-bold text-[#1769E0] bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider truncate">
-                      {item.category}
-                    </span>
-                    {item.sample && (
-                      <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded shrink-0">
-                        Sample: {item.sample}
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-base font-bold text-[#0A1A45] mb-2 leading-snug group-hover:text-[#1769E0] transition-colors break-words">
-                    {item.name}
-                  </h3>
-
-                  <div className="flex items-center gap-1.5 text-xs text-[#475569] mb-4">
-                    <Clock className="w-3.5 h-3.5 text-[#0FB5A0] shrink-0" />
-                    <span>Reports in {item.turnaround}</span>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                  <div>
-                    <span className="text-xl font-extrabold text-[#0A1A45]">₹{price}</span>
-                  </div>
-
-                  <button
-                    onClick={() => toggleCartItem(item)}
-                    className={`min-h-[44px] px-4 py-2 rounded-xl font-bold text-xs shadow-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                      added
-                        ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                        : 'bg-[#F2F7FF] text-[#1769E0] border border-blue-200 hover:bg-[#1769E0] hover:text-white'
-                    }`}
-                  >
-                    {added ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                    <span>{added ? 'Added' : 'Add'}</span>
-                  </button>
-                </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
 
-        {/* Load More Button */}
-        {visibleCount < sortedAndFiltered.length && (
-          <div className="text-center mt-10">
-            <button
-              onClick={() => setVisibleCount(prev => prev + 24)}
-              className="min-h-[48px] px-8 py-3 rounded-2xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition cursor-pointer"
-            >
-              Load More Tests ({sortedAndFiltered.length - visibleCount} remaining)
-            </button>
+              {/* Results Summary Bar */}
+              <div className="flex items-center justify-between text-xs font-semibold text-[#475569] pt-2 border-t border-slate-100">
+                <span>Showing {displayedItems.length} of {filteredItems.length} tests</span>
+                {cart.length > 0 && (
+                  <button 
+                    onClick={() => handleOpenBooking(1)}
+                    className="text-[#1769E0] font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <span>View Cart ({cart.length})</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Empty State */}
+            {filteredItems.length === 0 && (
+              <div className="bg-[#F2F7FF] border border-blue-100 rounded-3xl p-8 sm:p-12 text-center my-6">
+                <TestTube className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                <h3 className="text-lg font-bold text-[#0A1A45] mb-1">No Tests Found</h3>
+                <p className="text-xs text-[#475569] mb-4 max-w-md mx-auto">
+                  We couldn't find any test matching "{searchInput}". Try searching for common tests like "CBC", "Lipid", "HbA1c", or "Sugar".
+                </p>
+                <button
+                  onClick={() => { setSearchInput(''); setSelectedCategory('All'); }}
+                  className="min-h-[44px] px-6 py-2.5 rounded-xl health-gradient text-white font-bold text-xs shadow-md cursor-pointer"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            )}
+
+            {/* Tests & Packages Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              {displayedItems.map((item) => {
+                const isPkg = item.type === 'package';
+                const price = getPatientPrice(item);
+                const added = isInCart(item.id);
+                const includesList = item.includes ? item.includes.split(',').map(s => s.trim()) : [];
+
+                if (isPkg) {
+                  // Package Card
+                  return (
+                    <div 
+                      key={item.id}
+                      className="bg-white rounded-3xl p-5 border-2 border-blue-200 shadow-md flex flex-col justify-between h-full relative overflow-hidden group hover:border-[#1769E0] transition"
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-extrabold uppercase tracking-wider bg-blue-100 text-[#1769E0] px-2.5 py-0.5 rounded-md">
+                            {item.category}
+                          </span>
+                          <span className="flex items-center gap-1 text-[10px] font-extrabold text-white bg-amber-500 px-2 py-0.5 rounded-full shadow-sm shrink-0">
+                            <Sparkles className="w-3 h-3" /> Health Package
+                          </span>
+                        </div>
+
+                        <h3 className="text-lg font-bold text-[#0A1A45] leading-snug group-hover:text-[#1769E0] transition-colors break-words">
+                          {item.name}
+                        </h3>
+
+                        {includesList.length > 0 && (
+                          <div>
+                            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1.5">Includes {includesList.length} Tests:</p>
+                            <div className="flex flex-wrap gap-1">
+                              {includesList.map((inc, i) => (
+                                <span key={i} className="text-[11px] bg-blue-50 text-[#1769E0] font-semibold px-2 py-0.5 rounded border border-blue-100">
+                                  {inc}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-center gap-2 text-xs text-[#475569]">
+                          <Clock className="w-3.5 h-3.5 text-[#0FB5A0] shrink-0" />
+                          <span>Reports in {item.turnaround}</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <div>
+                          <div className="text-2xl font-extrabold text-[#0A1A45]">₹{price}</div>
+                          <span className="text-[10px] font-extrabold text-[#0FB5A0] uppercase block">Free Home Pickup</span>
+                        </div>
+
+                        <button
+                          onClick={() => toggleCartItem(item)}
+                          className={`min-h-[44px] px-5 py-2.5 rounded-xl font-bold text-xs shadow-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                            added
+                              ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                              : 'health-gradient text-white hover:opacity-95'
+                          }`}
+                        >
+                          {added ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                          <span>{added ? 'Added' : 'Add'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Standard Test Card
+                return (
+                  <div 
+                    key={item.id}
+                    className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between h-full group hover:border-blue-300 hover:shadow-md transition"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-[11px] font-bold text-[#1769E0] bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider truncate">
+                          {item.category}
+                        </span>
+                        {item.sample && (
+                          <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                            Sample: {item.sample}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-base font-bold text-[#0A1A45] mb-2 leading-snug group-hover:text-[#1769E0] transition-colors break-words">
+                        {item.name}
+                      </h3>
+
+                      <div className="flex items-center gap-1.5 text-xs text-[#475569] mb-4">
+                        <Clock className="w-3.5 h-3.5 text-[#0FB5A0] shrink-0" />
+                        <span>Reports in {item.turnaround}</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <div>
+                        <span className="text-xl font-extrabold text-[#0A1A45]">₹{price}</span>
+                      </div>
+
+                      <button
+                        onClick={() => toggleCartItem(item)}
+                        className={`min-h-[44px] px-4 py-2 rounded-xl font-bold text-xs shadow-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                          added
+                            ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                            : 'bg-[#F2F7FF] text-[#1769E0] border border-blue-200 hover:bg-[#1769E0] hover:text-white'
+                        }`}
+                      >
+                        {added ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                        <span>{added ? 'Added' : 'Add'}</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Load More Button */}
+            {visibleCount < sortedAndFiltered.length && (
+              <div className="text-center mt-10">
+                <button
+                  onClick={() => setVisibleCount(prev => prev + 24)}
+                  className="min-h-[48px] px-8 py-3 rounded-2xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition cursor-pointer"
+                >
+                  Load More Tests ({sortedAndFiltered.length - visibleCount} remaining)
+                </button>
+              </div>
+            )}
           </div>
-        )}
-      </section>
 
-      {/* Sticky Bottom Bar on Mobile */}
-      {cart.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0A1A45] text-white p-3 sm:p-4 shadow-2xl border-t border-blue-900 flex items-center justify-between max-w-full">
-          <div className="min-w-0 pr-2">
-            <span className="text-xs text-blue-200 block truncate">
-              {cart.length} {cart.length === 1 ? 'test selected' : 'tests selected'}
-            </span>
-            <span className="text-lg sm:text-xl font-extrabold text-white">
-              Total: ₹{totalPrice}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="hidden sm:inline">Cart</span>
-            </button>
-
-            <button
-              onClick={() => { setIsBookingOpen(true); setBookingSuccess(false); }}
-              className="min-h-[44px] px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs sm:text-sm shadow-lg transition cursor-pointer"
-            >
-              Book Now
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Cart Drawer Modal */}
-      <AnimatePresence>
-        {isCartOpen && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-            <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              className="bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 max-w-md w-full min-w-0 max-h-[85vh] overflow-y-auto shadow-2xl relative border border-slate-200"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          {/* Right Column: Desktop Sticky Cart Panel (lg:sticky lg:top-28 w-[360px]) */}
+          <div className="hidden lg:block lg:col-span-4 w-full">
+            <div className="lg:sticky lg:top-28 bg-white rounded-3xl border border-slate-200 p-6 shadow-xl w-full">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
                 <div className="flex items-center gap-2">
                   <ShoppingBag className="w-5 h-5 text-[#1769E0]" />
-                  <h3 className="text-lg font-bold text-[#0A1A45]">Selected Tests ({cart.length})</h3>
+                  <h3 className="text-lg font-bold text-[#0A1A45]">
+                    {cart.length > 0 ? `Your Cart (${cart.length})` : 'Your Cart'}
+                  </h3>
                 </div>
-                <button
-                  onClick={() => setIsCartOpen(false)}
-                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center font-bold transition"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                {cart.length > 0 && (
+                  <button
+                    onClick={clearCart}
+                    className="text-xs text-slate-400 hover:text-rose-600 font-semibold cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
               </div>
 
               {cart.length === 0 ? (
-                <div className="text-center py-8 text-slate-400">
-                  <p className="text-sm font-semibold mb-3">Your cart is empty.</p>
-                  <button
-                    onClick={() => setIsCartOpen(false)}
-                    className="min-h-[44px] px-4 py-2 bg-blue-50 text-[#1769E0] font-bold text-xs rounded-xl"
-                  >
-                    Browse Tests
-                  </button>
+                <div className="py-10 text-center text-slate-500 space-y-2">
+                  <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm font-semibold text-[#475569]">Your cart is empty.</p>
+                  <p className="text-xs text-slate-400">Add tests to book.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="space-y-2.5 max-h-[260px] overflow-y-auto pr-1">
+                  {/* Item Rows */}
+                  <div className="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
                     {cart.map((item) => (
-                      <div key={item.id} className="flex items-center justify-between p-3 bg-[#F2F7FF] rounded-xl text-xs border border-blue-100 gap-2">
+                      <div key={item.id} className="flex items-center justify-between p-3 bg-[#F2F7FF] rounded-xl border border-blue-100 gap-2">
                         <div className="min-w-0">
-                          <span className="font-bold text-[#0A1A45] block truncate">{item.name}</span>
-                          <span className="text-[10px] text-slate-500">{item.category}</span>
+                          <span className="font-bold text-[#0A1A45] text-xs block truncate">{item.name}</span>
+                          <span className="text-[10px] text-[#475569]">{item.sample ? `Sample: ${item.sample}` : item.category}</span>
                         </div>
-                        <div className="flex items-center gap-3 shrink-0">
-                          <span className="font-extrabold text-[#1769E0]">₹{getPatientPrice(item)}</span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="font-extrabold text-[#1769E0] text-xs">₹{getPatientPrice(item)}</span>
                           <button
                             onClick={() => removeFromCart(item.id)}
-                            className="text-slate-400 hover:text-red-500 p-1"
-                            title="Remove"
+                            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-red-600 cursor-pointer"
+                            title="Remove test"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -623,11 +704,13 @@ Please confirm my home collection booking slot.`;
                     ))}
                   </div>
 
-                  <div className="p-3.5 bg-slate-50 rounded-2xl space-y-1.5 text-xs text-[#475569]">
+                  {/* Summary Box */}
+                  <div className="p-4 bg-slate-50 rounded-2xl space-y-2 text-xs text-[#475569]">
                     <div className="flex justify-between">
-                      <span>Tests Subtotal:</span>
+                      <span>Subtotal:</span>
                       <span className="font-bold text-[#0A1A45]">₹{subtotal}</span>
                     </div>
+
                     {homeFee > 0 ? (
                       <div className="flex justify-between text-teal-700">
                         <span>Home Sample Collection:</span>
@@ -639,224 +722,451 @@ Please confirm my home collection booking slot.`;
                         <span>FREE</span>
                       </div>
                     )}
-                    <div className="pt-2 border-t border-slate-200 flex justify-between text-sm font-extrabold text-[#0A1A45]">
+
+                    <div className="pt-2 border-t border-slate-200 flex justify-between text-base font-extrabold text-[#0A1A45]">
                       <span>Total Amount:</span>
                       <span className="text-[#1769E0]">₹{totalPrice}</span>
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-2">
-                    <button
-                      onClick={clearCart}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-bold text-xs hover:bg-slate-50 transition"
-                    >
-                      Clear All
-                    </button>
-                    <button
-                      onClick={() => { setIsCartOpen(false); setIsBookingOpen(true); setBookingSuccess(false); }}
-                      className="flex-1 min-h-[44px] py-2.5 rounded-xl health-gradient text-white font-bold text-xs shadow-md hover:opacity-95 transition"
-                    >
-                      Proceed to Book
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleOpenBooking(2)}
+                    className="min-h-[48px] w-full rounded-2xl health-gradient text-white font-bold text-sm shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>Book Now (₹{totalPrice})</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
               )}
-            </motion.div>
+            </div>
           </div>
-        )}
-      </AnimatePresence>
 
-      {/* Booking Form Sheet / Modal */}
+        </div>
+      </section>
+
+      {/* Mobile Sticky Cart Bar (fixed above bottom navigation bar) */}
+      {cart.length > 0 && (
+        <div 
+          style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px))' }}
+          className="lg:hidden fixed left-3 right-3 z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2.5 sm:p-3 flex items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative shrink-0">
+              <ShoppingBag className="w-6 h-6 text-[#1769E0]" />
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#1769E0] text-white text-[10px] font-extrabold rounded-full flex items-center justify-center shadow">
+                {cart.length}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <span className="text-xs text-[#475569] block truncate font-medium">
+                {cart.length} {cart.length === 1 ? 'test' : 'tests'}
+              </span>
+              <span className="text-base font-extrabold text-[#0A1A45] leading-none">
+                ₹{totalPrice}
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => handleOpenBooking(1)}
+            className="min-h-[44px] h-[44px] px-5 rounded-xl bg-[#1769E0] hover:bg-[#1255b8] text-white font-bold text-xs sm:text-sm shadow-md active:scale-95 transition flex items-center justify-center shrink-0 cursor-pointer"
+          >
+            View Cart
+          </button>
+        </div>
+      )}
+
+      {/* Cart Sheet (Mobile) & Booking Modal (Desktop) */}
       <AnimatePresence>
-        {isBookingOpen && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
+        {isCartOpen && (
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end lg:items-center justify-center p-0 lg:p-4">
+            
+            {/* Backdrop click to close */}
+            <div 
+              className="absolute inset-0" 
+              onClick={() => setIsCartOpen(false)} 
+            />
+
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-8 max-w-lg w-full min-w-0 max-h-[90vh] overflow-y-auto shadow-2xl relative border border-slate-200 my-auto"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="bg-white rounded-t-3xl lg:rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[85svh] lg:max-h-[90vh] overflow-y-auto shadow-2xl relative border border-slate-200 z-10 flex flex-col justify-between my-auto"
             >
+              {/* Mobile Drag Handle */}
+              <div className="lg:hidden w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-3 shrink-0" />
+
+              {/* Close (X) Button */}
               <button
-                onClick={() => setIsBookingOpen(false)}
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition z-10"
+                onClick={() => setIsCartOpen(false)}
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition shrink-0 cursor-pointer min-h-[44px] min-w-[44px]"
+                aria-label="Close modal"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
 
-              {bookingSuccess ? (
-                <div className="text-center py-4">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                    className="w-16 h-16 rounded-full bg-emerald-100 text-[#0FB5A0] flex items-center justify-center mx-auto mb-4"
-                  >
-                    <CheckCircle2 className="w-10 h-10" />
-                  </motion.div>
-
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#0A1A45] mb-2">Booking Request Submitted</h3>
-                  <p className="text-xs sm:text-sm text-[#475569] mb-6 leading-relaxed">
-                    Your lab booking has been saved. Please tap below to send the details on WhatsApp for instant slot confirmation.
-                  </p>
-
-                  <div className="p-4 bg-blue-50 rounded-2xl text-left text-xs space-y-1.5 mb-6 text-slate-700 break-words">
-                    <div><span className="font-bold">Patient Name:</span> {patientInfo.name}</div>
-                    <div><span className="font-bold">Mobile:</span> {patientInfo.phone}</div>
-                    <div><span className="font-bold">Collection Address:</span> {patientInfo.address}</div>
-                    <div><span className="font-bold">Slot:</span> {patientInfo.date} ({patientInfo.time})</div>
-                    <div><span className="font-bold">Total Amount:</span> ₹{totalPrice}</div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <a
-                      href={whatsappLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 min-h-[44px] px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition"
-                    >
-                      <span>Send on WhatsApp</span>
-                    </a>
-                    <button
-                      onClick={() => setIsBookingOpen(false)}
-                      className="min-h-[44px] px-5 py-3 rounded-xl border border-slate-300 text-[#0A1A45] hover:bg-slate-50 font-bold text-sm"
-                    >
-                      Close
-                    </button>
-                  </div>
+              {/* Header Progress Hint */}
+              <div className="pb-4 mb-4 border-b border-slate-100 pr-8">
+                <div className="flex items-center justify-between gap-1 text-[11px] font-bold text-[#475569] uppercase tracking-wider mb-2">
+                  <span className={activeStep === 1 ? 'text-[#1769E0]' : 'text-slate-400'}>
+                    Step 1: Your Cart
+                  </span>
+                  <span>•</span>
+                  <span className={activeStep === 2 ? 'text-[#1769E0]' : 'text-slate-400'}>
+                    Step 2: Details
+                  </span>
+                  <span>•</span>
+                  <span className={activeStep === 3 ? 'text-emerald-600' : 'text-slate-400'}>
+                    Step 3: Confirm
+                  </span>
                 </div>
-              ) : (
-                <form onSubmit={handleBookingSubmit} className="space-y-4 text-left">
-                  <div className="pr-8">
-                    <span className="text-xs font-bold text-[#1769E0] uppercase tracking-wider block mb-1">
-                      Home Sample Collection
-                    </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-[#0A1A45]">Book Lab Tests & Packages</h3>
-                    <p className="text-xs text-[#475569] mt-0.5">
-                      {cart.length} {cart.length === 1 ? 'item' : 'items'} selected · Total: <span className="font-bold text-[#1769E0]">₹{totalPrice}</span>
-                    </p>
+              </div>
+
+              {/* STEP 1: CART ITEMS REVIEW */}
+              {activeStep === 1 && (
+                <div className="space-y-4 flex-1">
+                  <h3 className="text-lg font-bold text-[#0A1A45]">
+                    {cart.length > 0 ? `Selected Tests (${cart.length})` : 'Your Cart is Empty'}
+                  </h3>
+
+                  {cart.length === 0 ? (
+                    <div className="py-8 text-center text-slate-500 space-y-3">
+                      <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto" />
+                      <p className="text-sm font-semibold text-[#475569]">Add a test first.</p>
+                      <button
+                        onClick={() => setIsCartOpen(false)}
+                        className="min-h-[44px] px-6 py-2.5 bg-blue-50 text-[#1769E0] font-bold text-xs rounded-xl hover:bg-blue-100 cursor-pointer"
+                      >
+                        Back to Tests List
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Item list */}
+                      <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+                        {cart.map((item) => (
+                          <div key={item.id} className="flex items-center justify-between p-3 bg-[#F2F7FF] rounded-xl text-xs border border-blue-100 gap-2">
+                            <div className="min-w-0">
+                              <span className="font-bold text-[#0A1A45] text-sm block truncate">{item.name}</span>
+                              <span className="text-[11px] text-[#475569]">
+                                {item.sample ? `Sample: ${item.sample} • ` : ''}Reports in {item.turnaround}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3 shrink-0">
+                              <span className="font-extrabold text-[#1769E0] text-sm">₹{getPatientPrice(item)}</span>
+                              <button
+                                onClick={() => removeFromCart(item.id)}
+                                className="min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-red-600 cursor-pointer"
+                                title="Remove test"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Summary */}
+                      <div className="p-4 bg-slate-50 rounded-2xl space-y-2 text-xs text-[#475569]">
+                        <div className="flex justify-between">
+                          <span>Subtotal:</span>
+                          <span className="font-bold text-[#0A1A45]">₹{subtotal}</span>
+                        </div>
+
+                        {homeFee > 0 ? (
+                          <div className="flex justify-between text-teal-700">
+                            <span>Home Sample Collection:</span>
+                            <span className="font-bold">₹{homeFee}</span>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between text-emerald-700 font-semibold">
+                            <span>Home Sample Collection:</span>
+                            <span>FREE</span>
+                          </div>
+                        )}
+
+                        <div className="pt-2 border-t border-slate-200 flex justify-between text-lg font-extrabold text-[#0A1A45]">
+                          <span>Total:</span>
+                          <span className="text-[#1769E0]">₹{totalPrice}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <button
+                        onClick={() => setActiveStep(2)}
+                        className="min-h-[48px] w-full rounded-2xl health-gradient text-white font-bold text-base shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer mt-2"
+                      >
+                        <span>Continue to Booking (₹{totalPrice})</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* STEP 2: PATIENT DETAILS FORM */}
+              {activeStep === 2 && (
+                <div className="space-y-4 flex-1">
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => setActiveStep(1)}
+                      className="text-xs text-[#1769E0] font-bold flex items-center gap-1 hover:underline cursor-pointer"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Back to Cart</span>
+                    </button>
+                    <span className="text-xs font-bold text-[#0A1A45]">Total: ₹{totalPrice}</span>
                   </div>
 
-                  {formValidation && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold flex items-start gap-2 break-words">
-                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                      <span>{formValidation}</span>
-                    </div>
-                  )}
+                  <h3 className="text-lg font-bold text-[#0A1A45]">Enter Patient Details</h3>
 
                   {bookingError && (
-                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 font-semibold break-words">
-                      {bookingError}
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-semibold flex items-start gap-2 break-words">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div>
+                        <p>{bookingError}</p>
+                        <button
+                          onClick={handleBookingSubmit}
+                          className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-[11px] font-bold"
+                        >
+                          Retry Booking
+                        </button>
+                      </div>
                     </div>
                   )}
 
-                  <div>
-                    <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Patient Full Name *</label>
-                    <div className="relative">
-                      <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <form onSubmit={handleBookingSubmit} className="space-y-3.5">
+                    {/* Patient Name */}
+                    <div>
+                      <label className="block text-xs font-bold text-[#0A1A45] mb-1">Full Name *</label>
                       <input 
-                        type="text" 
-                        required 
+                        type="text"
+                        required
                         placeholder="e.g. Praveen Kumar"
                         value={patientInfo.name}
                         onChange={e => setPatientInfo({ ...patientInfo, name: e.target.value })}
-                        className="w-full min-h-[44px] pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-base focus:outline-none focus:border-[#1769E0]"
+                        className="w-full min-h-[44px] min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                       />
+                      {fieldErrors.name && (
+                        <p className="text-xs text-red-600 font-semibold mt-1">{fieldErrors.name}</p>
+                      )}
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Mobile Number (10 digits) *</label>
-                    <div className="relative">
-                      <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    {/* Mobile Number */}
+                    <div>
+                      <label className="block text-xs font-bold text-[#0A1A45] mb-1">Mobile Number (10 digits) *</label>
                       <input 
                         type="tel"
                         inputMode="tel"
-                        required 
+                        required
                         maxLength={10}
                         placeholder="9311601420"
                         value={patientInfo.phone}
                         onChange={e => setPatientInfo({ ...patientInfo, phone: e.target.value })}
-                        className="w-full min-h-[44px] pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-base focus:outline-none focus:border-[#1769E0]"
+                        className="w-full min-h-[44px] min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                       />
+                      {fieldErrors.phone && (
+                        <p className="text-xs text-red-600 font-semibold mt-1">{fieldErrors.phone}</p>
+                      )}
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Home Collection Address *</label>
-                    <div className="relative">
-                      <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                    {/* Collection Address */}
+                    <div>
+                      <label className="block text-xs font-bold text-[#0A1A45] mb-1">Home Collection Address *</label>
                       <textarea 
-                        required 
+                        required
                         rows={2}
-                        placeholder="House / Flat No., Street, Landmark, City & Pincode"
+                        placeholder="House / Flat No., Street, Landmark"
                         value={patientInfo.address}
                         onChange={e => setPatientInfo({ ...patientInfo, address: e.target.value })}
-                        className="w-full min-h-[44px] pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-base focus:outline-none focus:border-[#1769E0]"
+                        className="w-full min-h-[44px] min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                       />
+                      {fieldErrors.address && (
+                        <p className="text-xs text-red-600 font-semibold mt-1">{fieldErrors.address}</p>
+                      )}
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Area / Pincode */}
                     <div>
-                      <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Preferred Date *</label>
+                      <label className="block text-xs font-bold text-[#0A1A45] mb-1">Area / Pincode *</label>
                       <input 
-                        type="date" 
-                        required 
-                        value={patientInfo.date}
-                        onChange={e => setPatientInfo({ ...patientInfo, date: e.target.value })}
-                        className="w-full min-h-[44px] px-3 py-2.5 rounded-xl border border-slate-200 text-base focus:outline-none focus:border-[#1769E0]"
+                        type="text"
+                        required
+                        placeholder="e.g. Sector 62, Noida - 201309"
+                        value={patientInfo.pincode}
+                        onChange={e => setPatientInfo({ ...patientInfo, pincode: e.target.value })}
+                        className="w-full min-h-[44px] min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                       />
+                      {fieldErrors.pincode && (
+                        <p className="text-xs text-red-600 font-semibold mt-1">{fieldErrors.pincode}</p>
+                      )}
                     </div>
 
+                    {/* Date and Time Slot Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-[#0A1A45] mb-1">Preferred Date *</label>
+                        <input 
+                          type="date"
+                          required
+                          min={todayStr}
+                          max={maxDateStr}
+                          value={patientInfo.date}
+                          onChange={e => setPatientInfo({ ...patientInfo, date: e.target.value })}
+                          className="w-full min-h-[44px] min-w-0 max-w-full px-3 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
+                        />
+                        {fieldErrors.date && (
+                          <p className="text-xs text-red-600 font-semibold mt-1">{fieldErrors.date}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-[#0A1A45] mb-1">Time Slot *</label>
+                        <select
+                          value={patientInfo.time}
+                          onChange={e => setPatientInfo({ ...patientInfo, time: e.target.value })}
+                          className="w-full min-h-[44px] min-w-0 max-w-full px-3 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0] bg-white"
+                        >
+                          <option value="Morning (07:00 AM - 11:00 AM)">Morning (07:00 AM - 11:00 AM)</option>
+                          <option value="Afternoon (12:00 PM - 04:00 PM)">Afternoon (12:00 PM - 04:00 PM)</option>
+                          <option value="Evening (05:00 PM - 08:00 PM)">Evening (05:00 PM - 08:00 PM)</option>
+                        </select>
+                        {fieldErrors.time && (
+                          <p className="text-xs text-red-600 font-semibold mt-1">{fieldErrors.time}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Notes */}
                     <div>
-                      <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Time Slot *</label>
-                      <select
-                        value={patientInfo.time}
-                        onChange={e => setPatientInfo({ ...patientInfo, time: e.target.value })}
-                        className="w-full min-h-[44px] px-3 py-2.5 rounded-xl border border-slate-200 text-base focus:outline-none focus:border-[#1769E0] bg-white"
-                      >
-                        <option value="Morning (07:00 AM - 11:00 AM)">Morning (07:00 AM - 11:00 AM)</option>
-                        <option value="Midday (11:00 AM - 02:00 PM)">Midday (11:00 AM - 02:00 PM)</option>
-                        <option value="Afternoon (02:00 PM - 05:00 PM)">Afternoon (02:00 PM - 05:00 PM)</option>
-                        <option value="Evening (05:00 PM - 08:00 PM)">Evening (05:00 PM - 08:00 PM)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#0A1A45] uppercase mb-1">Notes / Medical History (Optional)</label>
-                    <div className="relative">
-                      <FileText className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                      <label className="block text-xs font-bold text-[#0A1A45] mb-1">Notes / Symptoms (Optional)</label>
                       <textarea 
                         rows={2}
-                        placeholder="Any fasting status, special instructions or symptoms..."
+                        placeholder="Fasting status, medical conditions or special instructions..."
                         value={patientInfo.notes}
                         onChange={e => setPatientInfo({ ...patientInfo, notes: e.target.value })}
-                        className="w-full min-h-[44px] pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-base focus:outline-none focus:border-[#1769E0]"
+                        className="w-full min-h-[44px] min-w-0 max-w-full px-4 py-2.5 rounded-xl border border-slate-200 text-[16px] text-[#0A1A45] focus:outline-none focus:border-[#1769E0]"
                       />
+                    </div>
+
+                    {/* Sticky Submit Button */}
+                    <div className="pt-2 sticky bottom-0 bg-white">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="min-h-[48px] w-full rounded-2xl health-gradient text-white font-bold text-base shadow-lg hover:opacity-95 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>Confirming Booking...</span>
+                          </>
+                        ) : (
+                          <span>Complete Booking (₹{totalPrice})</span>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* STEP 3: CONFIRMATION SCREEN (Reads ONLY from confirmedBooking) */}
+              {activeStep === 3 && confirmedBooking && (
+                <div className="text-center py-2 space-y-4">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                    className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2"
+                  >
+                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+                  </motion.div>
+
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-[#0A1A45]">Booking Request Received</h3>
+                  <p className="text-xs text-[#475569] font-bold">
+                    Booking Ref: <span className="text-[#1769E0] font-extrabold">{confirmedBooking.bookingRef}</span>
+                  </p>
+
+                  <div className="p-4 bg-blue-50/80 rounded-2xl text-left text-xs space-y-3 border border-blue-100 text-[#0A1A45]">
+                    <div>
+                      <span className="font-extrabold uppercase text-[10px] tracking-wider text-slate-500 block mb-1">Patient Details</span>
+                      <p className="font-bold text-sm text-[#0A1A45]">{confirmedBooking.patient.name}</p>
+                      <p className="text-[#475569]">Mobile: {confirmedBooking.patient.phone}</p>
+                      <p className="text-[#475569] break-words">Address: {confirmedBooking.patient.address}, Pincode: {confirmedBooking.patient.pincode}</p>
+                      <p className="text-[#1769E0] font-semibold mt-1">Slot: {confirmedBooking.slotDate} ({confirmedBooking.slotLabel})</p>
+                    </div>
+
+                    <div className="pt-2 border-t border-blue-100">
+                      <span className="font-extrabold uppercase text-[10px] tracking-wider text-slate-500 block mb-1">Booked Tests ({confirmedBooking.items.length})</span>
+                      <div className="space-y-1.5 max-h-36 overflow-y-auto">
+                        {confirmedBooking.items.map((item, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-xs">
+                            <span className="text-[#0A1A45] font-medium truncate">{idx + 1}. {item.name}</span>
+                            <span className="font-bold text-[#0A1A45] shrink-0">₹{item.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-blue-100 space-y-1">
+                      {confirmedBooking.homeCollectionFee > 0 ? (
+                        <div className="flex justify-between text-[#475569]">
+                          <span>Home Collection Fee:</span>
+                          <span>₹{confirmedBooking.homeCollectionFee}</span>
+                        </div>
+                      ) : (
+                        <div className="flex justify-between text-emerald-700 font-semibold">
+                          <span>Home Sample Collection:</span>
+                          <span>FREE</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-sm font-extrabold text-[#0A1A45] pt-1 border-t border-blue-200">
+                        <span>Total:</span>
+                        <span className="text-[#1769E0]">₹{confirmedBooking.total}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <button 
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full min-h-[48px] py-3.5 rounded-xl health-gradient text-white font-bold text-sm shadow-lg hover:opacity-95 transition mt-3 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                  {whatsappLink && (
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="min-h-[48px] w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm rounded-2xl shadow-md flex items-center justify-center gap-2 transition cursor-pointer"
+                    >
+                      <MessageSquare className="w-5 h-5" />
+                      <span>Send on WhatsApp</span>
+                    </a>
+                  )}
+
+                  {!user && (
+                    <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-center space-y-1.5">
+                      <p className="text-xs text-amber-900 font-semibold">Create an account to track your bookings</p>
+                      <Link
+                        to="/signup"
+                        onClick={handleCloseModal}
+                        className="inline-block px-4 py-2 bg-[#1769E0] text-white text-xs font-bold rounded-xl shadow-sm hover:bg-blue-700 transition"
+                      >
+                        Sign Up
+                      </Link>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleCloseModal}
+                    className="min-h-[44px] w-full rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0A1A45] font-bold text-xs transition cursor-pointer"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Saving Booking...</span>
-                      </>
-                    ) : (
-                      <span>Confirm & Request Sample Collection</span>
-                    )}
+                    Close Window
                   </button>
-                </form>
+                </div>
               )}
+
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
     </div>
   );
 }

@@ -18,12 +18,24 @@ service cloud.firestore {
                    && request.resource.data.patientName is string
                    && request.resource.data.phone is string
                    && request.resource.data.address is string;
-      allow read, update: if request.auth != null && (
+      allow read: if request.auth != null && (
         request.auth.uid == resource.data.userId ||
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'lab'])
+      );
+      allow update: if request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'lab'];
+      allow delete: if false;
+    }
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update: if request.auth != null && (
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'staff']
       );
       allow delete: if false;
     }
   }
 }
+

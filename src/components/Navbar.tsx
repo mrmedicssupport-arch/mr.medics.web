@@ -1,16 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, Globe, User, LogOut, Stethoscope, TestTube, Pill, Sparkles, FileText } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ChevronDown, Menu, X, Globe, User, Stethoscope, TestTube, Pill, FileText, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { config } from '../config';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar({ language, setLanguage }: { language: string; setLanguage: (lang: string) => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { cart, setIsCartOpen } = useCart();
+
+  const handleOpenCart = () => {
+    if (location.pathname.includes('/lab-tests')) {
+      setIsCartOpen(true);
+    } else {
+      navigate('/services/lab-tests');
+      setTimeout(() => setIsCartOpen(true), 100);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -134,6 +146,21 @@ export default function Navbar({ language, setLanguage }: { language: string; se
 
         {/* Right Actions */}
         <div className="hidden lg:flex items-center gap-4">
+          {/* Cart Icon Button */}
+          <button
+            onClick={handleOpenCart}
+            className="relative p-2 rounded-full hover:bg-[#F2F7FF] text-[#0A1A45] hover:text-[#1769E0] transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            title="View Cart"
+            aria-label="View Cart"
+          >
+            <ShoppingBag className="w-5 h-5" />
+            {cart.length > 0 && (
+              <span className="absolute top-1 right-1 w-4 h-4 bg-[#1769E0] text-white text-[10px] font-extrabold rounded-full flex items-center justify-center">
+                {cart.length}
+              </span>
+            )}
+          </button>
+
           {/* Language Toggle Pill */}
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
@@ -177,6 +204,20 @@ export default function Navbar({ language, setLanguage }: { language: string; se
 
         {/* Mobile Hamburger & Actions */}
         <div className="lg:hidden flex items-center gap-2">
+          {/* Mobile Cart Button */}
+          <button
+            onClick={handleOpenCart}
+            className="relative p-2 rounded-full hover:bg-[#F2F7FF] text-[#0A1A45] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="View Cart"
+          >
+            <ShoppingBag className="w-5 h-5 text-[#0A1A45]" />
+            {cart.length > 0 && (
+              <span className="absolute top-1 right-1 w-4 h-4 bg-[#1769E0] text-white text-[10px] font-extrabold rounded-full flex items-center justify-center">
+                {cart.length}
+              </span>
+            )}
+          </button>
+
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
             className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#F2F7FF] text-[#0A1A45] text-xs font-bold min-h-[36px]"
