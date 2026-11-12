@@ -9,3 +9,9 @@ export const config = {
   APP_STORE_URL: "",
   APP_URL: import.meta.env.VITE_APP_URL || "https://mrmedics.in",
 };
+
+export const LAB_PRICING = {
+  markup: 0,
+  homeCollectionFee: 0,
+};
+
