@@ -1,6 +1,7 @@
-import { Quote, Award, MapPin } from 'lucide-react';
+import { Quote, Award, MapPin, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
 import { AnimatedHeading, AnimatedParagraph, AnimatedBadge } from './AnimatedTypography';
+import { config } from '../config';
 
 export default function FounderSection() {
   return (
@@ -41,7 +42,7 @@ export default function FounderSection() {
           </div>
 
           {/* Founder Bio */}
-          <div className="lg:col-span-7 flex flex-col items-start">
+          <div className="lg:col-span-7 flex flex-col items-start min-w-0 w-full">
             <div className="hidden sm:block">
               <AnimatedBadge icon={Award} className="bg-blue-50 text-[#1769E0] mb-4">
                 Leadership & Vision
@@ -69,13 +70,20 @@ export default function FounderSection() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 sm:pt-6 border-t border-slate-200 w-full text-xs sm:text-sm">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6 pt-3 sm:pt-6 border-t border-slate-200 w-full min-w-0 text-sm">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <MapPin className="w-4 h-4 text-[#1769E0]" />
+                <MapPin className="w-4 h-4 text-[#1769E0] shrink-0" />
                 <span className="font-semibold text-[#0A1A45]">Noida Sector 62, UP</span>
               </div>
+              <a
+                href={`mailto:${config.EMAIL}`}
+                className="inline-flex items-center gap-1.5 sm:gap-2 min-h-[44px] sm:min-h-0 text-sm font-semibold text-[#0A1A45] md:hover:underline hover:underline break-all min-w-0 max-w-full"
+              >
+                <Mail className="w-4 h-4 text-[#1769E0] shrink-0" />
+                <span className="break-all">{config.EMAIL}</span>
+              </a>
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#0FB5A0] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-[#0FB5A0] animate-pulse shrink-0" />
                 <span className="font-semibold text-[#0A1A45]">Verified Enterprise</span>
               </div>
             </div>

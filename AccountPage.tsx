@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { config } from '../config';
 import { 
@@ -27,6 +27,144 @@ import {
   Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+
+function MyLabBookings({ userId }: { userId: string }) {
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchBookings() {
+      try {
+        setLoading(true);
+        const q = query(
+          collection(db, 'labBookings'),
+          where('userId', '==', userId)
+        );
+        const snap = await getDocs(q);
+        const list: any[] = [];
+        snap.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        list.sort((a, b) => {
+          const tA = a.createdAt?.seconds || 0;
+          const tB = b.createdAt?.seconds || 0;
+          return tB - tA;
+        });
+        setBookings(list.slice(0, 20));
+      } catch (err) {
+        console.error('Error fetching lab bookings:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (userId) {
+      fetchBookings();
+    }
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 animate-pulse space-y-3">
+        <div className="h-5 w-40 bg-slate-200 rounded" />
+        <div className="h-16 w-full bg-slate-100 rounded-2xl" />
+        <div className="h-16 w-full bg-slate-100 rounded-2xl" />
+      </div>
+    );
+  }
+
+  if (bookings.length === 0) {
+    return (
+      <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm text-center space-y-3">
+        <FlaskConical className="w-12 h-12 text-slate-300 mx-auto" />
+        <h3 className="text-base font-bold text-[#0A1A45]">No bookings yet</h3>
+        <p className="text-xs text-[#475569]">You haven't requested any lab tests or packages yet.</p>
+        <Link
+          to="/services/lab-tests"
+          className="inline-flex items-center gap-2 px-5 py-2.5 health-gradient text-white font-bold text-xs rounded-xl shadow-md transition"
+        >
+          <span>Book Lab Tests</span>
+          <ChevronRight className="w-4 h-4" />
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-extrabold text-[#0A1A45] flex items-center gap-2">
+          <FlaskConical className="w-5 h-5 text-[#1769E0]" />
+          <span>My Lab Bookings</span>
+        </h3>
+        <span className="text-xs text-[#475569] font-semibold">{bookings.length} {bookings.length === 1 ? 'booking' : 'bookings'}</span>
+      </div>
+
+      <div className="space-y-3">
+        {bookings.map((booking) => {
+          const isExpanded = expandedId === booking.id;
+          const status = booking.status || 'Pending';
+          const statusColor = 
+            status === 'Confirmed' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+            status === 'Completed' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' :
+            status === 'Cancelled' ? 'bg-rose-100 text-rose-800 border-rose-200' :
+            'bg-amber-100 text-amber-800 border-amber-200';
+
+          return (
+            <div key={booking.id} className="border border-slate-200 rounded-2xl p-4 bg-[#F8FAFF] space-y-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <span className="text-xs font-bold text-[#1769E0] block">{booking.bookingRef || booking.bookingId || booking.id}</span>
+                  <span className="text-[11px] text-[#475569]">Slot: {booking.slotDate || 'N/A'} ({booking.slotTime || 'Morning'})</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border uppercase tracking-wider ${statusColor}`}>
+                    {status}
+                  </span>
+                  <span className="text-sm font-extrabold text-[#0A1A45]">₹{booking.totalAmount || booking.total || 0}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
+                <span className="text-[#475569] font-medium">{booking.items?.length || 1} {booking.items?.length === 1 ? 'test' : 'tests'}</span>
+                <button
+                  onClick={() => setExpandedId(isExpanded ? null : booking.id)}
+                  className="text-[#1769E0] font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <span>{isExpanded ? 'Hide Details' : 'Details'}</span>
+                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                </button>
+              </div>
+
+              {isExpanded && (
+                <div className="pt-3 border-t border-slate-200 space-y-2.5 text-xs text-[#0A1A45]">
+                  <div>
+                    <p className="font-extrabold text-slate-400 uppercase text-[10px] tracking-wider mb-1">Patient Info</p>
+                    <p className="font-bold">{booking.patientName || booking.patient?.name}</p>
+                    <p className="text-[#475569]">Mobile: {booking.phone || booking.patient?.phone}</p>
+                    <p className="text-[#475569] break-words">Address: {booking.address || booking.patient?.address}, Pincode: {booking.pincode || booking.patient?.pincode}</p>
+                  </div>
+
+                  <div>
+                    <p className="font-extrabold text-slate-400 uppercase text-[10px] tracking-wider mb-1">Booked Items</p>
+                    <div className="space-y-1">
+                      {booking.items?.map((it: any, idx: number) => (
+                        <div key={idx} className="flex justify-between text-[#475569]">
+                          <span>{idx + 1}. {it.name}</span>
+                          <span className="font-bold text-[#0A1A45]">₹{it.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function AccountPage() {
   const { user, logout, loading: authLoading } = useAuth();
@@ -373,6 +511,11 @@ export default function AccountPage() {
                 </div>
               </Link>
             </div>
+          </div>
+
+          {/* My Lab Bookings Section */}
+          <div className="min-w-0">
+            <MyLabBookings userId={user.uid} />
           </div>
 
           {/* Support & Hub Cards */}
